@@ -5,3 +5,33 @@
 
 /*  Variaveis globais  */
 
+globais:
+	int comp;
+
+funcoes:
+
+/*  Funcao para imprimir o Hello World  */
+
+vazio Print (int nVezes) {
+locais:
+	int i;
+comandos:
+	para (i := 0; i < nVezes; i := i + 1) {
+		se (i = 0) 
+			escrever (Hello World T-, comp, 
+);
+		escrever (i);
+	}
+}
+
+/*  Funcao principal  */
+
+principal {
+locais:
+	int n;
+comandos:
+	comp := 17;
+	escrever (Digite um numero: );
+	ler (n);
+	chamar Print(n);
+}
