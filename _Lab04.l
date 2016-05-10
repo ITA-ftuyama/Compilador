@@ -19,7 +19,6 @@ cadeia		\"{carac2}*\"
 
 {ws}		{ ;}
 "/*"		{comentario ();}
-carac       {return CARAC;}
 
 se			{return SE;}
 senao		{return SENAO;}
@@ -42,15 +41,16 @@ chamar      {return CHAMAR;}
 
 int         {return INTEIRO;}
 real        {return REAL;}
+carac       {return CARAC;}
 logico      {return LOGICO;}
 vazio       {return VAZIO;}
 
-{id}		{strcpy (yylval.cadeia, yytext);    return ID;}
-{ctcarac}	{yylval.carac = tratachar (yytext); return CTCARAC;}
-{ctint}		{yylval.valint  = atoi(yytext);     return CTINT;}
-{ctreal}    {yylval.valreal = atof(yytext);     return CTREAL;}
+{id}		{strcpy (yylval.cadeia, yytext);    return ID;		}
+{ctcarac}	{yylval.carac = tratachar (yytext); return CTCARAC;	}
 {cadeia}	{strcpy (yylval.cadeia, yytext);   
-				tratacadeia (yylval.cadeia);	return CADEIA;}
+				tratacadeia (yylval.cadeia);	return CADEIA;	}
+{ctint}		{yylval.valint  = atoi(yytext);     return CTINT;	}
+{ctreal}    {yylval.valreal = atof(yytext);     return CTREAL;	}
 
 "<"		    {yylval.atr = LT;   return OPREL;}
 "<="		{yylval.atr = LE;   return OPREL;}
@@ -101,10 +101,8 @@ void comentario () {
             case 2:
                 c = input ();
                 printf("%c",c);
-				if (c == EOF) estado = 3;
-				else if (c == '/') estado = 3;
-				else if (c == '*') estado = 2;
-				else estado = 1;
+				if (c == EOF || c == '/') estado = 3;
+				else if (c != '*') estado = 1;
                 break;
 		}
 	}

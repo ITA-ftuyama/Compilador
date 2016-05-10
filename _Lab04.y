@@ -108,9 +108,9 @@ void VerificaInicRef (void);
 %type   <nsubscr>   ListSubscr
 
 %token  <cadeia>    ID
+%token  <carac>     CTCARAC
 %token  <valint>    CTINT
 %token  <valreal>   CTREAL
-%token  <carac>     CTCARAC
 %token  <cadeia>    CADEIA
 
 %token  <atr>       OPAD
@@ -170,8 +170,10 @@ void VerificaInicRef (void);
     para alguma estetica, ha mudanca de linha       
 */
 
-Programa    :   {InicTabSimb();}
-                DeclGlobs   Funcoes
+Programa    :   
+//{InicTabSimb();}
+                DeclGlobs   Funcoes 
+                 //{VerificaInicRef (); ImprimeTabSimb ();}
             ;
 DeclGlobs   :
             |   GLOBAIS  DPONTS  {tab = 1; printf("globais:\n");}
@@ -253,9 +255,9 @@ CmdComposto :
                 ABCHAVE {printf ("{\n"); tab++;}  ListCmds FCHAVE
                 {tab--; tabular (); printf ("}\n");}
             ;
-CmdSe       :   {printf("se (");} SE  ABPAR 
-                Expressao {printf(") ");} FPAR
-                
+CmdSe       :   {printf("se (");} 
+                SE  ABPAR Expressao 
+                FPAR {printf(") ");}
                 CmdInside CmdSenao
             ;
 CmdInside   :   CmdComposto
@@ -267,9 +269,10 @@ CmdSenao    :
             |   SENAO {tabular(); printf("senao ");}
                 Comando
             ;
-CmdEnquanto :   ENQUANTO  ABPAR {printf("enquanto (");} 
-                Expressao {printf(") ");} FPAR  
-                Comando
+CmdEnquanto :   {printf("enquanto (");}
+                ENQUANTO  ABPAR Expressao
+                {printf(") ");}
+                FPAR Comando
             ;
 CmdRepetir  :   REPETIR  {printf("repetir ");}
                 CmdInside {tabular(); printf("enquanto (");}
@@ -375,7 +378,7 @@ Termo       :   Fator
 Fator       :   Variavel
             |   CTINT           {printf ("%d", $1);}
             |   CTREAL          {printf ("%g", $1);}
-            |   CTCARAC         {printf ("%s", $1);}
+            |   CTCARAC         {printf ("\'%c\'", $1);}
             |   CADEIA          {printf ("%s", $1);}
             |   VERDADE         {printf ("true");}
             |   FALSO           {printf ("false");}
