@@ -45,8 +45,8 @@ char *nometipid[3] = {" ", "IDPROG", "IDVAR"};
 
 /*  Strings para nomes dos tipos de variaveis  */
 
-char *nometipvar[5] = {"NOTVAR",
-    "INTEGER", "LOGIC", "FLOAT", "CHAR"
+char *nometipvar[5] = {
+    "NOTVAR", "INTEGER", "LOGIC", "FLOAT", "CHAR"
 };
 
 /*    Declaracoes para a tabela de simbolos     */
@@ -170,10 +170,9 @@ void VerificaInicRef (void);
     para alguma estetica, ha mudanca de linha       
 */
 
-Programa    :   
-//{InicTabSimb();}
+Programa    :   {InicTabSimb();}
                 DeclGlobs   Funcoes 
-                 //{VerificaInicRef (); ImprimeTabSimb ();}
+                {VerificaInicRef (); ImprimeTabSimb ();}
             ;
 DeclGlobs   :
             |   GLOBAIS  DPONTS  {tab = 1; printf("globais:\n");}
@@ -189,21 +188,30 @@ Declaracao  :   {tabular();}
 Tipo        :   INTEIRO {printf("int ");    tipocorrente = INTEGER; }
             |   REAL    {printf("real ");   tipocorrente = FLOAT;   }  
             |   CARAC   {printf("carac ");  tipocorrente = CHAR;    } 
-            |   LOGICO  {printf("logico "); tipocorrente = LOGICO;  } 
+            |   LOGICO  {printf("logico "); tipocorrente = LOGIC;  } 
             |   VAZIO   {printf("vazio ");  tipocorrente = VAZIO;   } 
             ;
 ListElemDecl:   ElemDecl
             |   ListElemDecl {printf(", ");} VIRG ElemDecl
             ;
-ElemDecl    :   ID
-                {printf ("%s", $1);}
-                ListDims
+ElemDecl    :   ID {
+                    printf ("%s", $1);
+                    if  (ProcuraSimb ($1) != NULL)
+                        DeclaracaoRepetida ($1);
+                    else {
+                        simb =  InsereSimb ($1, IDVAR, tipocorrente);
+                        simb->array = FALSE; simb->ndims = 0;
+                    }
+                } ListDims
             ;
 ListDims    :
-            |   ListDims  Dimensao
+            |   ListDims  Dimensao {simb->array = TRUE;}
             ;
-Dimensao    :   ABCOL  CTINT FCOL
-                {printf("[%d]", $2);}
+Dimensao    :   ABCOL  CTINT FCOL {
+                    printf("[%d]", $2);
+                     if ($2 <= 0) Esperado ("Valor inteiro positivo");
+                    simb->ndims++; simb->dims[simb->ndims] = $2;
+                }
             ;
 Funcoes     :   FUNCOES  DPONTS  {tab = 1; printf("\nfuncoes:\n");} 
                 ListFunc
@@ -227,7 +235,16 @@ ListParam   :   Parametro
             |   ListParam 
                 VIRG {printf(", ");} Parametro
             ;
-Parametro   :   Tipo  ID {printf ("%s", $2);}
+Parametro   :   Tipo  ID {
+                    printf ("%s", $2);
+                    if  (ProcuraSimb ($2) != NULL)
+                        DeclaracaoRepetida ($2);
+                    else {
+                        simb =  InsereSimb ($2, IDVAR, tipocorrente);
+                        simb->array = FALSE; simb->ndims;
+                        simb->inic = simb->ref = TRUE;
+                    }
+                }
             ;
 DeclLocs    :
             |   LOCAIS  DPONTS {tab = 1; printf("locais:\n");}
@@ -281,7 +298,7 @@ CmdRepetir  :   REPETIR  {printf("repetir ");}
                 FPAR PVIRG  {printf(");\n");}
             ;
 CmdPara     :   PARA  ABPAR  {printf("para (");}
-                Variavel
+                Variavel {if ($4 != NULL) $4->inic = $4->ref = TRUE;}
                 ATRIB {printf(" := ");} Expressao
                 PVIRG {printf("; ");  } Expressao
                 PVIRG {printf("; ");  } Variavel
@@ -292,7 +309,7 @@ CmdLer      :   LER  ABPAR  {printf("ler (");}
                 ListLeit    {printf(");\n");}
                 FPAR  PVIRG 
             ;
-ListLeit    :   Variavel
+ListLeit    :   Variavel {if ($1 != NULL) $1->inic = $1->ref = TRUE;}
             |   ListLeit 
                 VIRG   {printf(", ");} Variavel
             ;
@@ -305,7 +322,7 @@ ListEscr    :   ElemEscr
                 VIRG  
                 ElemEscr
             ;
-ElemEscr    :   CADEIA      {printf("%s", $1);}
+ElemEscr    :   CADEIA      {printf("\"%s\"", $1);}
             |   Expressao
             ;
 ChamadaProc :   CHAMAR  ID ABPAR
@@ -325,7 +342,8 @@ CmdRetornar :   RETORNAR  PVIRG  {printf("retornar;\n");}
                 Expressao
                 PVIRG {printf(";\n");}
             ;
-CmdAtrib    :   Variavel ATRIB  {printf (" := ");}
+CmdAtrib    :   Variavel {if ($1 != NULL) $1->inic = $1->ref = TRUE;}
+                ATRIB  {printf (" := ");}
                 Expressao PVIRG {printf(";\n");}
             ;
 Expressao   :   ExprAux1
@@ -375,7 +393,12 @@ Termo       :   Fator
                 }
             }   Fator
             ;
-Fator       :   Variavel
+Fator       :   Variavel {
+                    if  ($1 != NULL)  {
+                        $1->ref  =  TRUE;
+                        $$ = $1->tvar;
+                    }
+                }
             |   CTINT           {printf ("%d", $1);}
             |   CTREAL          {printf ("%g", $1);}
             |   CTCARAC         {printf ("\'%c\'", $1);}
@@ -387,10 +410,26 @@ Fator       :   Variavel
                 Expressao  FPAR {printf (")");}
             |   ChamadaFunc
             ;
-Variavel    :   ID {printf ("%s", $1);} ListSubscr
+Variavel    :   ID {
+                    printf ("%s", $1);
+                    simb = ProcuraSimb ($1);
+                    if (simb == NULL)   NaoDeclarado ($1);
+                    else if (simb->tid != IDVAR)  TipoInadequado ($1);
+                    $<simb>$ = simb;
+                } ListSubscr  {
+                    $$ = $<simb>2;
+                    if ($$ != NULL) {
+                        if ($$->array == FALSE && $3 > 0)
+                            NaoEsperado ("Subscrito\(s)");
+                        else if ($$->array == TRUE && $3 == 0)
+                            Esperado ("Subscrito\(s)");
+                        else if ($$->ndims != $3)
+                            Incompatibilidade ("Numero de subscritos incompativel com declaracao");
+                    }
+                }
             ;
-ListSubscr  :
-            |   ListSubscr  Subscrito
+ListSubscr  :   {$$ = 0;}
+            |   ListSubscr  Subscrito {$$ = $1 + 1;}
             ;
 Subscrito   :   ABCOL   {printf("[");}
                 ExprAux4
