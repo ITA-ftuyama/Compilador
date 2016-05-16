@@ -47,8 +47,7 @@ vazio       {return VAZIO;}
 
 {id}		{strcpy (yylval.cadeia, yytext);    return ID;		}
 {ctcarac}	{yylval.carac = tratachar (yytext); return CTCARAC;	}
-{cadeia}	{strcpy (yylval.cadeia, yytext);   
-				tratacadeia (yylval.cadeia);	return CADEIA;	}
+{cadeia}	{strcpy (yylval.cadeia, yytext);    return CADEIA;	}
 {ctint}		{yylval.valint  = atoi(yytext);     return CTINT;	}
 {ctreal}    {yylval.valreal = atof(yytext);     return CTREAL;	}
 
