@@ -21,8 +21,9 @@
 
 /*   Definicao dos tipos de identificadores   */
 
-#define     IDPROG      1
-#define     IDVAR       2
+#define     IDGLOB      1
+#define     IDFUNC      2
+#define     IDVAR       3
 
 /*  Definicao dos tipos de variaveis   */
 
@@ -59,7 +60,7 @@
 
 /*  Strings para nomes dos tipos de identificadores  */
 
-char *nometipid[3] = {" ", "IDPROG", "IDVAR"};
+char *nometipid[4] = {" ", "IDGLOB", "IDFUNC", "IDVAR"};
 
 /*  Strings para nomes dos tipos de variaveis  */
 
@@ -71,12 +72,18 @@ char *nometipvar[5] = {
 
 typedef struct celsimb celsimb;
 typedef celsimb *simbolo;
+typedef struct elemlistsimb elemlistsimb;
+typedef elemlistsimb *listsimb;
+struct elemlistsimb {
+    simbolo simb, prox;
+};
 struct celsimb {
     char *cadeia;
-    int tid, tvar;
-    int  ndims, dims[MAXDIMS+1];
-    char inic, ref, array;
-    simbolo prox;
+    int tid, tvar, tparam;
+    int  nparam, ndims, dims[MAXDIMS+1];
+    char inic, ref, array, param;
+    listsimb listvardecl, listparam, listfunc; 
+    simbolo escopo, prox;
 };
 
 /*  
@@ -84,9 +91,11 @@ struct celsimb {
 */
 
 simbolo tabsimb[NCLASSHASH];
-simbolo simb;
+simbolo simb, escopo, aux;
+listsimb pontvardecl, pontfunc, pontparam;
 int tipocorrente;
 int tab = 0;
+char declparam;
 
 /*
     Prototipos das funcoes para a tabela de simbolos
@@ -102,7 +111,8 @@ void Tabular();
 int hash (char *);
 void InicTabSimb (void);
 void ImprimeTabSimb (void);
-simbolo InsereSimb (char *, int, int);
+void InsereListSimb (simbolo, listsimb *);
+simbolo InsereSimb (char *, int, int, simbolo);
 simbolo ProcuraSimb (char *);
 
 /*  Mensagens de erros semanticos  */
@@ -203,7 +213,14 @@ Programa    :   {InicTabSimb();}
                 {VerificaInicRef (); ImprimeTabSimb ();}
             ;
 DeclGlobs   :
-            |   GLOBAIS  DPONTS  {tab = 1; printf("globais:\n");}
+            |   GLOBAIS  DPONTS  {
+                    printf("globais:\n");
+                    tab = 1; declparam = FALSE;
+                    escopo = simb = 
+                        InsereSimb("Global", IDGLOB, NOTVAR, NULL);
+                    pontvardecl = simb->listvardecl;
+                    pontfunc = simb->listfunc;
+                }
                 ListDecl
             ;
 ListDecl    :   Declaracao
@@ -224,11 +241,11 @@ ListElemDecl:   ElemDecl
             ;
 ElemDecl    :   ID {
                     printf ("%s", $1);
-                    if  (ProcuraSimb ($1) != NULL)
+                    if  (SimbDeclarado($1) == TRUE) {
                         DeclaracaoRepetida ($1);
+                    }
                     else {
-                        simb =  InsereSimb ($1, IDVAR, tipocorrente);
-                        simb->array = FALSE; simb->ndims = 0;
+                        simb =  InsereSimb ($1, IDVAR, tipocorrente, escopo);
                     }
                 } ListDims
             ;
@@ -249,12 +266,21 @@ ListFunc    :   Funcao
             ;
 Funcao      :   Cabecalho ABCHAVE
                 {printf (" {\n"); tab++;}
-                DeclLocs Cmds FCHAVE
-                {tab--; tabular (); printf ("}\n");}
+                DeclLocs Cmds FCHAVE {
+                    tab--; tabular (); printf ("}\n");
+                    escopo = escopo->escopo; 
+                }
             ;
 Cabecalho   :   PRINCIPAL   {printf("principal");}
-            |   Tipo  ID    {printf("%s (", $2);} ABPAR
-                Params FPAR {printf(")");}
+            |   Tipo  ID {declparam = TRUE;} ABPAR {
+                    printf("%s (", $2);
+                    escopo = simb = 
+                        InsereSimb ($2, IDFUNC, tipocorrente, escopo);
+                    pontvardecl = simb->listvardecl;
+                    pontparam = simb->listparam;
+                } 
+                Params {declparam = FALSE;} FPAR  
+                {printf(")");}
             ;
 Params      :
             |   ListParam
@@ -265,12 +291,11 @@ ListParam   :   Parametro
             ;
 Parametro   :   Tipo  ID {
                     printf ("%s", $2);
-                    if  (ProcuraSimb ($2) != NULL)
+                    if  (SimbDeclarado($2) == TRUE) {
                         DeclaracaoRepetida ($2);
+                    }
                     else {
-                        simb =  InsereSimb ($2, IDVAR, tipocorrente);
-                        simb->array = FALSE; simb->ndims;
-                        simb->inic = simb->ref = TRUE;
+                        simb =  InsereSimb ($2, IDVAR, tipocorrente, escopo);
                     }
                 }
             ;
@@ -484,6 +509,7 @@ Fator       :   Variavel {
                     if  ($1 != NULL)  {
                         $1->ref  =  TRUE;
                         $$ = $1->tvar;
+
                     }
                 }
             |   CTINT       {printf ("%d", $1); $$ = INTEGER; }
@@ -562,6 +588,21 @@ void InicTabSimb () {
 }
 
 /*
+    SimbDeclarado(cadeia):
+    Verifica se um dado símbolo possui declaração repetida;
+    Isso é, já existe na tabela de símbolos no escopo atual;
+    Retorna char TRUE ou FALSE;
+ */
+
+char SimbDeclarado (char *cadeia) {
+    simbolo s = ProcuraSimb(cadeia);
+    if (s != NULL && s->escopo == escopo) {
+        return TRUE;
+    }
+    else return FALSE;
+}
+
+/*
     ProcuraSimb (cadeia): Procura cadeia na tabela de simbolos;
     Caso ela ali esteja, retorna um ponteiro para sua celula;
     Caso contrario, retorna NULL.
@@ -576,20 +617,66 @@ simbolo ProcuraSimb (char *cadeia) {
 }
 
 /*
+    InsereListSimb (cadeia, listasimbolos): Insere cadeia na lista de
+    simbolos, com tid como tipo de identificador e com tvar como
+    tipo de variavel; Retorna um ponteiro para a celula inserida
+ */
+
+void InsereListSimb (simbolo simb, listsimb *list) {
+
+}
+
+/*
     InsereSimb (cadeia, tid, tvar): Insere cadeia na tabela de
     simbolos, com tid como tipo de identificador e com tvar como
     tipo de variavel; Retorna um ponteiro para a celula inserida
  */
 
-simbolo InsereSimb (char *cadeia, int tid, int tvar) {
+simbolo InsereSimb (char *cadeia, int tid, int tvar, simbolo escopo) {
     int i; simbolo aux, s;
     i = hash (cadeia); aux = tabsimb[i];
     s = tabsimb[i] = (simbolo) malloc (sizeof (celsimb));
     s->cadeia = (char*) malloc ((strlen(cadeia)+1) * sizeof(char));
     strcpy (s->cadeia, cadeia);
-    s->tid = tid;       s->tvar = tvar;
-    s->inic = FALSE;    s->ref = FALSE;
-    s->prox = aux;  return s;
+    s->tid = tid;       s->tvar = tvar;     
+    s->prox = aux;      s->escopo = escopo;
+     
+    if (tid == IDVAR) {
+        if (declparam) {
+            s->inic = s->ref = s->param = TRUE;
+            s->array = FALSE;   s->ndims = 0;
+            if (s->tid == IDVAR)
+                InsereListSimb (s, &pontparam);
+            s->escopo->nparam++;
+        }
+        else {
+            s->inic = s->ref = s->param = FALSE;
+            s->array = FALSE;   s->ndims = 0;
+            if (s->tid == IDVAR)
+                InsereListSimb (s, &pontvardecl);
+            s->tvar = tvar;
+            s->tparam = tvar;   
+        }     
+    }
+    if (tid == IDGLOB || tid == IDFUNC) {
+        s->listvardecl = (elemlistsimb *) 
+            malloc  (sizeof (elemlistsimb));
+        s->listvardecl->prox = NULL;
+    }
+    if (tid == IDGLOB) {
+        s->listfunc = (elemlistsimb *) 
+            malloc  (sizeof (elemlistsimb));
+        s->listfunc->prox = NULL;
+    }
+    if (tid == IDFUNC) {
+        s->listparam = (elemlistsimb *) 
+            malloc  (sizeof (elemlistsimb));
+        s->listparam->prox = NULL;
+        s->nparam = 0;
+        InsereListSimb (s, &pontfunc);
+    }
+
+    return s;
 }
 
 /*
@@ -613,9 +700,9 @@ void ImprimeTabSimb () {
         if (tabsimb[i]) {
             printf ("Classe %d:\n", i);
             for (s = tabsimb[i]; s!=NULL; s = s->prox){
-                printf ("  (%s, %s", s->cadeia,  nometipid[s->tid]);
+                printf ("  (%-8s, %s", s->cadeia,  nometipid[s->tid]);
                 if (s->tid == IDVAR) {
-                    printf (", %s, %d, %d",
+                    printf (", %-7s, %d, %d",
                         nometipvar[s->tvar], s->inic, s->ref);
                     if (s->array == TRUE) 
                     { 
@@ -625,6 +712,9 @@ void ImprimeTabSimb () {
                             printf ("  %d", s->dims[j]);
                     }
                 }
+                if (s->escopo != NULL)
+                    printf(", escopo: %s", s->escopo->cadeia);
+                else printf(", escopo: NULL");
                 printf(")\n");
             }
         }
