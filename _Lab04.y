@@ -75,7 +75,8 @@ typedef celsimb *simbolo;
 typedef struct elemlistsimb elemlistsimb;
 typedef elemlistsimb *listsimb;
 struct elemlistsimb {
-    simbolo simb, prox;
+    simbolo simb;
+    listsimb prox;
 };
 struct celsimb {
     char *cadeia;
@@ -111,6 +112,7 @@ void Tabular();
 int hash (char *);
 void InicTabSimb (void);
 void ImprimeTabSimb (void);
+void ImprimeDeclaracoes (simbolo s);
 void InsereListSimb (simbolo, listsimb *);
 simbolo InsereSimb (char *, int, int, simbolo);
 simbolo ProcuraSimb (char *);
@@ -599,7 +601,7 @@ char SimbDeclarado (char *cadeia) {
     if (s != NULL && s->escopo == escopo) {
         return TRUE;
     }
-    else return FALSE;
+    return FALSE;
 }
 
 /*
@@ -617,13 +619,16 @@ simbolo ProcuraSimb (char *cadeia) {
 }
 
 /*
-    InsereListSimb (cadeia, listasimbolos): Insere cadeia na lista de
-    simbolos, com tid como tipo de identificador e com tvar como
-    tipo de variavel; Retorna um ponteiro para a celula inserida
+    InsereListSimb (simbolo, listasimbolos): 
+    Insere simbolo na lista de simbolos, usando lista encadeada.
  */
 
 void InsereListSimb (simbolo simb, listsimb *list) {
-
+    listsimb aux = (elemlistsimb *) 
+            malloc  (sizeof (elemlistsimb));
+    aux->simb = simb;
+    aux->prox = (*list)->prox;
+    (*list)->prox = aux;
 }
 
 /*
@@ -640,23 +645,24 @@ simbolo InsereSimb (char *cadeia, int tid, int tvar, simbolo escopo) {
     strcpy (s->cadeia, cadeia);
     s->tid = tid;       s->tvar = tvar;     
     s->prox = aux;      s->escopo = escopo;
-     
+    s->listvardecl = s->listparam = s->listfunc = NULL;
+
     if (tid == IDVAR) {
         if (declparam) {
             s->inic = s->ref = s->param = TRUE;
-            s->array = FALSE;   s->ndims = 0;
             if (s->tid == IDVAR)
                 InsereListSimb (s, &pontparam);
             s->escopo->nparam++;
         }
         else {
             s->inic = s->ref = s->param = FALSE;
-            s->array = FALSE;   s->ndims = 0;
             if (s->tid == IDVAR)
                 InsereListSimb (s, &pontvardecl);
             s->tvar = tvar;
             s->tparam = tvar;   
         }     
+        s->array = FALSE;   
+        s->ndims = 0;
     }
     if (tid == IDGLOB || tid == IDFUNC) {
         s->listvardecl = (elemlistsimb *) 
@@ -715,9 +721,58 @@ void ImprimeTabSimb () {
                 if (s->escopo != NULL)
                     printf(", escopo: %s", s->escopo->cadeia);
                 else printf(", escopo: NULL");
-                printf(")\n");
+                ImprimeDeclaracoes(s);
+                printf(");\n");
             }
         }
+}
+
+/* ImprimeDeclaracoes(simbolo): Imprime todo o conteudo da 
+    Lista de Variaveis, Parametros e Funcoes do dado simbolo
+  */
+
+void ImprimeDeclaracoes (simbolo s) {
+    listsimb aux;
+    if (s->listvardecl != NULL) {
+        printf("\n\tVariaveis: ");
+        if (s->listvardecl->prox == NULL) printf("void");
+        for(aux = s->listvardecl->prox; aux != NULL; aux = aux->prox) {
+            printf("%s", aux->simb->cadeia);
+            if (aux->prox != NULL) printf(", ");
+        }
+    }
+    if (s->listparam != NULL) {
+        printf("\n\tParametros: ");
+        if (s->listparam->prox == NULL) printf("void");
+        for(aux = s->listparam->prox; aux != NULL; aux = aux->prox) {
+            printf("%s", aux->simb->cadeia);
+            if (aux->prox != NULL) printf(", ");
+        }
+    }
+    if (s->listfunc != NULL) {
+        printf("\n\tFuncoes: ");
+        if (s->listfunc->prox == NULL) printf("void");
+        for(aux = s->listfunc->prox; aux != NULL; aux = aux->prox) {
+            printf("%s", aux->simb->cadeia);
+            if (aux->prox != NULL) printf(", ");
+        }
+    }
+}
+
+/*  Verificacao das variaveis inicializadas e referenciadas  */
+
+void VerificaInicRef () {
+    int i; simbolo s;
+    printf ("\n");
+    for (i = 0; i < NCLASSHASH; i++)
+        if (tabsimb[i])
+            for (s = tabsimb[i]; s!=NULL; s = s->prox)
+                if (s->tid == IDVAR) {
+                    if (s->inic == FALSE)
+                        printf ("%s: Nao Inicializada\n", s->cadeia);
+                    if (s->ref == FALSE)
+                        printf ("%s: Nao Referenciada\n", s->cadeia);
+                }
 }
 
 /*  Mensagens de erros semanticos  */
@@ -745,22 +800,4 @@ void TipoInadequado (char *s) {
 void Incompatibilidade (char *s) {
     printf ("\n\n***** Incompatibilidade: %s *****\n\n", s);
 }
-
-/*  Verificacao das variaveis inicializadas e referenciadas  */
-
-void VerificaInicRef () {
-    int i; simbolo s;
-
-    printf ("\n");
-    for (i = 0; i < NCLASSHASH; i++)
-        if (tabsimb[i])
-            for (s = tabsimb[i]; s!=NULL; s = s->prox)
-                if (s->tid == IDVAR) {
-                    if (s->inic == FALSE)
-                        printf ("%s: Nao Inicializada\n", s->cadeia);
-                    if (s->ref == FALSE)
-                        printf ("%s: Nao Referenciada\n", s->cadeia);
-                }
-}
-
 
