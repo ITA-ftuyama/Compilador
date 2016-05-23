@@ -38,7 +38,7 @@
 #define NCLASSHASH  23
 #define TRUE        1
 #define FALSE       0
-#define MAXDIMS     10 
+#define MAXDIMS     10
 
 /*  Definicao de mensagens de incompatibilidade */
 
@@ -70,6 +70,7 @@ char *nometipvar[5] = {
 
 /*    Declaracoes para a tabela de simbolos     */
 
+typedef char bool;
 typedef struct celsimb celsimb;
 typedef celsimb *simbolo;
 typedef struct elemlistsimb elemlistsimb;
@@ -82,7 +83,7 @@ struct celsimb {
     char *cadeia;
     int tid, tvar, tparam;
     int  nparam, ndims, dims[MAXDIMS+1];
-    char inic, ref, array, param;
+    bool inic, ref, array, param;
     listsimb listvardecl, listparam, listfunc; 
     simbolo escopo, prox;
 };
@@ -91,12 +92,10 @@ struct celsimb {
     Variaveis globais para a tabela de simbolos e analise semantica
 */
 
-simbolo tabsimb[NCLASSHASH];
-simbolo simb, escopo, aux;
+simbolo tabsimb[NCLASSHASH], simb, escopo;
 listsimb pontvardecl, pontfunc, pontparam;
-int tipocorrente;
-int tab = 0;
-char declparam;
+int tipocorrente, tab = 0;
+bool declparam;
 
 /*
     Prototipos das funcoes para a tabela de simbolos
@@ -115,7 +114,15 @@ void ImprimeTabSimb (void);
 void ImprimeDeclaracoes (simbolo s);
 void InsereListSimb (simbolo, listsimb *);
 simbolo InsereSimb (char *, int, int, simbolo);
-simbolo ProcuraSimb (char *);
+
+/*  Verificação de Declaração de Símbolo */
+
+simbolo VarDeclaradaEscopo (char *, simbolo);
+simbolo ParamDeclaradaEscopo (char *, simbolo);
+simbolo FuncDeclaradaEscopo (char *, simbolo);
+simbolo SimbDeclaradoEscopo (char *, listsimb, simbolo);
+
+simbolo SimbDeclarado (char *);
 
 /*  Mensagens de erros semanticos  */
 
@@ -148,7 +155,7 @@ void VerificaInicRef (void);
 %type   <nsubscr>   ListSubscr
 
 %token  <cadeia>    ID
-%token  <carac>     CTCARAC
+%token  <cadeia>    CTCARAC
 %token  <valint>    CTINT
 %token  <valreal>   CTREAL
 %token  <cadeia>    CADEIA
@@ -243,7 +250,7 @@ ListElemDecl:   ElemDecl
             ;
 ElemDecl    :   ID {
                     printf ("%s", $1);
-                    if  (SimbDeclarado($1) == TRUE) {
+                    if  (VarDeclaradaEscopo($1, escopo) != NULL) {
                         DeclaracaoRepetida ($1);
                     }
                     else {
@@ -273,7 +280,13 @@ Funcao      :   Cabecalho ABCHAVE
                     escopo = escopo->escopo; 
                 }
             ;
-Cabecalho   :   PRINCIPAL   {printf("principal");}
+Cabecalho   :   PRINCIPAL   {
+                    printf("principal");
+                    escopo = simb = 
+                        InsereSimb ("Principal", IDFUNC, VAZIO, escopo);
+                    pontvardecl = simb->listvardecl;
+                    pontparam = simb->listparam;
+                }
             |   Tipo  ID {declparam = TRUE;} ABPAR {
                     printf("%s (", $2);
                     escopo = simb = 
@@ -293,7 +306,7 @@ ListParam   :   Parametro
             ;
 Parametro   :   Tipo  ID {
                     printf ("%s", $2);
-                    if  (SimbDeclarado($2) == TRUE) {
+                    if  (ParamDeclaradaEscopo($2, escopo) != NULL) {
                         DeclaracaoRepetida ($2);
                     }
                     else {
@@ -516,7 +529,7 @@ Fator       :   Variavel {
                 }
             |   CTINT       {printf ("%d", $1); $$ = INTEGER; }
             |   CTREAL      {printf ("%g", $1); $$ = FLOAT;   }
-            |   CTCARAC     {printf ("\'%c\'", $1); $$ = CHAR;}
+            |   CTCARAC     {printf ("%s", $1); $$ = CHAR;    }
             |   CADEIA      {printf ("%s", $1); $$ = CADEIA;  }
             |   VERDADE     {printf ("true");   $$ = LOGIC;   }
             |   FALSO       {printf ("false");  $$ = LOGIC;   }
@@ -533,7 +546,7 @@ Fator       :   Variavel {
             ;
 Variavel    :   ID {
                     printf ("%s", $1);
-                    simb = ProcuraSimb ($1);
+                    simb = SimbDeclarado ($1);
                     if (simb == NULL)   NaoDeclarado ($1);
                     else if (simb->tid != IDVAR)  TipoInadequado ($1);
                     $<simb>$ = simb;
@@ -590,32 +603,57 @@ void InicTabSimb () {
 }
 
 /*
-    SimbDeclarado(cadeia):
-    Verifica se um dado símbolo possui declaração repetida;
-    Isso é, já existe na tabela de símbolos no escopo atual;
-    Retorna char TRUE ou FALSE;
+    SimbDeclaradoEscopo(cadeia, escopo):
+    Verifica se o símbolo foi declarado no escopo atual;
+
+    Sua chamada é dividida conforme o tipo do símbolo:
+        Variável, Parâmetro, Função
+
+    Caso ela ali esteja, retorna um ponteiro para sua celula;
+    Caso contrário, retorna NULL;
  */
 
-char SimbDeclarado (char *cadeia) {
-    simbolo s = ProcuraSimb(cadeia);
-    if (s != NULL && s->escopo == escopo) {
-        return TRUE;
+simbolo VarDeclaradaEscopo (char *cadeia, simbolo escopo) {
+    return SimbDeclaradoEscopo(cadeia, escopo->listvardecl, escopo);
+}
+
+simbolo ParamDeclaradaEscopo (char *cadeia, simbolo escopo) {
+    return SimbDeclaradoEscopo(cadeia, escopo->listparam, escopo);
+}
+
+simbolo FuncDeclaradaEscopo (char *cadeia, simbolo escopo) {
+    return SimbDeclaradoEscopo(cadeia, escopo->listfunc, escopo);
+}
+
+simbolo SimbDeclaradoEscopo (char *cadeia, listsimb listHeader, simbolo escopo) {
+    listsimb list;
+    if (listHeader == NULL) return NULL;
+    for (list = listHeader->prox; list != NULL; list = list->prox) {
+        if (strcmp(cadeia, list->simb->cadeia) == 0) {
+            return list->simb;
+        }
     }
-    return FALSE;
+    return NULL;
 }
 
 /*
-    ProcuraSimb (cadeia): Procura cadeia na tabela de simbolos;
+    SimbDeclarado(cadeia):
+    Verifica se o símbolo foi declarado no escopo atual ou ancestral;
     Caso ela ali esteja, retorna um ponteiro para sua celula;
-    Caso contrario, retorna NULL.
+    Caso contrário, retorna NULL;
  */
 
-simbolo ProcuraSimb (char *cadeia) {
-    simbolo s; int i;
-    i = hash (cadeia);
-    for (s = tabsimb[i]; (s!=NULL) && strcmp(cadeia, s->cadeia);
-        s = s->prox);
-    return s;
+simbolo SimbDeclarado (char *cadeia) {
+    simbolo esc, s = NULL;
+    for (esc = escopo; esc!=NULL; esc = esc->escopo) {
+        s = VarDeclaradaEscopo(cadeia, esc);
+        if (s!=NULL) return s;
+        s = ParamDeclaradaEscopo(cadeia, esc);
+        if (s!=NULL) return s;
+        s = FuncDeclaradaEscopo(cadeia, esc);
+        if (s!=NULL) return s;
+    }
+    return NULL;
 }
 
 /*
@@ -627,8 +665,9 @@ void InsereListSimb (simbolo simb, listsimb *list) {
     listsimb aux = (elemlistsimb *) 
             malloc  (sizeof (elemlistsimb));
     aux->simb = simb;
-    aux->prox = (*list)->prox;
+    aux->prox = NULL;
     (*list)->prox = aux;
+    (*list) = aux;
 }
 
 /*
@@ -648,7 +687,7 @@ simbolo InsereSimb (char *cadeia, int tid, int tvar, simbolo escopo) {
     s->listvardecl = s->listparam = s->listfunc = NULL;
 
     if (tid == IDVAR) {
-        if (declparam) {
+        if (declparam == TRUE) {
             s->inic = s->ref = s->param = TRUE;
             if (s->tid == IDVAR)
                 InsereListSimb (s, &pontparam);

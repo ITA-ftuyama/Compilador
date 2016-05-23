@@ -30,7 +30,7 @@ comandos:
 				compara := ~1;
 			senao se (palavra[i] > nomes[med][i]) 
 				compara := 1;
-			se (palavra[i] = '\0' || nomes[med][i] = '\0') 
+			SE (palavra[i] = '\0' || nomes[med][i] = '\0') 
 				fimteste := true;
 		}
 		se (compara = 0) 
@@ -75,7 +75,7 @@ comandos:
 
 vazio ExibirTabela () {
 locais:
-	int i;
+	int i, j;
 	logico fim;
 comandos:
 	escrever ("  ", "Palavra     ", "   Num. de ocorr.");
@@ -97,7 +97,7 @@ comandos:
 principal {
 locais:
 	carac c;
-	int posic;
+	int posic, i;
 	logico fim;
 comandos:
 	ntab := 0;

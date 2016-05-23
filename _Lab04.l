@@ -3,6 +3,14 @@ void comentario (void);
 char tratachar (char *);
 void tratacadeia (char *);
 %}
+/*
+ OBS: Buga o Pretty Printer:
+ Tratamento de char: 
+ 		yylval.carac = tratachar (yytext);
+ Tratamento de cadeia: 
+ 		strcpy (yylval.cadeia, yytext);    
+        tratacadeia (yylval.cadeia);
+ */
 
 delim		[ \t\n\r]
 ws			{delim}+
@@ -20,33 +28,33 @@ cadeia		\"{carac2}*\"
 {ws}		{ ;}
 "/*"		{comentario ();}
 
-se			{return SE;}
-senao		{return SENAO;}
-enquanto	{return ENQUANTO;}
-para        {return PARA;}
-retornar    {return RETORNAR;}
-repetir     {return REPETIR;}
-true        {return VERDADE;}
-false       {return FALSO;}
+se|SE 				{return SE;}
+senao|SENAO 		{return SENAO;}
+enquanto|ENQUANTO 	{return ENQUANTO;}
+para|PARA 			{return PARA;}
+retornar|RETORNAR 	{return RETORNAR;}
+repetir|REPETIR 	{return REPETIR;}
+true|TRUE 			{return VERDADE;}
+false|FALSE 		{return FALSO;}
 
-globais     {return GLOBAIS;}
-locais      {return LOCAIS;}
-comandos    {return COMANDOS;}
-funcoes     {return FUNCOES;}
-principal   {return PRINCIPAL;}
+globais|GLOBAIS     {return GLOBAIS;}
+locais|LOCAIS     	{return LOCAIS;}
+comandos|COMANDOS   {return COMANDOS;}
+funcoes|FUNCOES	    {return FUNCOES;}
+principal|PRINCIPAL	{return PRINCIPAL;}
 
-ler         {return LER;}
-escrever    {return ESCREVER;}
-chamar      {return CHAMAR;}
+ler|LER         	{return LER;}
+escrever|ESCREVER   {return ESCREVER;}
+chamar|CHAMAR      	{return CHAMAR;}
 
-int         {return INTEIRO;}
-real        {return REAL;}
-carac       {return CARAC;}
-logico      {return LOGICO;}
-vazio       {return VAZIO;}
+int|INT         	{return INTEIRO;}
+real|REAL        	{return REAL;}
+carac|CARAC       	{return CARAC;}
+logico|LOGICO      	{return LOGICO;}
+vazio|VAZIO       	{return VAZIO;}
 
 {id}		{strcpy (yylval.cadeia, yytext);    return ID;		}
-{ctcarac}	{yylval.carac = tratachar (yytext); return CTCARAC;	}
+{ctcarac}	{strcpy (yylval.cadeia, yytext);	return CTCARAC;	}
 {cadeia}	{strcpy (yylval.cadeia, yytext);    return CADEIA;	}
 {ctint}		{yylval.valint  = atoi(yytext);     return CTINT;	}
 {ctreal}    {yylval.valreal = atof(yytext);     return CTREAL;	}
