@@ -1,0 +1,12 @@
+
+/*
+	Testes Realizados:
+
+	- Função com nome principal (erro sintaxe)
+
+ */
+
+globais:
+	int variavel;
+
+funcoes:

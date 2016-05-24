@@ -7,17 +7,17 @@
 
 /* Definicao dos atributos dos atomos operadores */
 
-#define     LT      1
-#define     LE      2
-#define     GT      3
-#define     GE      4
-#define     EQ      5
-#define     NE      6
-#define     MAIS    7
-#define     MENOS   8
-#define     MULT    9
-#define     DIV     10
-#define     RESTO   11
+#define     LT          1
+#define     LE          2
+#define     GT          3
+#define     GE          4
+#define     EQ          5
+#define     NE          6
+#define     MAIS        7
+#define     MENOS       8
+#define     MULT        9
+#define     DIV         10
+#define     RESTO       11
 
 /*   Definicao dos tipos de identificadores   */
 
@@ -35,28 +35,39 @@
 
 /*   Definicao de outras constantes   */
 
-#define NCLASSHASH  23
-#define TRUE        1
-#define FALSE       0
-#define MAXDIMS     10
+#define NCLASSHASH      23
+#define TRUE            1
+#define FALSE           0
+#define MAXDIMS         10
+
+/*  Mensagens de erros semanticos  */
+
+#define errorDeclIndevida   "Declaracao Indevida"
+#define errorDeclRepetida   "Declaracao Repetida"
+#define errorEsperado       "Esperado"
+#define errorIncomp         "Incompatibilidade"
+#define errorNaoDecl        "Nao Declarado"
+#define errorNaoEsperado    "Nao Esperado"
+#define errorTipoInadeq     "Tipo Inadequado"
 
 /*  Definicao de mensagens de incompatibilidade */
 
-#define INCOMP_SE       "Expressao no Se deveria ser logico"
-#define INCOMP_ENQUANTO "Expressao no Enquanto deveria ser logico"
-#define INCOMP_REPETIR  "Expressao no Repetir deveria ser logico"
-#define INCOMP_ATRIB    "Lado direito de comando de atribuicao improprio"
-#define INCOMP_PARA     "Expressao no Para deveria ser logico"
-#define INCOMP_OR       "Operando improprio para OR"
-#define INCOMP_AND      "Operando improprio para AND"
-#define INCOMP_NOT      "Operando improprio para NOT"
-#define INCOMP_OPREL    "Operando improprio para operador relacional"
-#define INCOMP_OPARIT   "Operando improprio para operador aritmetico"
-#define INCOMP_OPREST   "Operando improprio para operador resto"
-#define INCOMP_OPNEG    "Operando improprio para menos unario"
-#define INCOMP_NUMSUB   "Numero de subscritos incompativel com declaracao"
-#define INCOMP_TIPOSUB  "Tipo inadequado para subscrito"
-
+#define INCOMP_AND          "Operando improprio para AND"
+#define INCOMP_ATRIB        "Lado direito de comando de atribuicao improprio"
+#define INCOMP_ENQUANTO     "Expressao no Enquanto deveria ser logico"
+#define INCOMP_FUNPRIN1     "Funcao principal deveria ser a ultima"
+#define INCOMP_FUNPRIN2     "Funcao principal deveria ser unica"
+#define INCOMP_NOT          "Operando improprio para NOT"
+#define INCOMP_NUMSUB       "Numero de subscritos incompativel com declaracao"
+#define INCOMP_OPARIT       "Operando improprio para operador aritmetico"
+#define INCOMP_OPNEG        "Operando improprio para menos unario"
+#define INCOMP_OPREL        "Operando improprio para operador relacional"
+#define INCOMP_OPREST       "Operando improprio para operador resto"
+#define INCOMP_OR           "Operando improprio para OR"
+#define INCOMP_PARA         "Expressao no Para deveria ser logico"
+#define INCOMP_REPETIR      "Expressao no Repetir deveria ser logico"
+#define INCOMP_SE           "Expressao no Se deveria ser logico"
+#define INCOMP_TIPOSUB      "Tipo inadequado para subscrito"
 
 /*  Strings para nomes dos tipos de identificadores  */
 
@@ -95,7 +106,7 @@ struct celsimb {
 simbolo tabsimb[NCLASSHASH], simb, escopo;
 listsimb pontvardecl, pontfunc, pontparam;
 int tipocorrente, tab = 0;
-bool declparam;
+bool declparam, declfunc;
 
 /*
     Prototipos das funcoes para a tabela de simbolos
@@ -114,6 +125,7 @@ void ImprimeTabSimb (void);
 void ImprimeDeclaracoes (simbolo s);
 void InsereListSimb (simbolo, listsimb *);
 simbolo InsereSimb (char *, int, int, simbolo);
+void VerificaInicRef (void);
 
 /*  Verificação de Declaração de Símbolo */
 
@@ -124,15 +136,9 @@ simbolo SimbDeclaradoEscopo (char *, listsimb, simbolo);
 
 simbolo SimbDeclarado (char *);
 
-/*  Mensagens de erros semanticos  */
+/* Verificação de erros semânticos */
 
-void Esperado (char *);
-void NaoEsperado (char *);
-void DeclaracaoRepetida (char *);
-void TipoInadequado (char *);
-void NaoDeclarado (char *);
-void Incompatibilidade (char *);
-void VerificaInicRef (void);
+void Exception (char *, char *);
 
 %}
 
@@ -195,17 +201,17 @@ void VerificaInicRef (void);
 %token	LOGICO
 %token	VAZIO
 
-%token  ABPAR
-%token  FPAR
-%token  ABCOL
-%token  FCOL
 %token  ABCHAVE
-%token  FCHAVE
-%token  PVIRG
-%token  PONTO
-%token  DPONTS
-%token  VIRG
+%token  ABCOL
+%token  ABPAR
 %token  ATRIB
+%token  DPONTS
+%token  FCHAVE
+%token  FCOL
+%token  FPAR
+%token  PONTO
+%token  PVIRG
+%token  VIRG
 
 %token	<carac> INVAL
 
@@ -224,7 +230,7 @@ Programa    :   {InicTabSimb();}
 DeclGlobs   :
             |   GLOBAIS  DPONTS  {
                     printf("globais:\n");
-                    tab = 1; declparam = FALSE;
+                    tab = 1; declparam = FALSE; declfunc = TRUE;
                     escopo = simb = 
                         InsereSimb("Global", IDGLOB, NOTVAR, NULL);
                     pontvardecl = simb->listvardecl;
@@ -251,11 +257,12 @@ ListElemDecl:   ElemDecl
 ElemDecl    :   ID {
                     printf ("%s", $1);
                     if  (VarDeclaradaEscopo($1, escopo) != NULL) {
-                        DeclaracaoRepetida ($1);
+                        Exception (errorDeclRepetida, $1);
                     }
-                    else {
-                        simb =  InsereSimb ($1, IDVAR, tipocorrente, escopo);
+                    else if (tipocorrente == VAZIO) {
+                        Exception (errorTipoInadeq, $1);
                     }
+                    simb =  InsereSimb ($1, IDVAR, tipocorrente, escopo);
                 } ListDims
             ;
 ListDims    :
@@ -263,7 +270,7 @@ ListDims    :
             ;
 Dimensao    :   ABCOL  CTINT FCOL {
                     printf("[%d]", $2);
-                     if ($2 <= 0) Esperado ("Valor inteiro positivo");
+                     if ($2 <= 0) Exception (errorEsperado, "Valor inteiro positivo");
                     simb->ndims++; simb->dims[simb->ndims] = $2;
                 }
             ;
@@ -282,20 +289,32 @@ Funcao      :   Cabecalho ABCHAVE
             ;
 Cabecalho   :   PRINCIPAL   {
                     printf("principal");
+                    if (declfunc == FALSE) {
+                        Exception (errorIncomp, INCOMP_FUNPRIN2);
+                    }
                     escopo = simb = 
                         InsereSimb ("Principal", IDFUNC, VAZIO, escopo);
                     pontvardecl = simb->listvardecl;
                     pontparam = simb->listparam;
+                    declfunc = FALSE;
                 }
-            |   Tipo  ID {declparam = TRUE;} ABPAR {
+            |   Tipo  ID ABPAR {
+                    declparam = TRUE;
                     printf("%s (", $2);
+                    if (declfunc == FALSE) {
+                        Exception (errorIncomp, INCOMP_FUNPRIN1);
+                    }
+                    if  ( FuncDeclaradaEscopo($2, escopo) != NULL
+                        || VarDeclaradaEscopo($2, escopo) != NULL) {
+                        Exception (errorDeclIndevida, $2);
+                    }
                     escopo = simb = 
                         InsereSimb ($2, IDFUNC, tipocorrente, escopo);
                     pontvardecl = simb->listvardecl;
-                    pontparam = simb->listparam;
+                    pontparam = simb->listparam; 
                 } 
-                Params {declparam = FALSE;} FPAR  
-                {printf(")");}
+                Params FPAR  
+                {declparam = FALSE; printf(")");}
             ;
 Params      :
             |   ListParam
@@ -307,11 +326,12 @@ ListParam   :   Parametro
 Parametro   :   Tipo  ID {
                     printf ("%s", $2);
                     if  (ParamDeclaradaEscopo($2, escopo) != NULL) {
-                        DeclaracaoRepetida ($2);
+                        Exception (errorDeclRepetida, $2);
                     }
-                    else {
-                        simb =  InsereSimb ($2, IDVAR, tipocorrente, escopo);
+                    else if (tipocorrente == VAZIO) {
+                        Exception (errorTipoInadeq, $2);
                     }
+                    simb =  InsereSimb ($2, IDVAR, tipocorrente, escopo);
                 }
             ;
 DeclLocs    :
@@ -343,7 +363,7 @@ CmdComposto :
 CmdSe       :   {printf("se (");} 
                 SE  ABPAR Expressao 
                 FPAR {printf (") "); if ($4 != LOGIC)
-                        Incompatibilidade (INCOMP_SE);
+                        Exception (errorIncomp, INCOMP_SE);
                     } CmdInside CmdSenao
             ;
 CmdInside   :   CmdComposto
@@ -357,7 +377,7 @@ CmdSenao    :
             ;
 CmdEnquanto :   ENQUANTO  ABPAR {printf("enquanto (");} Expressao
                 FPAR {printf (") "); if ($4 != LOGIC)
-                        Incompatibilidade (INCOMP_ENQUANTO); 
+                        Exception (errorIncomp, INCOMP_ENQUANTO); 
                     } Comando
             ;
 CmdRepetir  :   REPETIR  {printf("repetir ");}
@@ -366,7 +386,7 @@ CmdRepetir  :   REPETIR  {printf("repetir ");}
                 Expressao FPAR PVIRG  {
                     printf(");\n"); 
                     if ($7 != LOGIC)
-                        Incompatibilidade (INCOMP_REPETIR); 
+                        Exception (errorIncomp, INCOMP_REPETIR); 
                 }
             ;
 CmdPara     :   PARA  ABPAR {printf("para (");}
@@ -379,11 +399,11 @@ CmdPara     :   PARA  ABPAR {printf("para (");}
                             ($8 == FLOAT || $8 == LOGIC)) ||
                             ($4->tvar == FLOAT && $8 == LOGIC) ||
                             ($4->tvar == LOGIC && $8 != LOGIC))
-                            Incompatibilidade (INCOMP_ATRIB);
+                            Exception (errorIncomp, INCOMP_ATRIB);
                 } 
                 Expressao PVIRG {
                     printf("; "); 
-                    if ($11 != LOGIC) Incompatibilidade (INCOMP_PARA); 
+                    if ($11 != LOGIC) Exception (errorIncomp, INCOMP_PARA); 
                 }
                 Variavel        {if ($14 != NULL) $14->ref = TRUE;}
                 ATRIB           {printf(" := ");} 
@@ -430,27 +450,27 @@ CmdAtrib    :   Variavel {if ($1 != NULL) $1->inic = $1->ref = TRUE;}
                             ($5 == FLOAT || $5 == LOGIC)) ||
                             ($1->tvar == FLOAT && $5 == LOGIC) ||
                             ($1->tvar == LOGIC && $5 != LOGIC))
-                            Incompatibilidade (INCOMP_ATRIB);
+                            Exception (errorIncomp, INCOMP_ATRIB);
                 }
             ;
 Expressao   :   ExprAux1
             |   Expressao  OR {printf(" || ");} ExprAux1 {
                     if ($1 != LOGIC || $4 != LOGIC)
-                        Incompatibilidade (INCOMP_OR);
+                        Exception (errorIncomp, INCOMP_OR);
                     $$ = LOGIC;
                 }
             ;
 ExprAux1    :   ExprAux2
             |   ExprAux1  AND {printf(" && ");} ExprAux2 {
                     if ($1 != LOGIC || $4 != LOGIC)
-                        Incompatibilidade (INCOMP_AND);
+                        Exception (errorIncomp, INCOMP_AND);
                     $$ = LOGIC;
                 }
             ;
 ExprAux2    :   ExprAux3
             |   NOT {printf ("!");}  ExprAux3  {
                     if ($3 != LOGIC)
-                        Incompatibilidade (INCOMP_NOT);
+                        Exception (errorIncomp, INCOMP_NOT);
                     $$ = LOGIC;
                 }
             ;
@@ -470,11 +490,11 @@ ExprAux3    :   ExprAux4
                     case LT: case LE: case GT: case GE:
                         if ($1 != INTEGER && $1 != FLOAT && $1 != CHAR 
                          || $4 != INTEGER && $4 != FLOAT && $4 != CHAR)
-                            Incompatibilidade (INCOMP_OPREL);
+                            Exception (errorIncomp, INCOMP_OPREL);
                         break;
                     case EQ: case NE:
                         if (($1 == LOGIC || $4 == LOGIC) && $1 != $4)
-                            Incompatibilidade (INCOMP_OPREL);
+                            Exception (errorIncomp, INCOMP_OPREL);
                         break;
                     }
                     $$ = LOGIC;
@@ -489,7 +509,7 @@ ExprAux4    :   Termo
                 }
             } Termo  {
                 if ($1 != INTEGER && $1 != FLOAT && $1 != CHAR || $4 != INTEGER && $4!=FLOAT && $4!=CHAR)
-                    Incompatibilidade (INCOMP_OPARIT);
+                    Exception (errorIncomp, INCOMP_OPARIT);
                 if ($1 == FLOAT || $4 == FLOAT) $$ = FLOAT;
                 else $$ = INTEGER;
             }
@@ -507,14 +527,14 @@ Termo       :   Fator
                     case MULT: case DIV:
                         if ($1 != INTEGER && $1 != FLOAT && $1 != CHAR
                          || $4 != INTEGER && $4 != FLOAT && $4 != CHAR)
-                            Incompatibilidade (INCOMP_OPARIT);
+                            Exception (errorIncomp, INCOMP_OPARIT);
                         if ($1 == FLOAT || $4 == FLOAT) $$ = FLOAT;
                         else $$ = INTEGER;
                     break;
                     case RESTO:
                         if ($1 != INTEGER && $1 != CHAR
                         ||  $4 != INTEGER && $4 != CHAR)
-                            Incompatibilidade (INCOMP_OPREST);
+                            Exception (errorIncomp, INCOMP_OPREST);
                         $$ = INTEGER;
                     break;
                 }
@@ -536,7 +556,7 @@ Fator       :   Variavel {
             |   NEG         {printf ("~");}  Fator  
             {
                 if ($3 != INTEGER && $3 != FLOAT && $3 != CHAR)
-                    Incompatibilidade  (INCOMP_OPNEG);
+                    Exception (errorIncomp, INCOMP_OPNEG);
                 if ($3 == FLOAT) $$ = FLOAT;
                 else $$ = INTEGER;
             }
@@ -547,18 +567,20 @@ Fator       :   Variavel {
 Variavel    :   ID {
                     printf ("%s", $1);
                     simb = SimbDeclarado ($1);
-                    if (simb == NULL)   NaoDeclarado ($1);
-                    else if (simb->tid != IDVAR)  TipoInadequado ($1);
+                    if (simb == NULL)   
+                        Exception (errorNaoDecl, $1);
+                    else if (simb->tid != IDVAR)  
+                        Exception (errorTipoInadeq, $1);
                     $<simb>$ = simb;
                 } ListSubscr  {
                     $$ = $<simb>2;
                     if ($$ != NULL) {
                         if ($$->array == FALSE && $3 > 0)
-                            NaoEsperado ("Subscrito\(s)");
+                            Exception (errorNaoEsperado, "Subscrito\(s)");
                         else if ($$->array == TRUE && $3 == 0)
-                            Esperado ("Subscrito\(s)");
+                            Exception (errorEsperado, "Subscrito\(s)");
                         else if ($$->ndims != $3)
-                            Incompatibilidade (INCOMP_NUMSUB);
+                            Exception (errorIncomp, INCOMP_NUMSUB);
                     }
                 }
             ;
@@ -570,7 +592,7 @@ Subscrito   :   ABCOL   {printf("[");}
                 FCOL    {
                     printf("]");
                     if ($3 != INTEGER && $3 != CHAR)
-                        Incompatibilidade (INCOMP_TIPOSUB);
+                        Exception (errorIncomp, INCOMP_TIPOSUB);
                 }
             ;
 ChamadaFunc :   ID ABPAR{printf ("%s (", $1);}
@@ -649,8 +671,6 @@ simbolo SimbDeclarado (char *cadeia) {
         s = VarDeclaradaEscopo(cadeia, esc);
         if (s!=NULL) return s;
         s = ParamDeclaradaEscopo(cadeia, esc);
-        if (s!=NULL) return s;
-        s = FuncDeclaradaEscopo(cadeia, esc);
         if (s!=NULL) return s;
     }
     return NULL;
@@ -816,27 +836,7 @@ void VerificaInicRef () {
 
 /*  Mensagens de erros semanticos  */
 
-void Esperado (char *s) {
-    printf ("\n\n***** Esperado: %s *****\n\n", s);
-}
-
-void NaoEsperado (char *s) {
-    printf ("\n\n***** Nao Esperado: %s *****\n\n", s);
-}
-
-void DeclaracaoRepetida (char *s) {
-    printf ("\n\n***** Declaracao Repetida: %s *****\n\n", s);
-}
-
-void NaoDeclarado (char *s) {
-    printf ("\n\n***** Identificador Nao Declarado: %s *****\n\n", s);
-}
-
-void TipoInadequado (char *s) {
-    printf("\n\n***** Identificador de Tipo Inadequado: %s *****\n\n", s);
-}
-
-void Incompatibilidade (char *s) {
-    printf ("\n\n***** Incompatibilidade: %s *****\n\n", s);
+void Exception (char *type, char *error) {
+    printf ("\n\n***** Exception<%s>: %s *****\n\n", type, error);
 }
 

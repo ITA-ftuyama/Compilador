@@ -3,14 +3,6 @@ void comentario (void);
 char tratachar (char *);
 void tratacadeia (char *);
 %}
-/*
- OBS: Buga o Pretty Printer:
- Tratamento de char: 
- 		yylval.carac = tratachar (yytext);
- Tratamento de cadeia: 
- 		strcpy (yylval.cadeia, yytext);    
-        tratacadeia (yylval.cadeia);
- */
 
 delim		[ \t\n\r]
 ws			{delim}+

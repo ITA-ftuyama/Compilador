@@ -1,0 +1,24 @@
+/*
+	Testes Realizados:
+
+	- Variável com nome principal (erro sintaxe)
+
+ */
+
+globais:
+	int variavel, principal;
+funcoes:
+
+principal {
+locais:
+	int x;
+comandos:
+	x := 0;
+}
+
+principal {
+locais:
+	int y;
+comandos:
+	y := 0;
+}

@@ -1,0 +1,33 @@
+/*
+	Testes Realizados:
+
+	- Função principal repetida
+	- Função principal deveria ser a última
+
+ */
+
+globais:
+	int variavel;
+funcoes:
+
+principal {
+locais:
+	int x, y;
+comandos:
+	x := 0;
+}
+
+principal {
+locais:
+	int y;
+comandos:
+	x := 0;
+	y := 0;
+}
+
+int Inserir () {
+locais:
+	int x, y;
+comandos:
+	x := 0;
+}

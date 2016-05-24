@@ -1,0 +1,79 @@
+
+/*
+	Testes Realizados:
+
+	- Função principal repetida
+	- Função principal deveria ser a última
+
+ */
+
+globais:
+	int variavel;
+
+funcoes:
+principal {
+locais:
+	int x, y;
+comandos:
+	x := 0;
+}
+principal
+
+***** Incompatibilidade: Funcao principal deveria ser unica *****
+
+ {
+locais:
+	int y;
+comandos:
+	x
+
+***** Identificador Nao Declarado: x *****
+
+ := 0;
+	y := 0;
+}
+int Inserir (
+
+***** Incompatibilidade: Funcao principal deveria ser a ultima *****
+
+) {
+locais:
+	int x, y;
+comandos:
+	x := 0;
+}
+
+y: Nao Inicializada
+y: Nao Referenciada
+y: Nao Inicializada
+y: Nao Referenciada
+variavel: Nao Inicializada
+variavel: Nao Referenciada
+
+
+   TABELA  DE  SIMBOLOS:
+
+Classe 5:
+  (x       , IDVAR, INTEGER, 1, 1, escopo: Inserir);
+  (x       , IDVAR, INTEGER, 1, 1, escopo: Principal);
+Classe 6:
+  (y       , IDVAR, INTEGER, 0, 0, escopo: Inserir);
+  (y       , IDVAR, INTEGER, 1, 1, escopo: Principal);
+  (y       , IDVAR, INTEGER, 0, 0, escopo: Principal);
+Classe 7:
+  (variavel, IDVAR, INTEGER, 0, 0, escopo: Global);
+Classe 10:
+  (Principal, IDFUNC, escopo: Global
+	Variaveis: y
+	Parametros: void);
+  (Principal, IDFUNC, escopo: Global
+	Variaveis: x, y
+	Parametros: void);
+Classe 18:
+  (Global  , IDGLOB, escopo: NULL
+	Variaveis: variavel
+	Funcoes: Principal, Principal, Inserir);
+Classe 19:
+  (Inserir , IDFUNC, escopo: Global
+	Variaveis: x, y
+	Parametros: void);

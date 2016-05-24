@@ -1,0 +1,25 @@
+/*
+	Testes Realizados:
+
+	- Função com nome principal (erro sintaxe)
+
+ */
+
+globais:
+	int variavel;
+funcoes:
+
+void principal () {
+locais:
+	int x, y;
+comandos:
+	x := 0;
+}
+
+principal {
+locais:
+	int y;
+comandos:
+	x := 0;
+	y := 0;
+}

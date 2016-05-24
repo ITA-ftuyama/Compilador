@@ -1,0 +1,10 @@
+
+/*
+	Testes Realizados:
+
+	- Variável com nome principal (erro sintaxe)
+
+ */
+
+globais:
+	int variavel, 

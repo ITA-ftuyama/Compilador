@@ -30,7 +30,7 @@ comandos:
 				compara := ~1;
 			senao se (palavra[i] > nomes[med][i]) 
 				compara := 1;
-			SE (palavra[i] = '\0' || nomes[med][i] = '\0') 
+			se (palavra[i] = '\0' || nomes[med][i] = '\0') 
 				fimteste := true;
 		}
 		se (compara = 0) 
