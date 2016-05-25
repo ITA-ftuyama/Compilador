@@ -23,19 +23,22 @@ echo Compilando programa
 REM _Lab04  < Compilador/_Lab04Teste.dat > Compilador/_Lab04TesteOutput.dat
 REM _Lab04  < Compilador/_Lab04Prog.dat > Compilador/_Lab04ProgOutput.dat
 
-REM goto Test_declaracao
+REM goto Testes
 	echo.
 	echo ### Testes para Declaração de Variáveis
-	_Lab04 < Compilador/Bench/BenchDeclaracao01.dat > Compilador/Bench/oBenchDeclaracao01.dat
-:Test_declaracao
+	_Lab04 < Compilador/Bench/BenchDeclaracao.dat > Compilador/Bench/oBenchDeclaracao.dat
 
-goto Test_principal
 	echo.
 	echo ### Testes para função Principal ###
-	_Lab04 < Compilador/Bench/BenchPrincipal01.dat > Compilador/Bench/oBenchPrincipal01.dat
-	_Lab04 < Compilador/Bench/BenchPrincipal02.dat > Compilador/Bench/oBenchPrincipal02.dat
-	_Lab04 < Compilador/Bench/BenchPrincipal03.dat > Compilador/Bench/oBenchPrincipal03.dat
-:Test_principal
+	_Lab04 < Compilador/Bench/BenchPrincipal1.dat > Compilador/Bench/oBenchPrincipal1.dat
+	_Lab04 < Compilador/Bench/BenchPrincipal2.dat > Compilador/Bench/oBenchPrincipal2.dat
+	_Lab04 < Compilador/Bench/BenchPrincipal3.dat > Compilador/Bench/oBenchPrincipal3.dat
+
+	echo.
+	echo ### Testes para Variáveis Indexadas
+	_Lab04 < Compilador/Bench/BenchIndexada.dat > Compilador/Bench/oBenchIndexada.dat
+:Testes
+
 
 REM Loop compilation with delay
 REM timeout /t 10

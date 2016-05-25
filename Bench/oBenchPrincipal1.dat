@@ -2,8 +2,7 @@
 /*
 	Testes Realizados:
 
-	- Função principal repetida
-	- Função principal deveria ser a última
+•	O programa deve ter uma e uma só função de cabeçalho principal, devendo esta ser a última função desse programa.
 
  */
 
@@ -19,7 +18,7 @@ comandos:
 }
 principal
 
-***** Incompatibilidade: Funcao principal deveria ser unica *****
+***** Exception<Incompatibilidade>: Funcao principal deveria ser unica *****
 
  {
 locais:
@@ -27,14 +26,14 @@ locais:
 comandos:
 	x
 
-***** Identificador Nao Declarado: x *****
+***** Exception<Nao Declarado>: x *****
 
  := 0;
 	y := 0;
 }
 int Inserir (
 
-***** Incompatibilidade: Funcao principal deveria ser a ultima *****
+***** Exception<Incompatibilidade>: Funcao principal deveria ser a ultima *****
 
 ) {
 locais:

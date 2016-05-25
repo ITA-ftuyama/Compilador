@@ -1,0 +1,2 @@
+1. Usar trataChar e trataCadeia? Imprimir bem formatado ou cagado?
+2. Inserir ou não um erro na tabela de símbolos

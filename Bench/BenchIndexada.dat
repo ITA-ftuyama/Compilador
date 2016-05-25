@@ -1,0 +1,28 @@
+/*
+	Testes Realizados:
+
+
+ */
+
+globais:
+	int Inserir;
+	carac destruir;
+	vazio variavelVoid;
+funcoes:
+
+vazio Inserir (int posic, vazio parametroVoid) {
+locais:
+	real vetor[3];
+	logico nope;
+comandos:
+	vetor[0] := 1.4;
+	nope := true;
+}
+
+principal {
+locais:
+	int naoInicializadaReferenciada;
+comandos:
+	varNaoDeclarada := naoInicializadaReferenciada;
+
+}

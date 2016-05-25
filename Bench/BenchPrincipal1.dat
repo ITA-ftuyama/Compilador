@@ -1,0 +1,32 @@
+/*
+	Testes Realizados:
+
+•	O programa deve ter uma e uma só função de cabeçalho principal, devendo esta ser a última função desse programa.
+
+ */
+
+globais:
+	int variavel;
+funcoes:
+
+principal {
+locais:
+	int x, y;
+comandos:
+	x := 0;
+}
+
+principal {
+locais:
+	int y;
+comandos:
+	x := 0;
+	y := 0;
+}
+
+int Inserir () {
+locais:
+	int x, y;
+comandos:
+	x := 0;
+}

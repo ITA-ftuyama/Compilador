@@ -1,0 +1,41 @@
+/*
+	Testes Realizados:
+
+•	Qualquer identificador deve ser declarado antes de usado.
+•	Um identificador não pode estar declarado mais de uma vez dentro de uma função, ou como global, mas pode estar declarado ao mesmo tempo como global e numa função qualquer, ou em duas ou mais funções quaisquer.
+•	Identificadores podem ser do tipo nome de variável ou nome de função.
+•	Variáveis escalares, expressões e elementos de variáveis indexadas podem ser do tipo inteiro, real, caractere ou lógico.
+•	O tipo de uma variável comum ou de um parâmetro não pode ser o tipo vazio.
+•	Toda variável escalar e ao menos um elemento de cada variável indexada deve ser inicializado e referenciado pelo menos uma vez no programa.
+
+ */
+
+globais:
+	int Inserir;
+	carac destruir;
+	vazio variavelVoid;
+funcoes:
+
+vazio Inserir (int posic, vazio parametroVoid) {
+locais:
+	real vetor[3];
+	logico nope;
+comandos:
+	vetor[0] := 1.4;
+	nope := true;
+}
+
+vazio Destruir () {
+locais:
+	int naoInicializadaNaoReferenciada;
+comandos:
+	;
+}
+
+principal {
+locais:
+	int naoInicializadaReferenciada;
+comandos:
+	varNaoDeclarada := naoInicializadaReferenciada;
+
+}
