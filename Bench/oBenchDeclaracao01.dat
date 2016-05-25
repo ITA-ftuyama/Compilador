@@ -1,0 +1,95 @@
+
+/*
+	Testes Realizados:
+
+	- Variável não declarada
+	- Variável não inicializada
+	- Variável não referenciada
+	- Nome de função diferente do nome de variável global
+	- Variável tipo Void
+	- Parâmetro tipo Void
+
+ */
+
+globais:
+	int Inserir;
+	carac destruir;
+	vazio variavelVoid
+
+***** Exception<Tipo Inadequado>: variavelVoid *****
+
+;
+
+funcoes:
+vazio Inserir (
+
+***** Exception<Declaracao Indevida>: Inserir *****
+
+int posic, vazio parametroVoid
+
+***** Exception<Tipo Inadequado>: parametroVoid *****
+
+) {
+locais:
+	int nope;
+comandos:
+	nope := nope + 1;
+}
+vazio Destruir () {
+locais:
+	int naoInicializadaNaoReferenciada;
+comandos:
+	;
+}
+principal {
+locais:
+	int naoInicializadaReferenciada;
+comandos:
+	varNaoDeclarada
+
+***** Exception<Nao Declarado>: varNaoDeclarada *****
+
+ := naoInicializadaReferenciada;
+}
+
+naoInicializadaReferenciada: Nao Inicializada
+destruir: Nao Inicializada
+destruir: Nao Referenciada
+naoInicializadaNaoReferenciada: Nao Inicializada
+naoInicializadaNaoReferenciada: Nao Referenciada
+variavelVoid: Nao Inicializada
+variavelVoid: Nao Referenciada
+Inserir: Nao Inicializada
+Inserir: Nao Referenciada
+
+
+   TABELA  DE  SIMBOLOS:
+
+Classe 8:
+  (naoInicializadaReferenciada, IDVAR, INTEGER, 0, 1, escopo: Principal);
+  (destruir, IDVAR, CHAR   , 0, 0, escopo: Global);
+Classe 10:
+  (Principal, IDFUNC, escopo: Global
+	Variaveis: naoInicializadaReferenciada
+	Parametros: void);
+Classe 13:
+  (posic   , IDVAR, INTEGER, 1, 1, escopo: Inserir);
+Classe 16:
+  (parametroVoid, IDVAR, (null) , 1, 1, escopo: Inserir);
+Classe 18:
+  (naoInicializadaNaoReferenciada, IDVAR, INTEGER, 0, 0, escopo: Destruir);
+  (variavelVoid, IDVAR, (null) , 0, 0, escopo: Global);
+  (Global  , IDGLOB, escopo: NULL
+	Variaveis: Inserir, destruir, variavelVoid
+	Funcoes: Inserir, Destruir, Principal);
+Classe 19:
+  (Inserir , IDFUNC, escopo: Global
+	Variaveis: nope
+	Parametros: posic, parametroVoid);
+  (Inserir , IDVAR, INTEGER, 0, 0, escopo: Global);
+Classe 20:
+  (nope    , IDVAR, INTEGER, 1, 1, escopo: Inserir);
+Classe 22:
+  (Destruir, IDFUNC, escopo: Global
+	Variaveis: naoInicializadaNaoReferenciada
+	Parametros: void);
