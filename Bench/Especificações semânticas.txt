@@ -49,6 +49,22 @@ Especificações semânticas de COMP-ITA 2016
 •	Os elementos de uma variável indexada só poderão ser lidos, ou escritos um de cada vez.
 •	A expressão aritmética no subscrito de uma variável indexada deve ser do tipo inteiro ou caractere.
 
+####################################################DONE####################################################
+
+	#### Arquivo BenchDeclaracao ####
+
+•	Qualquer identificador deve ser declarado antes de usado.
+•	Um identificador não pode estar declarado mais de uma vez dentro de uma função, ou como global, mas pode estar declarado ao mesmo tempo como global e numa função qualquer, ou em duas ou mais funções quaisquer.
+•	Identificadores podem ser do tipo nome de variável ou nome de função.
+•	Variáveis escalares, expressões e elementos de variáveis indexadas podem ser do tipo inteiro, real, caractere ou lógico.
+•	O tipo de uma variável comum ou de um parâmetro não pode ser o tipo vazio.
+•	Toda variável escalar e ao menos um elemento de cada variável indexada deve ser inicializado e referenciado pelo menos uma vez no programa.
+
+	#### Arquivo BenchPrincipal ####
+
+•	O programa deve ter uma e uma só função de cabeçalho principal, devendo esta ser a última função desse programa.
+•	Uma função não pode ter o mesmo nome que o de uma variável global.
+
 	#### Arquivo BenchCompatibilidade ####
 
 •	Deve haver compatibilidade entre os tipos dos dois lados de um comando de atribuição, conforme a seguinte tabela:
@@ -71,19 +87,3 @@ Especificações semânticas de COMP-ITA 2016
 								=  !=	Todos (se um for lógico o outro também deve ser)
 								+  -  *  /  ~	Inteiro, Real ou Caractere
 								%	Inteiro ou Caractere
-
-####################################################DONE####################################################
-
-	#### Arquivo BenchDeclaracao ####
-
-•	Qualquer identificador deve ser declarado antes de usado.
-•	Um identificador não pode estar declarado mais de uma vez dentro de uma função, ou como global, mas pode estar declarado ao mesmo tempo como global e numa função qualquer, ou em duas ou mais funções quaisquer.
-•	Identificadores podem ser do tipo nome de variável ou nome de função.
-•	Variáveis escalares, expressões e elementos de variáveis indexadas podem ser do tipo inteiro, real, caractere ou lógico.
-•	O tipo de uma variável comum ou de um parâmetro não pode ser o tipo vazio.
-•	Toda variável escalar e ao menos um elemento de cada variável indexada deve ser inicializado e referenciado pelo menos uma vez no programa.
-
-	#### Arquivo BenchPrincipal ####
-
-•	O programa deve ter uma e uma só função de cabeçalho principal, devendo esta ser a última função desse programa.
-•	Uma função não pode ter o mesmo nome que o de uma variável global.

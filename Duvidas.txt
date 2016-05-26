@@ -1,2 +1,4 @@
 1. Usar trataChar e trataCadeia? Imprimir bem formatado ou cagado?
 2. Inserir ou não um erro na tabela de símbolos
+3. Número real perde formato (1.0 -> 1)
+4. Exception em lugar bisonho? Ver BenchCompatibilidade

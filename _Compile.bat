@@ -37,6 +37,10 @@ REM goto Testes
 	echo.
 	echo ### Testes para Variáveis Indexadas
 	_Lab04 < Compilador/Bench/BenchIndexada.dat > Compilador/Bench/oBenchIndexada.dat
+
+	echo.
+	echo ### Testes para Compatibilidade
+	_Lab04 < Compilador/Bench/BenchCompatibilidade.dat > Compilador/Bench/oBenchCompatibilidade.dat
 :Testes
 
 

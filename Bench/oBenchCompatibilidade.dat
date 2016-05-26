@@ -1,0 +1,331 @@
+
+/*
+	Testes Realizados:
+
+•	Deve haver compatibilidade entre os tipos dos dois lados de um comando de atribuição, conforme a seguinte tabela:
+								Tipo do lado esquerdo	Tipo do lado direito
+								Inteiro	Inteiro ou Caractere
+								Real	Inteiro, Real ou Caractere
+								Caractere	Inteiro ou Caractere
+								Lógico	Lógico
+
+•	Os tipos dos resultados das diversas classes de expressões só podem ser os seguintes:
+									Classe da expressão	Tipo
+									Aritmética	Inteiro, Real ou Caractere
+									Relacional	Lógico
+									Lógica	Lógico
+
+•	Os tipos dos operandos admitidos pelos operadores de expressões são os seguintes:
+								Operadores	Tipos admitidos dos operandos
+								||  &&  !	Lógico
+								<  <=  >  >=  	Inteiro, Real ou Caractere
+								=  !=	Todos (se um for lógico o outro também deve ser)
+								+  -  *  /  ~	Inteiro, Real ou Caractere
+								%	Inteiro ou Caractere
+
+ */
+
+globais:
+	int varInteiro, exprI;
+	real varReal, exprR;
+	carac varCarac, exprC;
+	logico varLogico, exprL;
+
+funcoes:
+vazio Inteiro () {
+locais:
+	int var;
+comandos:
+	var := varInteiro;
+	var := varCarac;
+	var := varReal;
+
+
+***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+
+	var := varLogico;
+
+
+***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+
+}
+vazio Real () {
+locais:
+	real var;
+comandos:
+	var := varInteiro;
+	var := varCarac;
+	var := varReal;
+	var := varLogico;
+
+
+***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+
+}
+vazio Carac () {
+locais:
+	carac var;
+comandos:
+	var := varInteiro;
+	var := varCarac;
+	var := varReal;
+
+
+***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+
+	var := varLogico;
+
+
+***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+
+}
+vazio Logico () {
+locais:
+	logico var;
+comandos:
+	var := varInteiro;
+
+
+***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+
+	var := varCarac;
+
+
+***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+
+	var := varReal;
+
+
+***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+
+	var := varLogico;
+}
+vazio ExprAritmetica () {
+locais:
+	int var;
+comandos:
+	exprI := (1 + 1);
+	exprC := ('c' - 'a');
+	exprR := (2 / 4);
+	exprL := (true + true
+
+***** Exception<Incompatibilidade>: Operando improprio para operador aritmetico *****
+
+);
+
+
+***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+
+}
+vazio ExprRelacional () {
+locais:
+	int var;
+comandos:
+	exprI := (2 = 1);
+
+
+***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+
+	exprC := (2 != 1);
+
+
+***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+
+	exprR := (2 >= 1);
+
+
+***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+
+	exprL := (2 > 1);
+}
+vazio ExprLogica () {
+locais:
+	int var;
+comandos:
+	exprI := (true || false);
+
+
+***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+
+	exprC := (true && true);
+
+
+***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+
+	exprR := (!true);
+
+
+***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+
+	exprL := (!false);
+}
+vazio OpLogico () {
+locais:
+	int var;
+comandos:
+	varLogico := varLogico && varLogico;
+	varLogico := varLogico || varLogico;
+	varLogico := !varLogico;
+	varLogico := varInteiro && varCarac
+
+***** Exception<Incompatibilidade>: Operando improprio para AND *****
+
+;
+	varLogico := varInteiro || varCarac
+
+***** Exception<Incompatibilidade>: Operando improprio para OR *****
+
+;
+	varLogico := !varInteiro
+
+***** Exception<Incompatibilidade>: Operando improprio para NOT *****
+
+;
+}
+vazio OpRelacional () {
+locais:
+	int var;
+comandos:
+	varLogico := varInteiro > varInteiro;
+	varLogico := varReal >= varInteiro;
+	varLogico := varInteiro < varCarac;
+	varLogico := varLogico <= varCarac
+
+***** Exception<Incompatibilidade>: Operando improprio para operador relacional *****
+
+;
+}
+vazio OpIgualdade () {
+locais:
+	int var;
+comandos:
+	varLogico := varInteiro = varCarac;
+	varLogico := varReal != varCarac;
+	varLogico := varLogico = varLogico;
+	varLogico := varLogico != varInteiro
+
+***** Exception<Incompatibilidade>: Operando improprio para operador relacional *****
+
+;
+}
+vazio OpAritmetico () {
+locais:
+	int var;
+comandos:
+	varInteiro := varInteiro + varCarac;
+	varReal := varReal * varCarac;
+	varInteiro := varLogico / varLogico
+
+***** Exception<Incompatibilidade>: Operando improprio para operador aritmetico *****
+
+;
+	varInteiro := varLogico - varInteiro
+
+***** Exception<Incompatibilidade>: Operando improprio para operador aritmetico *****
+
+;
+	varInteiro := ~varInteiro;
+	varInteiro := varInteiro % varInteiro;
+	varInteiro := varCarac % varCarac;
+}
+principal {
+locais:
+	int var;
+comandos:
+	;
+}
+
+var: Nao Inicializada
+var: Nao Referenciada
+var: Nao Inicializada
+var: Nao Referenciada
+var: Nao Inicializada
+var: Nao Referenciada
+var: Nao Inicializada
+var: Nao Referenciada
+var: Nao Inicializada
+var: Nao Referenciada
+var: Nao Inicializada
+var: Nao Referenciada
+var: Nao Inicializada
+var: Nao Referenciada
+var: Nao Inicializada
+var: Nao Referenciada
+varCarac: Nao Inicializada
+
+
+   TABELA  DE  SIMBOLOS:
+
+Classe 0:
+  (exprR   , IDVAR, FLOAT  , 1, 1, escopo: Global);
+Classe 1:
+  (varInteiro, IDVAR, INTEGER, 1, 1, escopo: Global);
+Classe 4:
+  (varReal , IDVAR, FLOAT  , 1, 1, escopo: Global);
+Classe 6:
+  (OpIgualdade, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: void);
+Classe 7:
+  (var     , IDVAR, INTEGER, 0, 0, escopo: Principal);
+  (var     , IDVAR, INTEGER, 0, 0, escopo: OpAritmetico);
+  (var     , IDVAR, INTEGER, 0, 0, escopo: OpIgualdade);
+  (var     , IDVAR, INTEGER, 0, 0, escopo: OpRelacional);
+  (var     , IDVAR, INTEGER, 0, 0, escopo: OpLogico);
+  (var     , IDVAR, INTEGER, 0, 0, escopo: ExprLogica);
+  (var     , IDVAR, INTEGER, 0, 0, escopo: ExprRelacional);
+  (ExprRelacional, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: void);
+  (var     , IDVAR, INTEGER, 0, 0, escopo: ExprAritmetica);
+  (var     , IDVAR, LOGIC  , 1, 1, escopo: Logico);
+  (Logico  , IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: void);
+  (var     , IDVAR, CHAR   , 1, 1, escopo: Carac);
+  (var     , IDVAR, FLOAT  , 1, 1, escopo: Real);
+  (var     , IDVAR, INTEGER, 1, 1, escopo: Inteiro);
+Classe 8:
+  (exprC   , IDVAR, CHAR   , 1, 1, escopo: Global);
+Classe 10:
+  (Principal, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: void);
+Classe 13:
+  (OpAritmetico, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: void);
+  (OpRelacional, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: void);
+Classe 14:
+  (OpLogico, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: void);
+  (Carac   , IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: void);
+  (varLogico, IDVAR, LOGIC  , 1, 1, escopo: Global);
+  (exprI   , IDVAR, INTEGER, 1, 1, escopo: Global);
+Classe 16:
+  (ExprAritmetica, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: void);
+Classe 17:
+  (ExprLogica, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: void);
+  (Inteiro , IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: void);
+  (exprL   , IDVAR, LOGIC  , 1, 1, escopo: Global);
+Classe 18:
+  (Global  , IDGLOB, escopo: NULL
+	Variaveis: varInteiro, exprI, varReal, exprR, varCarac, exprC, varLogico, exprL
+	Funcoes: Inteiro, Real, Carac, Logico, ExprAritmetica, ExprRelacional, ExprLogica, OpLogico, OpRelacional, OpIgualdade, OpAritmetico, Principal);
+Classe 20:
+  (Real    , IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: void);
+Classe 21:
+  (varCarac, IDVAR, CHAR   , 0, 1, escopo: Global);

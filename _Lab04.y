@@ -520,7 +520,7 @@ Termo       :   Fator
                 switch ($2) {
                     case MULT :  printf (" * "); break;
                     case DIV  :  printf (" / "); break;
-                    case RESTO:  printf (" % "); break;
+                    case RESTO:  printf (" %% "); break;
                 }
             }  Fator {
                 switch ($2) {

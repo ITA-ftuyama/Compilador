@@ -1,0 +1,155 @@
+/*
+	Testes Realizados:
+
+•	Deve haver compatibilidade entre os tipos dos dois lados de um comando de atribuição, conforme a seguinte tabela:
+								Tipo do lado esquerdo	Tipo do lado direito
+								Inteiro	Inteiro ou Caractere
+								Real	Inteiro, Real ou Caractere
+								Caractere	Inteiro ou Caractere
+								Lógico	Lógico
+
+•	Os tipos dos resultados das diversas classes de expressões só podem ser os seguintes:
+									Classe da expressão	Tipo
+									Aritmética	Inteiro, Real ou Caractere
+									Relacional	Lógico
+									Lógica	Lógico
+
+•	Os tipos dos operandos admitidos pelos operadores de expressões são os seguintes:
+								Operadores	Tipos admitidos dos operandos
+								||  &&  !	Lógico
+								<  <=  >  >=  	Inteiro, Real ou Caractere
+								=  !=	Todos (se um for lógico o outro também deve ser)
+								+  -  *  /  ~	Inteiro, Real ou Caractere
+								%	Inteiro ou Caractere
+
+ */
+
+globais:
+	int varInteiro, exprI;
+	real varReal, exprR;
+	carac varCarac, exprC;
+	logico varLogico, exprL;
+funcoes:
+
+vazio Inteiro () {
+locais:
+	int var;
+comandos:
+	var := varInteiro;
+	var := varCarac;
+	var := varReal;
+	var := varLogico;
+}
+
+vazio Real () {
+locais:
+	real var;
+comandos:
+	var := varInteiro;
+	var := varCarac;
+	var := varReal;
+	var := varLogico;
+}
+
+vazio Carac () {
+locais:
+	carac var;
+comandos:
+	var := varInteiro;
+	var := varCarac;
+	var := varReal;
+	var := varLogico;
+}
+
+vazio Logico () {
+locais:
+	logico var;
+comandos:
+	var := varInteiro;
+	var := varCarac;
+	var := varReal;
+	var := varLogico;
+}
+
+vazio ExprAritmetica () {
+locais:
+	int var;
+comandos:
+	exprI := (1 + 1);
+	exprC := ('c' - 'a');
+	exprR := (2.0/4.0);
+	exprL := (true + true);
+}
+
+vazio ExprRelacional () {
+locais:
+	int var;
+comandos:
+	exprI := (2 = 1);
+	exprC := (2 != 1);
+	exprR := (2 >= 1);
+	exprL := (2 > 1);
+}
+
+vazio ExprLogica () {
+locais:
+	int var;
+comandos:
+	exprI := (true || false);
+	exprC := (true && true);
+	exprR := (!true);
+	exprL := (!false);
+}
+
+vazio OpLogico () {
+locais:
+	int var;
+comandos:
+	varLogico := varLogico && varLogico;
+	varLogico := varLogico || varLogico;
+	varLogico := !varLogico;
+
+	varLogico := varInteiro && varCarac;
+	varLogico := varInteiro || varCarac;
+	varLogico := !varInteiro;
+}
+
+vazio OpRelacional () {
+locais:
+	int var;
+comandos:
+	varLogico := varInteiro > varInteiro;
+	varLogico := varReal >= varInteiro;
+	varLogico := varInteiro < varCarac;
+	varLogico := varLogico <= varCarac;
+}
+
+vazio OpIgualdade () {
+locais:
+	int var;
+comandos:
+	varLogico := varInteiro = varCarac;
+	varLogico := varReal != varCarac;
+	varLogico := varLogico = varLogico;
+	varLogico := varLogico != varInteiro;
+}
+
+vazio OpAritmetico () {
+locais:
+	int var;
+comandos:
+	varInteiro := varInteiro + varCarac;
+	varReal := varReal * varCarac;
+	varInteiro := varLogico / varLogico;
+	varInteiro := varLogico - varInteiro;
+	varInteiro := ~ varInteiro;
+	varInteiro := varInteiro % varInteiro;
+	varInteiro := varCarac % varCarac;
+}
+
+principal {
+locais:
+	int var;
+comandos:
+	;
+}
