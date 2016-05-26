@@ -40,14 +40,7 @@ Especificações semânticas de COMP-ITA 2016
 
 ####################################################TEST####################################################
 
-	#### Arquivo BenchIndexada ####
 
-•	A constante inteira usada no dimensionamento de uma variável indexada deve ser maior do que zero.
-•	Variáveis escalares não podem ter subscritos.
-•	O número de subscritos de uma variável indexada deve ser igual ao seu número de dimensões declarado.
-•	Os elementos de uma variável indexada só poderão ser atribuídos ou receber atribuição um de cada vez.
-•	Os elementos de uma variável indexada só poderão ser lidos, ou escritos um de cada vez.
-•	A expressão aritmética no subscrito de uma variável indexada deve ser do tipo inteiro ou caractere.
 
 ####################################################DONE####################################################
 
@@ -87,3 +80,13 @@ Especificações semânticas de COMP-ITA 2016
 								=  !=	Todos (se um for lógico o outro também deve ser)
 								+  -  *  /  ~	Inteiro, Real ou Caractere
 								%	Inteiro ou Caractere
+
+
+	#### Arquivo BenchIndexada ####
+
+•	A constante inteira usada no dimensionamento de uma variável indexada deve ser maior do que zero.
+•	Variáveis escalares não podem ter subscritos.
+•	O número de subscritos de uma variável indexada deve ser igual ao seu número de dimensões declarado.
+•	Os elementos de uma variável indexada só poderão ser atribuídos ou receber atribuição um de cada vez.
+•	Os elementos de uma variável indexada só poderão ser lidos, ou escritos um de cada vez.
+•	A expressão aritmética no subscrito de uma variável indexada deve ser do tipo inteiro ou caractere.

@@ -1,28 +1,37 @@
 /*
 	Testes Realizados:
 
+•	A constante inteira usada no dimensionamento de uma variável indexada deve ser maior do que zero.
+•	Variáveis escalares não podem ter subscritos.
+•	O número de subscritos de uma variável indexada deve ser igual ao seu número de dimensões declarado.
+•	Os elementos de uma variável indexada só poderão ser atribuídos ou receber atribuição um de cada vez.
+•	Os elementos de uma variável indexada só poderão ser lidos, ou escritos um de cada vez.
+•	A expressão aritmética no subscrito de uma variável indexada deve ser do tipo inteiro ou caractere.
 
  */
 
 globais:
-	int Inserir;
-	carac destruir;
-	vazio variavelVoid;
+	int arrayB[0], arrayC[1];
 funcoes:
 
-vazio Inserir (int posic, vazio parametroVoid) {
+vazio Func () {
 locais:
-	real vetor[3];
-	logico nope;
+	int var;
+	int array[4][4][4];
 comandos:
-	vetor[0] := 1.4;
-	nope := true;
+	var[0] := 1;
+	array[0][0] := 1;
+	array[0][0][0] := 1;
+	array[0][0][0][0] := 1;
+	ler(arrayC);
+	ler(arrayC[0]);
+	var := arrayC[(2 - 1)];
+	var := arrayC[('b' - 'a')];
 }
 
 principal {
 locais:
-	int naoInicializadaReferenciada;
+	int var;
 comandos:
-	varNaoDeclarada := naoInicializadaReferenciada;
-
+	;
 }
