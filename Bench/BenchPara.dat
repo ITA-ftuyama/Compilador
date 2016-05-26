@@ -1,0 +1,38 @@
+/*
+	Testes Realizados:
+
+•	As expressões nos cabeçalhos de comandos se e enquanto e no encerramento de comandos repetir devem ser relacionais ou lógicas.
+•	A variável da inicialização do cabeçalho de um comando para deve ser escalar do tipo inteiro ou caractere.
+•	A variável da atualização do cabeçalho de um comando para deve ser a mesma daquela de sua inicialização.
+•	A primeira e a terceira expressão de um comando para deve ser do tipo inteiro ou caractere e a segunda expressão deve ser do tipo lógico.
+ */
+
+globais:
+	int Inserir;
+	carac destruir;
+	vazio variavelVoid;
+funcoes:
+
+vazio Inserir (int posic, vazio parametroVoid) {
+locais:
+	real vetor[3];
+	logico nope;
+comandos:
+	vetor[0] := 1.4;
+	nope := true;
+}
+
+vazio Destruir () {
+locais:
+	int naoInicializadaNaoReferenciada;
+comandos:
+	;
+}
+
+principal {
+locais:
+	int naoInicializadaReferenciada;
+comandos:
+	varNaoDeclarada := naoInicializadaReferenciada;
+
+}

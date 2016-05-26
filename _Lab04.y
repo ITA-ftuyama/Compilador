@@ -64,7 +64,12 @@
 #define INCOMP_OPREL        "Operando improprio para operador relacional"
 #define INCOMP_OPREST       "Operando improprio para operador resto"
 #define INCOMP_OR           "Operando improprio para OR"
-#define INCOMP_PARA         "Expressao no Para deveria ser logico"
+#define INCOMP_PARAEXP1     "Expressao1 no Para deveria ser inteira ou caractere"
+#define INCOMP_PARAEXP2     "Expressao2 no Para deveria ser logico"
+#define INCOMP_PARAEXP3     "Expressao3 no Para deveria ser inteira ou caractere"
+#define INCOMP_PARAVAR1     "Variavel1 no Para deveria ser inteira ou caractere"
+#define INCOMP_PARAVAR2     "Variavel2 no Para deveria ser inteira ou caractere"
+#define INCOMP_PARAVAR12    "Variavel2 no Para nao corresponde a Variavel1"
 #define INCOMP_REPETIR      "Expressao no Repetir deveria ser logico"
 #define INCOMP_SE           "Expressao no Se deveria ser logico"
 #define INCOMP_TIPOSUB      "Tipo inadequado para subscrito"
@@ -390,24 +395,41 @@ CmdRepetir  :   REPETIR  {printf("repetir ");}
                 }
             ;
 CmdPara     :   PARA  ABPAR {printf("para (");}
-                Variavel    {if ($4 != NULL) $4->inic = $4->ref = TRUE;}
-                ATRIB       {printf(" := ");} 
+                Variavel    {
+                    if ($4 != NULL) {
+                        $4->inic = $4->ref = TRUE;
+                        if (!($4->tvar == INTEGER || $4->tvar == CHAR))
+                            Exception (errorIncomp, INCOMP_PARAVAR1);
+                    }
+                    printf(" := ");
+                }
+                ATRIB
                 Expressao PVIRG {
                     printf ("; ");
-                    if ($4 != NULL)
-                        if ((($4->tvar == INTEGER || $4->tvar == CHAR) &&
-                            ($8 == FLOAT || $8 == LOGIC)) ||
-                            ($4->tvar == FLOAT && $8 == LOGIC) ||
-                            ($4->tvar == LOGIC && $8 != LOGIC))
-                            Exception (errorIncomp, INCOMP_ATRIB);
+                    if (!($7 == INTEGER || $7 == CARAC)) 
+                        Exception (errorIncomp, INCOMP_PARAEXP1);
                 } 
                 Expressao PVIRG {
                     printf("; "); 
-                    if ($11 != LOGIC) Exception (errorIncomp, INCOMP_PARA); 
+                    if ($10 != LOGIC) 
+                        Exception (errorIncomp, INCOMP_PARAEXP2); 
                 }
-                Variavel        {if ($14 != NULL) $14->ref = TRUE;}
-                ATRIB           {printf(" := ");} 
-                Expressao FPAR  {printf (") ");}
+                Variavel        {
+                    if ($13 != NULL) {
+                        $13->ref = TRUE;
+                        if (!($13->tvar == INTEGER || $13->tvar == CHAR))
+                            Exception (errorIncomp, INCOMP_PARAVAR2);
+                        if (strcmp($4->cadeia, $13->cadeia)!=0)
+                            Exception(errorIncomp, INCOMP_PARAVAR12);
+                    }
+                    printf(" := ");
+                }
+                ATRIB
+                Expressao FPAR  {
+                    if (!($16 == INTEGER || $16 == CARAC)) 
+                        Exception (errorIncomp, INCOMP_PARAEXP3);
+                    printf (") ");
+                }
                 Comando
             ;
 CmdLer      :   LER  ABPAR  {printf("ler (");}

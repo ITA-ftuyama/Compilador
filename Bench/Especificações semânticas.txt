@@ -3,13 +3,6 @@ Especificações semânticas de COMP-ITA 2016
 
 ####################################################TO DO####################################################
 
-	#### Arquivo BenchPara ####
-
-•	As expressões nos cabeçalhos de comandos se e enquanto e no encerramento de comandos repetir devem ser relacionais ou lógicas.
-•	A variável da inicialização do cabeçalho de um comando para deve ser escalar do tipo inteiro ou caractere.
-•	A variável da atualização do cabeçalho de um comando para deve ser a mesma daquela de sua inicialização.
-•	A primeira e a terceira expressão de um comando para deve ser do tipo inteiro ou caractere e a segunda expressão deve ser do tipo lógico.
-
 	#### Arquivo BenchCallFunc ####
 
 •	O identificador de uma chamada de procedimento e o identificador de uma chamada de função deve ser do tipo nome de função. 
@@ -40,6 +33,12 @@ Especificações semânticas de COMP-ITA 2016
 
 ####################################################TEST####################################################
 
+	#### Arquivo BenchPara ####
+
+•	As expressões nos cabeçalhos de comandos se e enquanto e no encerramento de comandos repetir devem ser relacionais ou lógicas.
+•	A variável da inicialização do cabeçalho de um comando para deve ser escalar do tipo inteiro ou caractere.
+•	A variável da atualização do cabeçalho de um comando para deve ser a mesma daquela de sua inicialização.
+•	A primeira e a terceira expressão de um comando para deve ser do tipo inteiro ou caractere e a segunda expressão deve ser do tipo lógico.
 
 
 ####################################################DONE####################################################
