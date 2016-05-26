@@ -1,0 +1,47 @@
+/*
+	Testes Realizados:
+
+•	O identificador de uma chamada de procedimento e o identificador de uma chamada de função deve ser do tipo nome de função. 
+•	Um identificador de variável e de parâmetro deve ser do tipo nome de variável.
+•	O tipo de variável correspondente ao identificador de uma chamada de procedimento deve ser o tipo vazio.
+•	O tipo de variável correspondente ao identificador de uma chamada de função não deve ser o tipo vazio.
+•	O número de argumentos na chamada de uma função ou procedimento deve ser igual ao número de parâmetros do mesmo. 
+•	Deve haver compatibilidade entre um argumento de chamada de uma função ou procedimento e seu parâmetro correspondente, conforme a seguinte tabela:
+
+								Tipo do parâmetro	Tipo do argumento
+								Inteiro	Expressão inteira ou caractere
+								Real	Expressão inteira, real ou caractere
+								Caractere	Expressão inteira ou caractere
+								Lógico	Expressão de valor lógico
+
+ */
+
+globais:
+	int Inserir;
+	carac destruir;
+	vazio variavelVoid;
+funcoes:
+
+vazio Inserir (int posic, vazio parametroVoid) {
+locais:
+	real vetor[3];
+	logico nope;
+comandos:
+	vetor[0] := 1.4;
+	nope := true;
+}
+
+vazio Destruir () {
+locais:
+	int naoInicializadaNaoReferenciada;
+comandos:
+	;
+}
+
+principal {
+locais:
+	int naoInicializadaReferenciada;
+comandos:
+	varNaoDeclarada := naoInicializadaReferenciada;
+
+}

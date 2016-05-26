@@ -1,0 +1,105 @@
+
+/*
+	Testes Realizados:
+
+•	O identificador de uma chamada de procedimento e o identificador de uma chamada de função deve ser do tipo nome de função. 
+•	Um identificador de variável e de parâmetro deve ser do tipo nome de variável.
+•	O tipo de variável correspondente ao identificador de uma chamada de procedimento deve ser o tipo vazio.
+•	O tipo de variável correspondente ao identificador de uma chamada de função não deve ser o tipo vazio.
+•	O número de argumentos na chamada de uma função ou procedimento deve ser igual ao número de parâmetros do mesmo. 
+•	Deve haver compatibilidade entre um argumento de chamada de uma função ou procedimento e seu parâmetro correspondente, conforme a seguinte tabela:
+
+								Tipo do parâmetro	Tipo do argumento
+								Inteiro	Expressão inteira ou caractere
+								Real	Expressão inteira, real ou caractere
+								Caractere	Expressão inteira ou caractere
+								Lógico	Expressão de valor lógico
+
+ */
+
+globais:
+	int Inserir;
+	carac destruir;
+	vazio variavelVoid
+
+***** Exception<Tipo Inadequado>: variavelVoid *****
+
+;
+
+funcoes:
+vazio Inserir (
+
+***** Exception<Declaracao Indevida>: Inserir *****
+
+int posic, vazio parametroVoid
+
+***** Exception<Tipo Inadequado>: parametroVoid *****
+
+) {
+locais:
+	real vetor[3];
+	logico nope;
+comandos:
+	vetor[0] := 1.4;
+	nope := true;
+}
+vazio Destruir () {
+locais:
+	int naoInicializadaNaoReferenciada;
+comandos:
+	;
+}
+principal {
+locais:
+	int naoInicializadaReferenciada;
+comandos:
+	varNaoDeclarada
+
+***** Exception<Nao Declarado>: varNaoDeclarada *****
+
+ := naoInicializadaReferenciada;
+}
+
+naoInicializadaReferenciada: Nao Inicializada
+destruir: Nao Inicializada
+destruir: Nao Referenciada
+naoInicializadaNaoReferenciada: Nao Inicializada
+naoInicializadaNaoReferenciada: Nao Referenciada
+variavelVoid: Nao Inicializada
+variavelVoid: Nao Referenciada
+Inserir: Nao Inicializada
+Inserir: Nao Referenciada
+
+
+   TABELA  DE  SIMBOLOS:
+
+Classe 8:
+  (naoInicializadaReferenciada, IDVAR, INTEGER, 0, 1, escopo: Principal);
+  (vetor   , IDVAR, FLOAT  , 1, 1, EH ARRAY
+	ndims = 1, dimensoes:  3, escopo: Inserir);
+  (destruir, IDVAR, CHAR   , 0, 0, escopo: Global);
+Classe 10:
+  (Principal, IDFUNC, escopo: Global
+	Variaveis: naoInicializadaReferenciada
+	Parametros: void);
+Classe 13:
+  (posic   , IDVAR, INTEGER, 1, 1, escopo: Inserir);
+Classe 16:
+  (parametroVoid, IDVAR, (null) , 1, 1, escopo: Inserir);
+Classe 18:
+  (naoInicializadaNaoReferenciada, IDVAR, INTEGER, 0, 0, escopo: Destruir);
+  (variavelVoid, IDVAR, (null) , 0, 0, escopo: Global);
+  (Global  , IDGLOB, escopo: NULL
+	Variaveis: Inserir, destruir, variavelVoid
+	Funcoes: Inserir, Destruir, Principal);
+Classe 19:
+  (Inserir , IDFUNC, escopo: Global
+	Variaveis: vetor, nope
+	Parametros: posic, parametroVoid);
+  (Inserir , IDVAR, INTEGER, 0, 0, escopo: Global);
+Classe 20:
+  (nope    , IDVAR, LOGIC  , 1, 1, escopo: Inserir);
+Classe 22:
+  (Destruir, IDFUNC, escopo: Global
+	Variaveis: naoInicializadaNaoReferenciada
+	Parametros: void);

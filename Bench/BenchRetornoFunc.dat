@@ -1,0 +1,45 @@
+/*
+	Testes Realizados:
+
+•	Todo comando retornar dentro de uma função de tipo vazio não deve ser seguido de expressão e dentro de funções de outros tipos deve ser seguido por uma expressão. 
+•	Deve haver compatibilidade entre o tipo de uma função e o tipo da expressão de qualquer comando retornar em seu escopo, conforme a seguinte tabela:
+								Tipo da função	Tipo da expressão retornada
+								Inteiro	Inteiro ou Caractere
+								Real	Inteiro, Real ou Caractere
+								Caractere	Inteiro ou Caractere
+								Lógico	Lógico
+
+•	Funções não são usados como parâmetros ou argumentos de chamada de outras funções.
+•	A linguagem não admite recursividade.
+
+ */
+
+globais:
+	int Inserir;
+	carac destruir;
+	vazio variavelVoid;
+funcoes:
+
+vazio Inserir (int posic, vazio parametroVoid) {
+locais:
+	real vetor[3];
+	logico nope;
+comandos:
+	vetor[0] := 1.4;
+	nope := true;
+}
+
+vazio Destruir () {
+locais:
+	int naoInicializadaNaoReferenciada;
+comandos:
+	;
+}
+
+principal {
+locais:
+	int naoInicializadaReferenciada;
+comandos:
+	varNaoDeclarada := naoInicializadaReferenciada;
+
+}

@@ -21,9 +21,9 @@ echo.
 echo Compilando programa
 
 REM _Lab04  < Compilador/_Lab04Teste.dat > Compilador/_Lab04TesteOutput.dat
-_Lab04  < Compilador/_Lab04Prog.dat > Compilador/_Lab04ProgOutput.dat
+REM _Lab04  < Compilador/_Lab04Prog.dat > Compilador/_Lab04ProgOutput.dat
 
-goto Testes
+REM goto Testes
 	echo.
 	echo ### Testes para Declaração de Variáveis
 	_Lab04 < Compilador/Bench/BenchDeclaracao.dat > Compilador/Bench/oBenchDeclaracao.dat
@@ -41,6 +41,18 @@ goto Testes
 	echo.
 	echo ### Testes para Compatibilidade
 	_Lab04 < Compilador/Bench/BenchCompatibilidade.dat > Compilador/Bench/oBenchCompatibilidade.dat
+
+	echo.
+	echo ### Testes para Para
+	_Lab04 < Compilador/Bench/BenchPara.dat > Compilador/Bench/oBenchPara.dat
+
+	echo.
+	echo ### Testes para CallFunc
+	_Lab04 < Compilador/Bench/BenchCallFunc.dat > Compilador/Bench/oBenchCallFunc.dat
+
+	echo.
+	echo ### Testes para RetornoFunc
+	_Lab04 < Compilador/Bench/BenchRetornoFunc.dat > Compilador/Bench/oBenchRetornoFunc.dat
 :Testes
 
 

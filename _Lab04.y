@@ -406,7 +406,7 @@ CmdPara     :   PARA  ABPAR {printf("para (");}
                 ATRIB
                 Expressao PVIRG {
                     printf ("; ");
-                    if (!($7 == INTEGER || $7 == CARAC)) 
+                    if (!($7 == INTEGER || $7 == CHAR)) 
                         Exception (errorIncomp, INCOMP_PARAEXP1);
                 } 
                 Expressao PVIRG {
@@ -426,7 +426,7 @@ CmdPara     :   PARA  ABPAR {printf("para (");}
                 }
                 ATRIB
                 Expressao FPAR  {
-                    if (!($16 == INTEGER || $16 == CARAC)) 
+                    if (!($16 == INTEGER || $16 == CHAR)) 
                         Exception (errorIncomp, INCOMP_PARAEXP3);
                     printf (") ");
                 }

@@ -8,31 +8,59 @@
  */
 
 globais:
-	int Inserir;
-	carac destruir;
-	vazio variavelVoid;
+	int varInteiro;
+	real varReal;
+	carac varCarac;
+	logico varLogico;
 funcoes:
 
-vazio Inserir (int posic, vazio parametroVoid) {
+vazio SeEnquanto () {
 locais:
-	real vetor[3];
-	logico nope;
+	int var;
 comandos:
-	vetor[0] := 1.4;
-	nope := true;
+	se (varInteiro);
+	se (varReal);
+	se (varCarac);
+	se (varLogico);
+	se (var > varInteiro);
+
+	enquanto (varInteiro);
+	enquanto (varReal);
+	enquanto (varCarac);
+	enquanto (varLogico);
+	enquanto (var > varInteiro);
 }
 
-vazio Destruir () {
+vazio Para () {
 locais:
-	int naoInicializadaNaoReferenciada;
+	int i;
+	carac c;
+	real r;
+	logico l;
 comandos:
-	;
+	para (i := 0; i < 10; i := i + 1) {
+		;
+	}
+	para (c := 'a'; c < 'z'; c := c + 1) {
+		;
+	}
+	para (r := 1.0; r < 10.0; r := r + 1.0) {
+		;
+	}
+	para (l := true; l != false; l := !l) {
+		;
+	}
+	para (i := 0; c < 'z'; c := 'b') {
+		;
+	}
+	para (i := 0; (2 + 2); i := i + 1) {
+		;
+	}
 }
 
 principal {
 locais:
-	int naoInicializadaReferenciada;
+	int var;
 comandos:
-	varNaoDeclarada := naoInicializadaReferenciada;
-
+	;
 }

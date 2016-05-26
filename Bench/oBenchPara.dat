@@ -1,0 +1,179 @@
+
+/*
+	Testes Realizados:
+
+•	As expressões nos cabeçalhos de comandos se e enquanto e no encerramento de comandos repetir devem ser relacionais ou lógicas.
+•	A variável da inicialização do cabeçalho de um comando para deve ser escalar do tipo inteiro ou caractere.
+•	A variável da atualização do cabeçalho de um comando para deve ser a mesma daquela de sua inicialização.
+•	A primeira e a terceira expressão de um comando para deve ser do tipo inteiro ou caractere e a segunda expressão deve ser do tipo lógico.
+ */
+
+globais:
+	int varInteiro;
+	real varReal;
+	carac varCarac;
+	logico varLogico;
+
+funcoes:
+vazio SeEnquanto () {
+locais:
+	int var;
+comandos:
+	se (varInteiro) 
+
+***** Exception<Incompatibilidade>: Expressao no Se deveria ser logico *****
+
+
+		;
+	se (varReal) 
+
+***** Exception<Incompatibilidade>: Expressao no Se deveria ser logico *****
+
+
+		;
+	se (varCarac) 
+
+***** Exception<Incompatibilidade>: Expressao no Se deveria ser logico *****
+
+
+		;
+	se (varLogico) 
+		;
+	se (var > varInteiro) 
+		;
+	enquanto (varInteiro) 
+
+***** Exception<Incompatibilidade>: Expressao no Enquanto deveria ser logico *****
+
+;
+	enquanto (varReal) 
+
+***** Exception<Incompatibilidade>: Expressao no Enquanto deveria ser logico *****
+
+;
+	enquanto (varCarac) 
+
+***** Exception<Incompatibilidade>: Expressao no Enquanto deveria ser logico *****
+
+;
+	enquanto (varLogico) ;
+	enquanto (var > varInteiro) ;
+}
+vazio Para () {
+locais:
+	int i;
+	carac c;
+	real r;
+	logico l;
+comandos:
+	para (i := 0; i < 10; i := i + 1) {
+		;
+	}
+	para (c := 'a'; c < 'z'; c := c + 1) {
+		;
+	}
+	para (r
+
+***** Exception<Incompatibilidade>: Variavel1 no Para deveria ser inteira ou caractere *****
+
+ := 1; 
+
+***** Exception<Incompatibilidade>: Expressao1 no Para deveria ser inteira ou caractere *****
+
+r < 10; r
+
+***** Exception<Incompatibilidade>: Variavel2 no Para deveria ser inteira ou caractere *****
+
+ := r + 1
+
+***** Exception<Incompatibilidade>: Expressao3 no Para deveria ser inteira ou caractere *****
+
+) {
+		;
+	}
+	para (l
+
+***** Exception<Incompatibilidade>: Variavel1 no Para deveria ser inteira ou caractere *****
+
+ := true; 
+
+***** Exception<Incompatibilidade>: Expressao1 no Para deveria ser inteira ou caractere *****
+
+l != false; l
+
+***** Exception<Incompatibilidade>: Variavel2 no Para deveria ser inteira ou caractere *****
+
+ := !l
+
+***** Exception<Incompatibilidade>: Expressao3 no Para deveria ser inteira ou caractere *****
+
+) {
+		;
+	}
+	para (i := 0; c < 'z'; c
+
+***** Exception<Incompatibilidade>: Variavel2 no Para nao corresponde a Variavel1 *****
+
+ := 'b') {
+		;
+	}
+	para (i := 0; (2 + 2); 
+
+***** Exception<Incompatibilidade>: Expressao2 no Para deveria ser logico *****
+
+i := i + 1) {
+		;
+	}
+}
+principal {
+locais:
+	int var;
+comandos:
+	;
+}
+
+varInteiro: Nao Inicializada
+varReal: Nao Inicializada
+var: Nao Inicializada
+var: Nao Referenciada
+var: Nao Inicializada
+varLogico: Nao Inicializada
+varCarac: Nao Inicializada
+
+
+   TABELA  DE  SIMBOLOS:
+
+Classe 1:
+  (varInteiro, IDVAR, INTEGER, 0, 1, escopo: Global);
+Classe 4:
+  (varReal , IDVAR, FLOAT  , 0, 1, escopo: Global);
+Classe 7:
+  (var     , IDVAR, INTEGER, 0, 0, escopo: Principal);
+  (c       , IDVAR, CHAR   , 1, 1, escopo: Para);
+  (var     , IDVAR, INTEGER, 0, 1, escopo: SeEnquanto);
+Classe 10:
+  (Principal, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: void);
+Classe 13:
+  (i       , IDVAR, INTEGER, 1, 1, escopo: Para);
+Classe 14:
+  (varLogico, IDVAR, LOGIC  , 0, 1, escopo: Global);
+Classe 15:
+  (SeEnquanto, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: void);
+Classe 16:
+  (l       , IDVAR, LOGIC  , 1, 1, escopo: Para);
+Classe 18:
+  (Global  , IDGLOB, escopo: NULL
+	Variaveis: varInteiro, varReal, varCarac, varLogico
+	Funcoes: SeEnquanto, Para, Principal);
+Classe 20:
+  (Para    , IDFUNC, escopo: Global
+	Variaveis: i, c, r, l
+	Parametros: void);
+Classe 21:
+  (varCarac, IDVAR, CHAR   , 0, 1, escopo: Global);
+Classe 22:
+  (r       , IDVAR, FLOAT  , 1, 1, escopo: Para);
