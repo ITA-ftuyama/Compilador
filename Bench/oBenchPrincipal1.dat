@@ -19,7 +19,6 @@ comandos:
 principal
 
 ***** Exception<Incompatibilidade>: Funcao principal deveria ser unica *****
-
  {
 locais:
 	int y;
@@ -27,14 +26,12 @@ comandos:
 	x
 
 ***** Exception<Nao Declarado>: x *****
-
  := 0;
 	y := 0;
 }
 int Inserir (
 
 ***** Exception<Incompatibilidade>: Funcao principal deveria ser a ultima *****
-
 ) {
 locais:
 	int x, y;

@@ -23,7 +23,7 @@ echo Compilando programa
 REM _Lab04  < Compilador/_Lab04Teste.dat > Compilador/_Lab04TesteOutput.dat
 REM _Lab04  < Compilador/_Lab04Prog.dat > Compilador/_Lab04ProgOutput.dat
 
-REM goto Testes
+REM goto Teste
 	echo.
 	echo ### Testes para Declaração de Variáveis
 	_Lab04 < Compilador/Bench/BenchDeclaracao.dat > Compilador/Bench/oBenchDeclaracao.dat
@@ -53,13 +53,13 @@ REM goto Testes
 	echo.
 	echo ### Testes para RetornoFunc
 	_Lab04 < Compilador/Bench/BenchRetornoFunc.dat > Compilador/Bench/oBenchRetornoFunc.dat
-:Testes
-
-
-REM Loop compilation with delay
-REM timeout /t 10
-REM goto loop
+:Teste
 
 echo.
 echo Completo
 pause
+
+REM Loop compilation with delay
+REM timeout /t 10
+goto loop
+

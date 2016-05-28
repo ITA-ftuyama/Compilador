@@ -17,31 +17,91 @@
  */
 
 globais:
-	int Inserir;
-	carac destruir;
-	vazio variavelVoid;
+	int varint;
+	real varreal;
+	carac varchar;
+	logico varlogico;
 funcoes:
 
-vazio Inserir (int posic, vazio parametroVoid) {
+vazio InserirVazio() {
 locais:
-	real vetor[3];
-	logico nope;
-comandos:
-	vetor[0] := 1.4;
-	nope := true;
-}
-
-vazio Destruir () {
-locais:
-	int naoInicializadaNaoReferenciada;
+	int var;
 comandos:
 	;
 }
 
+vazio InserirVazio(int a) {
+locais:
+	int var;
+comandos:
+	;
+}
+
+vazio InserirVariosVazio(int a, real b, carac c, logico d) {
+locais:
+	int var;
+comandos:
+	;
+}
+
+int InserirOne (int a) {
+locais:
+	int var;
+comandos:
+	retornar a;
+}
+
+int Inserir (int a, int b) {
+locais:
+	int var;
+comandos:
+	var := a + b;
+	retornar var;
+}
+
+int InserirVarios (int a, real b, carac c, logico d) {
+locais:
+	int var;
+comandos:
+	retornar a;
+}
+
 principal {
 locais:
-	int naoInicializadaReferenciada;
+	int var;
 comandos:
-	varNaoDeclarada := naoInicializadaReferenciada;
+	var := InserirOne(varint);
+	var := InserirOne();
+	var := InserirOne(varint, varint);
 
+	var := InserirOne(varlogico);
+	var := InserirOne(varlogico);
+
+	var := Inserir(varint, varint);
+
+	var := InserirVarios(varint, varreal, varchar, varlogico);
+	var := InserirVarios(varint, varreal, varlogico, varchar);
+	var := InserirVarios(varreal, varint, varlogico, varchar);
+	var := InserirVazio();
+
+	chamar InserirVazio();
+	chamar InserirOne(varint);
+	chamar InserirVazio(varint);
+	
+	chamar InserirVariosVazio(varint, varreal, varchar, varlogico);
+	chamar InserirVariosVazio(varint, varreal, varlogico, varchar);
+	chamar InserirVariosVazio(varreal, varint, varlogico, varchar);
+
+	var := InserirNenhum();
+
+	chamar varint();
+	/*
+	var := Inserir(varint, varint);
+	var := Inserir(varint);
+	var := Inserir(varint, varint, varint);
+
+	var := Inserir(varint, varreal);
+	var := Inserir(varint, varchar);
+	var := Inserir(varint, varlogico);
+	*/
 }

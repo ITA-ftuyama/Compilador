@@ -18,88 +18,224 @@
  */
 
 globais:
-	int Inserir;
-	carac destruir;
-	vazio variavelVoid
-
-***** Exception<Tipo Inadequado>: variavelVoid *****
-
-;
+	int varint;
+	real varreal;
+	carac varchar;
+	logico varlogico;
 
 funcoes:
-vazio Inserir (
-
-***** Exception<Declaracao Indevida>: Inserir *****
-
-int posic, vazio parametroVoid
-
-***** Exception<Tipo Inadequado>: parametroVoid *****
-
-) {
+vazio InserirVazio () {
 locais:
-	real vetor[3];
-	logico nope;
-comandos:
-	vetor[0] := 1.4;
-	nope := true;
-}
-vazio Destruir () {
-locais:
-	int naoInicializadaNaoReferenciada;
+	int var;
 comandos:
 	;
 }
+vazio InserirVazio (
+
+***** Exception<Declaracao Indevida>: InserirVazio *****
+int a) {
+locais:
+	int var;
+comandos:
+	;
+}
+vazio InserirVariosVazio (int a, real b, carac c, logico d) {
+locais:
+	int var;
+comandos:
+	;
+}
+int InserirOne (int a) {
+locais:
+	int var;
+comandos:
+	retornar a;
+}
+int Inserir (int a, int b) {
+locais:
+	int var;
+comandos:
+	var := a + b;
+	retornar var;
+}
+int InserirVarios (int a, real b, carac c, logico d) {
+locais:
+	int var;
+comandos:
+	retornar a;
+}
 principal {
 locais:
-	int naoInicializadaReferenciada;
+	int var;
 comandos:
-	varNaoDeclarada
+	var := InserirOne (varint);
+	var := InserirOne ()
 
-***** Exception<Nao Declarado>: varNaoDeclarada *****
+***** Exception<Incompatibilidade>: Numero de argumentos diferente do numero de parametros *****
+;
+	var := InserirOne (varint, varint)
 
- := naoInicializadaReferenciada;
+***** Exception<Incompatibilidade>: Numero de argumentos diferente do numero de parametros *****
+;
+	var := InserirOne (varlogico)
+
+***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+;
+	var := InserirOne (varlogico)
+
+***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+;
+	var := Inserir (varint, varint);
+	var := InserirVarios (varint, varreal, varchar, varlogico);
+	var := InserirVarios (varint, varreal, varlogico, varchar)
+
+***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+
+
+***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+;
+	var := InserirVarios (varreal, varint, varlogico, varchar)
+
+***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+
+
+***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+
+
+***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+
+
+***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+;
+	var := InserirVazio (
+
+***** Exception<Tipo Inadequado>: InserirVazio *****
+);
+	chamar InserirVazio();
+	chamar InserirOne(
+
+***** Exception<Tipo Inadequado>: InserirOne *****
+varint);
+	chamar InserirVazio(varint);
+
+
+***** Exception<Incompatibilidade>: Numero de argumentos diferente do numero de parametros *****
+	chamar InserirVariosVazio(varint, varreal, varchar, varlogico);
+	chamar InserirVariosVazio(varint, varreal, varlogico, varchar);
+
+
+***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+
+
+***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+	chamar InserirVariosVazio(varreal, varint, varlogico, varchar);
+
+
+***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+
+
+***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+
+
+***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+
+
+***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+	var := InserirNenhum (
+
+***** Exception<Nao Declarado>: InserirNenhum *****
+);
+	chamar varint(
+
+***** Exception<Tipo Inadequado>: varint *****
+);
+
+/*
+	var := Inserir(varint, varint);
+	var := Inserir(varint);
+	var := Inserir(varint, varint, varint);
+
+	var := Inserir(varint, varreal);
+	var := Inserir(varint, varchar);
+	var := Inserir(varint, varlogico);
+	*/
+
 }
 
-naoInicializadaReferenciada: Nao Inicializada
-destruir: Nao Inicializada
-destruir: Nao Referenciada
-naoInicializadaNaoReferenciada: Nao Inicializada
-naoInicializadaNaoReferenciada: Nao Referenciada
-variavelVoid: Nao Inicializada
-variavelVoid: Nao Referenciada
-Inserir: Nao Inicializada
-Inserir: Nao Referenciada
+varlogico: Nao Inicializada
+var: Nao Inicializada
+var: Nao Referenciada
+var: Nao Inicializada
+var: Nao Referenciada
+var: Nao Inicializada
+var: Nao Referenciada
+var: Nao Inicializada
+var: Nao Referenciada
+var: Nao Inicializada
+var: Nao Referenciada
+varchar: Nao Inicializada
+varreal: Nao Inicializada
+varint: Nao Inicializada
 
 
    TABELA  DE  SIMBOLOS:
 
+Classe 0:
+  (varlogico, IDVAR, LOGIC  , 0, 1, escopo: Global);
+Classe 3:
+  (InserirVarios, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: a, b, c, d);
+Classe 5:
+  (a       , IDVAR, INTEGER, 1, 1, escopo: InserirVarios);
+  (a       , IDVAR, INTEGER, 1, 1, escopo: Inserir);
+  (a       , IDVAR, INTEGER, 1, 1, escopo: InserirOne);
+  (a       , IDVAR, INTEGER, 1, 1, escopo: InserirVariosVazio);
+  (a       , IDVAR, INTEGER, 1, 1, escopo: InserirVazio);
+Classe 6:
+  (b       , IDVAR, FLOAT  , 1, 1, escopo: InserirVarios);
+  (b       , IDVAR, INTEGER, 1, 1, escopo: Inserir);
+  (b       , IDVAR, FLOAT  , 1, 1, escopo: InserirVariosVazio);
+Classe 7:
+  (var     , IDVAR, INTEGER, 1, 1, escopo: Principal);
+  (var     , IDVAR, INTEGER, 0, 0, escopo: InserirVarios);
+  (c       , IDVAR, CHAR   , 1, 1, escopo: InserirVarios);
+  (var     , IDVAR, INTEGER, 1, 1, escopo: Inserir);
+  (var     , IDVAR, INTEGER, 0, 0, escopo: InserirOne);
+  (var     , IDVAR, INTEGER, 0, 0, escopo: InserirVariosVazio);
+  (c       , IDVAR, CHAR   , 1, 1, escopo: InserirVariosVazio);
+  (var     , IDVAR, INTEGER, 0, 0, escopo: InserirVazio);
+  (var     , IDVAR, INTEGER, 0, 0, escopo: InserirVazio);
+  (varchar , IDVAR, CHAR   , 0, 1, escopo: Global);
 Classe 8:
-  (naoInicializadaReferenciada, IDVAR, INTEGER, 0, 1, escopo: Principal);
-  (vetor   , IDVAR, FLOAT  , 1, 1, EH ARRAY
-	ndims = 1, dimensoes:  3, escopo: Inserir);
-  (destruir, IDVAR, CHAR   , 0, 0, escopo: Global);
+  (d       , IDVAR, LOGIC  , 1, 1, escopo: InserirVarios);
+  (d       , IDVAR, LOGIC  , 1, 1, escopo: InserirVariosVazio);
 Classe 10:
   (Principal, IDFUNC, escopo: Global
-	Variaveis: naoInicializadaReferenciada
+	Variaveis: var
+	Parametros: void);
+  (InserirOne, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: a);
+Classe 11:
+  (InserirVazio, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: a);
+  (InserirVazio, IDFUNC, escopo: Global
+	Variaveis: var
 	Parametros: void);
 Classe 13:
-  (posic   , IDVAR, INTEGER, 1, 1, escopo: Inserir);
+  (varreal , IDVAR, FLOAT  , 0, 1, escopo: Global);
 Classe 16:
-  (parametroVoid, IDVAR, (null) , 1, 1, escopo: Inserir);
+  (varint  , IDVAR, INTEGER, 0, 1, escopo: Global);
 Classe 18:
-  (naoInicializadaNaoReferenciada, IDVAR, INTEGER, 0, 0, escopo: Destruir);
-  (variavelVoid, IDVAR, (null) , 0, 0, escopo: Global);
+  (InserirVariosVazio, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: a, b, c, d);
   (Global  , IDGLOB, escopo: NULL
-	Variaveis: Inserir, destruir, variavelVoid
-	Funcoes: Inserir, Destruir, Principal);
+	Variaveis: varint, varreal, varchar, varlogico
+	Funcoes: InserirVazio, InserirVazio, InserirVariosVazio, InserirOne, Inserir, InserirVarios, Principal);
 Classe 19:
   (Inserir , IDFUNC, escopo: Global
-	Variaveis: vetor, nope
-	Parametros: posic, parametroVoid);
-  (Inserir , IDVAR, INTEGER, 0, 0, escopo: Global);
-Classe 20:
-  (nope    , IDVAR, LOGIC  , 1, 1, escopo: Inserir);
-Classe 22:
-  (Destruir, IDFUNC, escopo: Global
-	Variaveis: naoInicializadaNaoReferenciada
-	Parametros: void);
+	Variaveis: var
+	Parametros: a, b);
