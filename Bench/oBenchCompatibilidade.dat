@@ -42,12 +42,10 @@ comandos:
 
 
 ***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
-
 	var := varLogico;
 
 
 ***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
-
 }
 vazio Real () {
 locais:
@@ -60,7 +58,6 @@ comandos:
 
 
 ***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
-
 }
 vazio Carac () {
 locais:
@@ -72,12 +69,10 @@ comandos:
 
 
 ***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
-
 	var := varLogico;
 
 
 ***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
-
 }
 vazio Logico () {
 locais:
@@ -87,17 +82,14 @@ comandos:
 
 
 ***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
-
 	var := varCarac;
 
 
 ***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
-
 	var := varReal;
 
 
 ***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
-
 	var := varLogico;
 }
 vazio ExprAritmetica () {
@@ -110,12 +102,10 @@ comandos:
 	exprL := (true + true
 
 ***** Exception<Incompatibilidade>: Operando improprio para operador aritmetico *****
-
 );
 
 
 ***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
-
 }
 vazio ExprRelacional () {
 locais:
@@ -125,17 +115,14 @@ comandos:
 
 
 ***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
-
 	exprC := (2 != 1);
 
 
 ***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
-
 	exprR := (2 >= 1);
 
 
 ***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
-
 	exprL := (2 > 1);
 }
 vazio ExprLogica () {
@@ -146,17 +133,14 @@ comandos:
 
 
 ***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
-
 	exprC := (true && true);
 
 
 ***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
-
 	exprR := (!true);
 
 
 ***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
-
 	exprL := (!false);
 }
 vazio OpLogico () {
@@ -169,17 +153,14 @@ comandos:
 	varLogico := varInteiro && varCarac
 
 ***** Exception<Incompatibilidade>: Operando improprio para AND *****
-
 ;
 	varLogico := varInteiro || varCarac
 
 ***** Exception<Incompatibilidade>: Operando improprio para OR *****
-
 ;
 	varLogico := !varInteiro
 
 ***** Exception<Incompatibilidade>: Operando improprio para NOT *****
-
 ;
 }
 vazio OpRelacional () {
@@ -192,7 +173,6 @@ comandos:
 	varLogico := varLogico <= varCarac
 
 ***** Exception<Incompatibilidade>: Operando improprio para operador relacional *****
-
 ;
 }
 vazio OpIgualdade () {
@@ -205,7 +185,6 @@ comandos:
 	varLogico := varLogico != varInteiro
 
 ***** Exception<Incompatibilidade>: Operando improprio para operador relacional *****
-
 ;
 }
 vazio OpAritmetico () {
@@ -217,12 +196,10 @@ comandos:
 	varInteiro := varLogico / varLogico
 
 ***** Exception<Incompatibilidade>: Operando improprio para operador aritmetico *****
-
 ;
 	varInteiro := varLogico - varInteiro
 
 ***** Exception<Incompatibilidade>: Operando improprio para operador aritmetico *****
-
 ;
 	varInteiro := ~varInteiro;
 	varInteiro := varInteiro % varInteiro;

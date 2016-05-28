@@ -15,7 +15,6 @@ globais:
 	int arrayB[0]
 
 ***** Exception<Esperado>: Valor inteiro positivo *****
-
 , arrayC[1];
 
 funcoes:
@@ -27,23 +26,19 @@ comandos:
 	var[0]
 
 ***** Exception<Nao Esperado>: Subscrito(s) *****
-
  := 1;
 	array[0][0]
 
 ***** Exception<Incompatibilidade>: Numero de subscritos incompativel com declaracao *****
-
  := 1;
 	array[0][0][0] := 1;
 	array[0][0][0][0]
 
 ***** Exception<Incompatibilidade>: Numero de subscritos incompativel com declaracao *****
-
  := 1;
 	ler (arrayC
 
 ***** Exception<Esperado>: Subscrito(s) *****
-
 );
 	ler (arrayC[0]);
 	var := arrayC[(2 - 1)];

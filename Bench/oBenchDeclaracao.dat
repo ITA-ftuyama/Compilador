@@ -17,18 +17,15 @@ globais:
 	vazio variavelVoid
 
 ***** Exception<Tipo Inadequado>: variavelVoid *****
-
 ;
 
 funcoes:
 vazio Inserir (
 
 ***** Exception<Declaracao Indevida>: Inserir *****
-
 int posic, vazio parametroVoid
 
 ***** Exception<Tipo Inadequado>: parametroVoid *****
-
 ) {
 locais:
 	real vetor[3];
@@ -50,7 +47,6 @@ comandos:
 	varNaoDeclarada
 
 ***** Exception<Nao Declarado>: varNaoDeclarada *****
-
  := naoInicializadaReferenciada;
 }
 

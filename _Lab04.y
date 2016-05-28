@@ -73,6 +73,8 @@
 #define INCOMP_REPETIR      "Expressao no Repetir deveria ser logico"
 #define INCOMP_SE           "Expressao no Se deveria ser logico"
 #define INCOMP_TIPOSUB      "Tipo inadequado para subscrito"
+#define INCOMP_NARG         "Numero de argumentos diferente do numero de parametros"
+#define INCOMP_PARAM        "Incompatibilidade de parametros"    
 
 /*  Strings para nomes dos tipos de identificadores  */
 
@@ -91,6 +93,9 @@ typedef struct celsimb celsimb;
 typedef celsimb *simbolo;
 typedef struct elemlistsimb elemlistsimb;
 typedef elemlistsimb *listsimb;
+typedef struct infolistexpr infolistexpr;
+typedef struct exprtipo exprtipo;
+typedef exprtipo *pontexprtipo;
 struct elemlistsimb {
     simbolo simb;
     listsimb prox;
@@ -103,6 +108,15 @@ struct celsimb {
     listsimb listvardecl, listparam, listfunc; 
     simbolo escopo, prox;
 };
+struct infolistexpr {
+    pontexprtipo listtipo;
+    int nargs;
+};
+struct exprtipo {
+    int tipo;
+    pontexprtipo prox;
+};
+
 
 /*  
     Variaveis globais para a tabela de simbolos e analise semantica
@@ -134,12 +148,15 @@ void VerificaInicRef (void);
 
 /*  Verificação de Declaração de Símbolo */
 
-simbolo VarDeclaradaEscopo (char *, simbolo);
-simbolo ParamDeclaradaEscopo (char *, simbolo);
-simbolo FuncDeclaradaEscopo (char *, simbolo);
 simbolo SimbDeclaradoEscopo (char *, listsimb, simbolo);
 
 simbolo SimbDeclarado (char *);
+
+/*  Testes de compatibilidade entre parametros 
+        e argumentos escalares   */
+
+pontexprtipo InicListTipo (int);
+pontexprtipo ConcatListTipo (pontexprtipo, pontexprtipo);
 
 /* Verificação de erros semânticos */
 
@@ -156,6 +173,7 @@ void Exception (char *, char *);
     char carac;
     simbolo simb;
     int tipoexpr, nsubscr;
+    infolistexpr infolexpr;
 }
 
 /* Declaracao dos atributos dos tokens e dos nao-terminais */
@@ -164,6 +182,8 @@ void Exception (char *, char *);
 %type   <tipoexpr>  Expressao   ExprAux1    ExprAux2    
                 Termo   Fator   ExprAux3    ExprAux4
 %type   <nsubscr>   ListSubscr
+%type   <infolexpr> ListExpr   Argumentos
+%type   <simb>      ChamadaFunc ChamadaProc
 
 %token  <cadeia>    ID
 %token  <cadeia>    CTCARAC
@@ -261,7 +281,7 @@ ListElemDecl:   ElemDecl
             ;
 ElemDecl    :   ID {
                     printf ("%s", $1);
-                    if  (VarDeclaradaEscopo($1, escopo) != NULL) {
+                    if  (SimbDeclaradoEscopo($1, escopo->listvardecl, escopo) != NULL) {
                         Exception (errorDeclRepetida, $1);
                     }
                     else if (tipocorrente == VAZIO) {
@@ -309,8 +329,8 @@ Cabecalho   :   PRINCIPAL   {
                     if (declfunc == FALSE) {
                         Exception (errorIncomp, INCOMP_FUNPRIN1);
                     }
-                    if  ( FuncDeclaradaEscopo($2, escopo) != NULL
-                        || VarDeclaradaEscopo($2, escopo) != NULL) {
+                    if  ( SimbDeclaradoEscopo($2, escopo->listfunc, escopo) != NULL
+                        || SimbDeclaradoEscopo($2, escopo->listvardecl, escopo) != NULL) {
                         Exception (errorDeclIndevida, $2);
                     }
                     escopo = simb = 
@@ -330,7 +350,7 @@ ListParam   :   Parametro
             ;
 Parametro   :   Tipo  ID {
                     printf ("%s", $2);
-                    if  (ParamDeclaradaEscopo($2, escopo) != NULL) {
+                    if  (SimbDeclaradoEscopo($2, escopo->listparam, escopo) != NULL) {
                         Exception (errorDeclRepetida, $2);
                     }
                     else if (tipocorrente == VAZIO) {
@@ -449,15 +469,35 @@ ListEscr    :   ElemEscr
 ElemEscr    :   CADEIA      {printf("%s", $1);}
             |   Expressao
             ;
-ChamadaProc :   CHAMAR  ID ABPAR
-                {printf("chamar %s(", $2);}
-                Argumentos FPAR PVIRG {printf(");\n");}
+ChamadaProc :   CHAMAR ID ABPAR {
+                    printf("chamar %s(", $2);
+                    simb = SimbDeclarado ($2);
+                    if (! simb) 
+                        Exception (errorNaoDecl, $2);
+                    else if (simb->tid != IDFUNC)
+                        Exception (errorTipoInadeq, $2);
+                    else if (simb->tvar != VAZIO)
+                        Exception (errorTipoInadeq, $2);
+                    $<simb>$ = simb;
+                }
+                Argumentos FPAR PVIRG {
+                    printf(");\n");
+                    $$ = $<simb>4;
+                    if ($$ && $$->tid == IDFUNC) {
+                        if ($$->nparam != $5.nargs)
+                            Exception (errorIncomp, INCOMP_NARG);
+                        ChecArgumentos  ($5.listtipo, $$->listparam); 
+                    }
+                }
             ;
-Argumentos  :
+Argumentos  :   { $$.nargs = 0;  $$.listtipo = NULL; }
             |   ListExpr
             ;
-ListExpr    :   Expressao
-            |   ListExpr VIRG   {printf(", ");} Expressao
+ListExpr    :   Expressao { $$.nargs = 1;   $$.listtipo = InicListTipo ($1); }
+            |   ListExpr VIRG   {printf(", ");} Expressao {
+                    $$.nargs = $1.nargs + 1;
+                    $$.listtipo = ConcatListTipo ($1.listtipo, InicListTipo ($4));
+                }
             ;
 CmdRetornar :   RETORNAR  PVIRG {printf("retornar;\n");}
             |   RETORNAR        {printf("retornar ");}
@@ -617,9 +657,26 @@ Subscrito   :   ABCOL   {printf("[");}
                         Exception (errorIncomp, INCOMP_TIPOSUB);
                 }
             ;
-ChamadaFunc :   ID ABPAR{printf ("%s (", $1);}
+ChamadaFunc :   ID ABPAR {
+                    printf ("%s (", $1);
+                    simb = SimbDeclarado ($1);
+                    if (! simb) 
+                        Exception (errorNaoDecl, $1);
+                    else if (simb->tid != IDFUNC)
+                        Exception (errorTipoInadeq, $1);
+                    else if (simb->tvar == VAZIO)
+                        Exception (errorTipoInadeq, $1);
+                    $<simb>$ = simb;
+                }
                 Argumentos {printf(")");}
-                FPAR    
+                FPAR  {
+                    $$ = $<simb>3;
+                    if ($$ && $$->tid == IDFUNC) {
+                        if ($$->nparam != $4.nargs)
+                            Exception (errorIncomp, INCOMP_NARG);
+                        ChecArgumentos  ($4.listtipo, $$->listparam); 
+                    }
+                }  
             ;
 %%
 /* Inclusao do analisador lexico  */
@@ -657,18 +714,6 @@ void InicTabSimb () {
     Caso contrário, retorna NULL;
  */
 
-simbolo VarDeclaradaEscopo (char *cadeia, simbolo escopo) {
-    return SimbDeclaradoEscopo(cadeia, escopo->listvardecl, escopo);
-}
-
-simbolo ParamDeclaradaEscopo (char *cadeia, simbolo escopo) {
-    return SimbDeclaradoEscopo(cadeia, escopo->listparam, escopo);
-}
-
-simbolo FuncDeclaradaEscopo (char *cadeia, simbolo escopo) {
-    return SimbDeclaradoEscopo(cadeia, escopo->listfunc, escopo);
-}
-
 simbolo SimbDeclaradoEscopo (char *cadeia, listsimb listHeader, simbolo escopo) {
     listsimb list;
     if (listHeader == NULL) return NULL;
@@ -690,9 +735,11 @@ simbolo SimbDeclaradoEscopo (char *cadeia, listsimb listHeader, simbolo escopo) 
 simbolo SimbDeclarado (char *cadeia) {
     simbolo esc, s = NULL;
     for (esc = escopo; esc!=NULL; esc = esc->escopo) {
-        s = VarDeclaradaEscopo(cadeia, esc);
+        s = SimbDeclaradoEscopo(cadeia, esc->listvardecl, escopo);
         if (s!=NULL) return s;
-        s = ParamDeclaradaEscopo(cadeia, esc);
+        s = SimbDeclaradoEscopo(cadeia, esc->listparam, escopo);
+        if (s!=NULL) return s;
+        s = SimbDeclaradoEscopo(cadeia, esc->listfunc, escopo);
         if (s!=NULL) return s;
     }
     return NULL;
@@ -859,6 +906,60 @@ void VerificaInicRef () {
 /*  Mensagens de erros semanticos  */
 
 void Exception (char *type, char *error) {
-    printf ("\n\n***** Exception<%s>: %s *****\n\n", type, error);
+    printf ("\n\n***** Exception<%s>: %s *****\n", type, error);
 }
 
+/*  Inicializacao da lista de tipos     */
+
+pontexprtipo InicListTipo (int tvar) {
+    pontexprtipo listtipo;
+    listtipo = (pontexprtipo) (malloc (sizeof(pontexprtipo)));
+    listtipo->prox = (pontexprtipo) (malloc (sizeof(pontexprtipo)));
+    listtipo->prox->tipo = tvar;
+    listtipo->prox->prox = NULL;
+    return listtipo;
+}
+
+/*  Concantena listas de tipos     */
+
+pontexprtipo ConcatListTipo (pontexprtipo lista1, pontexprtipo lista2) {
+    pontexprtipo p = lista1->prox;
+    while(p->prox != NULL) {
+        p = p->prox;
+    }
+    p->prox = lista2->prox;
+    free(lista2);
+    return lista1;
+}
+
+/* Funcao que checa os argumentos de uma chamada de funcao*/
+
+void ChecArgumentos (pontexprtipo Ltiparg, listsimb Lparam) {
+    pontexprtipo p;  
+    listsimb q;
+    if (Ltiparg == NULL || Lparam == NULL)
+        return;
+    p = Ltiparg->prox;
+    q = Lparam->prox;
+    while (p != NULL && q != NULL) {
+        switch (q->simb->tvar) {
+            case INTEIRO: case CARAC:
+                if (p->tipo != INTEIRO && p->tipo != CARAC)
+                    Exception(errorIncomp, INCOMP_PARAM);
+                break;
+            case REAL:
+                if (p->tipo != INTEIRO &&  p->tipo != CARAC && p->tipo != REAL)
+                    Exception(errorIncomp, INCOMP_PARAM);
+                break;
+            case LOGICO:
+                if (p->tipo != LOGICO)
+                    Exception(errorIncomp, INCOMP_PARAM);
+                break;
+            default:
+                if (q->simb->tvar != p->tipo)
+                    Exception(errorIncomp, INCOMP_PARAM);
+                break;
+        }
+        p = p->prox; q = q->prox;
+    }
+}

@@ -23,18 +23,15 @@ comandos:
 
 ***** Exception<Incompatibilidade>: Expressao no Se deveria ser logico *****
 
-
 		;
 	se (varReal) 
 
 ***** Exception<Incompatibilidade>: Expressao no Se deveria ser logico *****
 
-
 		;
 	se (varCarac) 
 
 ***** Exception<Incompatibilidade>: Expressao no Se deveria ser logico *****
-
 
 		;
 	se (varLogico) 
@@ -44,17 +41,14 @@ comandos:
 	enquanto (varInteiro) 
 
 ***** Exception<Incompatibilidade>: Expressao no Enquanto deveria ser logico *****
-
 ;
 	enquanto (varReal) 
 
 ***** Exception<Incompatibilidade>: Expressao no Enquanto deveria ser logico *****
-
 ;
 	enquanto (varCarac) 
 
 ***** Exception<Incompatibilidade>: Expressao no Enquanto deveria ser logico *****
-
 ;
 	enquanto (varLogico) ;
 	enquanto (var > varInteiro) ;
@@ -75,52 +69,42 @@ comandos:
 	para (r
 
 ***** Exception<Incompatibilidade>: Variavel1 no Para deveria ser inteira ou caractere *****
-
  := 1; 
 
 ***** Exception<Incompatibilidade>: Expressao1 no Para deveria ser inteira ou caractere *****
-
 r < 10; r
 
 ***** Exception<Incompatibilidade>: Variavel2 no Para deveria ser inteira ou caractere *****
-
  := r + 1
 
 ***** Exception<Incompatibilidade>: Expressao3 no Para deveria ser inteira ou caractere *****
-
 ) {
 		;
 	}
 	para (l
 
 ***** Exception<Incompatibilidade>: Variavel1 no Para deveria ser inteira ou caractere *****
-
  := true; 
 
 ***** Exception<Incompatibilidade>: Expressao1 no Para deveria ser inteira ou caractere *****
-
 l != false; l
 
 ***** Exception<Incompatibilidade>: Variavel2 no Para deveria ser inteira ou caractere *****
-
  := !l
 
 ***** Exception<Incompatibilidade>: Expressao3 no Para deveria ser inteira ou caractere *****
-
 ) {
 		;
 	}
 	para (i := 0; c < 'z'; c
 
 ***** Exception<Incompatibilidade>: Variavel2 no Para nao corresponde a Variavel1 *****
-
  := 'b') {
 		;
 	}
 	para (i := 0; (2 + 2); 
 
 ***** Exception<Incompatibilidade>: Expressao2 no Para deveria ser logico *****
-
 i := i + 1) {
 		;
 	}
