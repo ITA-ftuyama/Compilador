@@ -52,6 +52,24 @@ comandos:
 ;
 	enquanto (varLogico) ;
 	enquanto (var > varInteiro) ;
+	repetir 
+		;
+	enquanto (1 > 0);
+	repetir 
+		;
+	enquanto (varInteiro);
+
+
+***** Exception<Incompatibilidade>: Expressao no Repetir deveria ser logico *****
+	repetir 
+		;
+	enquanto (varReal);
+
+
+***** Exception<Incompatibilidade>: Expressao no Repetir deveria ser logico *****
+	repetir 
+		;
+	enquanto (varLogico);
 }
 vazio Para () {
 locais:

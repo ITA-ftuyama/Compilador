@@ -29,6 +29,14 @@ comandos:
 	enquanto (varCarac);
 	enquanto (varLogico);
 	enquanto (var > varInteiro);
+	repetir ;
+	enquanto (1 > 0);
+	repetir ;
+	enquanto (varInteiro);
+	repetir ;
+	enquanto (varReal);
+	repetir ;
+	enquanto (varLogico);
 }
 
 vazio Para () {
