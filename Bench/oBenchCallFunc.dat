@@ -51,6 +51,12 @@ locais:
 comandos:
 	retornar a;
 }
+real InserirReal (real a) {
+locais:
+	int var;
+comandos:
+	retornar a;
+}
 int Inserir (int a, int b) {
 locais:
 	int var;
@@ -68,7 +74,10 @@ principal {
 locais:
 	int var;
 comandos:
-	var := InserirOne (varint);
+	
+/* Testando o numero de argumentos de funcao*/
+
+var := InserirOne (varint);
 	var := InserirOne ()
 
 ***** Exception<Incompatibilidade>: Numero de argumentos diferente do numero de parametros *****
@@ -77,40 +86,50 @@ comandos:
 
 ***** Exception<Incompatibilidade>: Numero de argumentos diferente do numero de parametros *****
 ;
+
+/* Testando compatibilidade de argumentos de funcao*/
+
 	var := InserirOne (varlogico)
 
-***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
-;
-	var := InserirOne (varlogico)
-
-***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
 ;
 	var := Inserir (varint, varint);
 	var := InserirVarios (varint, varreal, varchar, varlogico);
-	var := InserirVarios (varint, varreal, varlogico, varchar)
+	var := InserirVarios (varint, varint, varint, varint)
 
-***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
-
-
-***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+***** Exception<Incompatibilidade>: Esperado "logico". Obtido "int, carac, real" *****
 ;
-	var := InserirVarios (varreal, varint, varlogico, varchar)
+	var := InserirVarios (varreal, varreal, varreal, varreal)
 
-***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
-
-
-***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
 
 
-***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
 
 
-***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+***** Exception<Incompatibilidade>: Esperado "logico". Obtido "int, carac, real" *****
+;
+	var := InserirVarios (varchar, varchar, varchar, varchar)
+
+***** Exception<Incompatibilidade>: Esperado "logico". Obtido "int, carac, real" *****
+;
+	var := InserirVarios (varlogico, varlogico, varlogico, varlogico)
+
+***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
+
+
+***** Exception<Incompatibilidade>: Esperado "int, carac, real". Obtido "logico" *****
+
+
+***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
 ;
 	var := InserirVazio (
 
 ***** Exception<Tipo Inadequado>: InserirVazio *****
 );
+
+/* Testando numero de argumentos de procedimento */
+
 	chamar InserirVazio();
 	chamar InserirOne(
 
@@ -120,27 +139,27 @@ varint);
 
 
 ***** Exception<Incompatibilidade>: Numero de argumentos diferente do numero de parametros *****
+
+/* Testando compatibilidade de argumentos de procedimento */
+
 	chamar InserirVariosVazio(varint, varreal, varchar, varlogico);
 	chamar InserirVariosVazio(varint, varreal, varlogico, varchar);
 
 
-***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
 
 
-***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+***** Exception<Incompatibilidade>: Esperado "logico". Obtido "int, carac, real" *****
 	chamar InserirVariosVazio(varreal, varint, varlogico, varchar);
 
 
-***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
 
 
-***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
 
 
-***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
-
-
-***** Exception<Incompatibilidade>: Incompatibilidade de parametros *****
+***** Exception<Incompatibilidade>: Esperado "logico". Obtido "int, carac, real" *****
 	var := InserirNenhum (
 
 ***** Exception<Nao Declarado>: InserirNenhum *****
@@ -150,16 +169,15 @@ varint);
 ***** Exception<Tipo Inadequado>: varint *****
 );
 
-/*
-	var := Inserir(varint, varint);
-	var := Inserir(varint);
-	var := Inserir(varint, varint, varint);
+/*Testando compatibilidade entre alguns tipos */
 
-	var := Inserir(varint, varreal);
-	var := Inserir(varint, varchar);
-	var := Inserir(varint, varlogico);
-	*/
+	varreal := InserirReal (varreal);
+	varreal := InserirReal (varint);
+	varreal := InserirReal (varchar);
+	varreal := InserirReal (varlogico)
 
+***** Exception<Incompatibilidade>: Esperado "int, carac, real". Obtido "logico" *****
+;
 }
 
 varlogico: Nao Inicializada
@@ -173,8 +191,9 @@ var: Nao Inicializada
 var: Nao Referenciada
 var: Nao Inicializada
 var: Nao Referenciada
+var: Nao Inicializada
+var: Nao Referenciada
 varchar: Nao Inicializada
-varreal: Nao Inicializada
 varint: Nao Inicializada
 
 
@@ -189,6 +208,7 @@ Classe 3:
 Classe 5:
   (a       , IDVAR, INTEGER, 1, 1, escopo: InserirVarios);
   (a       , IDVAR, INTEGER, 1, 1, escopo: Inserir);
+  (a       , IDVAR, FLOAT  , 1, 1, escopo: InserirReal);
   (a       , IDVAR, INTEGER, 1, 1, escopo: InserirOne);
   (a       , IDVAR, INTEGER, 1, 1, escopo: InserirVariosVazio);
   (a       , IDVAR, INTEGER, 1, 1, escopo: InserirVazio);
@@ -201,6 +221,7 @@ Classe 7:
   (var     , IDVAR, INTEGER, 0, 0, escopo: InserirVarios);
   (c       , IDVAR, CHAR   , 1, 1, escopo: InserirVarios);
   (var     , IDVAR, INTEGER, 1, 1, escopo: Inserir);
+  (var     , IDVAR, INTEGER, 0, 0, escopo: InserirReal);
   (var     , IDVAR, INTEGER, 0, 0, escopo: InserirOne);
   (var     , IDVAR, INTEGER, 0, 0, escopo: InserirVariosVazio);
   (c       , IDVAR, CHAR   , 1, 1, escopo: InserirVariosVazio);
@@ -225,8 +246,11 @@ Classe 11:
 	Variaveis: var
 	Parametros: void);
 Classe 13:
-  (varreal , IDVAR, FLOAT  , 0, 1, escopo: Global);
+  (varreal , IDVAR, FLOAT  , 1, 1, escopo: Global);
 Classe 16:
+  (InserirReal, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: a);
   (varint  , IDVAR, INTEGER, 0, 1, escopo: Global);
 Classe 18:
   (InserirVariosVazio, IDFUNC, escopo: Global
@@ -234,7 +258,7 @@ Classe 18:
 	Parametros: a, b, c, d);
   (Global  , IDGLOB, escopo: NULL
 	Variaveis: varint, varreal, varchar, varlogico
-	Funcoes: InserirVazio, InserirVazio, InserirVariosVazio, InserirOne, Inserir, InserirVarios, Principal);
+	Funcoes: InserirVazio, InserirVazio, InserirVariosVazio, InserirOne, InserirReal, Inserir, InserirVarios, Principal);
 Classe 19:
   (Inserir , IDFUNC, escopo: Global
 	Variaveis: var

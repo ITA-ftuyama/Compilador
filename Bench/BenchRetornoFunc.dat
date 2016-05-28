@@ -15,31 +15,199 @@
  */
 
 globais:
-	int Inserir;
-	carac destruir;
-	vazio variavelVoid;
+	int varint;
+	real varreal;
+	carac varchar;
+	logico varlogico;
 funcoes:
 
-vazio Inserir (int posic, vazio parametroVoid) {
+vazio InserirVazioCorreto() {
 locais:
-	real vetor[3];
-	logico nope;
-comandos:
-	vetor[0] := 1.4;
-	nope := true;
-}
-
-vazio Destruir () {
-locais:
-	int naoInicializadaNaoReferenciada;
+	int var;
 comandos:
 	;
 }
 
+vazio InserirVazioIncorreto1() {
+locais:
+	int var;
+comandos:
+	retornar var;
+}
+
+vazio InserirVazioIncorreto2() {
+locais:
+	real var;
+comandos:
+	retornar var;
+}
+
+vazio InserirVazioIncorreto3() {
+locais:
+	carac var;
+comandos:
+	retornar var;
+}
+
+vazio InserirVazioIncorreto4() {
+locais:
+	logico var;
+comandos:
+	retornar var;
+}
+
+vazio InserirVazio(int a) {
+locais:
+	int var;
+comandos:
+	;
+}
+
+
+int InserirIntCorreto1 (int a) {
+locais:
+	int var;
+comandos:
+	retornar a;
+}
+
+int InserirIntCorreto2 () {
+locais:
+	carac var;
+comandos:
+	retornar var;
+}
+
+int InserirIntIncorreto1 () {
+locais:
+	real var;
+comandos:
+	retornar var;
+}
+
+int InserirIntIncorreto2 () {
+locais:
+	logico var;
+comandos:
+	retornar var;
+}
+
+carac InserirCaracIorreto1 (int a) {
+locais:
+	int var;
+comandos:
+	retornar a;
+}
+
+carac InserirCaracIorreto2 () {
+locais:
+	carac var;
+comandos:
+	retornar var;
+}
+
+carac InserirCaracIncorreto1 () {
+locais:
+	real var;
+comandos:
+	retornar var;
+}
+
+carac InserirCaracIncorreto2 () {
+locais:
+	logico var;
+comandos:
+	retornar var;
+}
+
+real InserirRealCorreto1 () {
+locais:
+	int var;
+comandos:
+	retornar var;
+}
+
+real InserirRealCorreto2 () {
+locais:
+	real var;
+comandos:
+	retornar var;
+}
+
+real InserirRealCorreto3 () {
+locais:
+	carac var;
+comandos:
+	retornar var;
+}
+
+real InserirRealIncorreto1 () {
+locais:
+	logico var;
+comandos:
+	retornar var;
+}
+
+logico InserirLogicoCorreto1 () {
+locais:
+	logico var;
+comandos:
+	retornar var;
+}
+
+logico InserirLogicoIncorreto1 () {
+locais:
+	real var;
+comandos:
+	retornar var;
+}
+
+logico InserirLogicoIncorreto2 () {
+locais:
+	carac var;
+comandos:
+	retornar var;
+}
+
+logico InserirLogicoIncorreto3 () {
+locais:
+	int var;
+comandos:
+	retornar var;
+}
+
+int InserirParametro (int a, int b) {
+locais:
+	int var;
+comandos:
+	var := a + b;
+	retornar var;
+}
+
+int InserirRecursivo (int a, int b) {
+locais:
+	int var;
+comandos:
+	retornar InserirRecursivo(a,b);
+}
+
+int InserirFuncao (int a, int b) {
+locais:
+	int var;
+comandos:
+	retornar InserirIntCorreto2();
+}
+
 principal {
 locais:
-	int naoInicializadaReferenciada;
+	int var;
 comandos:
-	varNaoDeclarada := naoInicializadaReferenciada;
 
+	/* Testando retorno de funcao vazia (procedimento) */
+	chamar InserirVazioCorreto();
+	chamar InserirVazioIncorreto();
+
+	/* Testando retorno de funcao nao vazia */
+	var := InserirIntCorreto1(InserirIntCorreto2());
+	
 }

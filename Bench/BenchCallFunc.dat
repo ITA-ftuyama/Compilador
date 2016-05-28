@@ -51,6 +51,13 @@ comandos:
 	retornar a;
 }
 
+real InserirReal (real a) {
+locais:
+	int var;
+comandos:
+	retornar a;
+}
+
 int Inserir (int a, int b) {
 locais:
 	int var;
@@ -70,24 +77,30 @@ principal {
 locais:
 	int var;
 comandos:
+
+	/* Testando o numero de argumentos de funcao*/
 	var := InserirOne(varint);
 	var := InserirOne();
 	var := InserirOne(varint, varint);
 
-	var := InserirOne(varlogico);
+	/* Testando compatibilidade de argumentos de funcao*/
 	var := InserirOne(varlogico);
 
 	var := Inserir(varint, varint);
 
 	var := InserirVarios(varint, varreal, varchar, varlogico);
-	var := InserirVarios(varint, varreal, varlogico, varchar);
-	var := InserirVarios(varreal, varint, varlogico, varchar);
+	var := InserirVarios(varint, varint, varint, varint);
+	var := InserirVarios(varreal, varreal, varreal, varreal);
+	var := InserirVarios(varchar, varchar, varchar, varchar);
+	var := InserirVarios(varlogico, varlogico, varlogico, varlogico);
 	var := InserirVazio();
 
+	/* Testando numero de argumentos de procedimento */
 	chamar InserirVazio();
 	chamar InserirOne(varint);
 	chamar InserirVazio(varint);
 	
+	/* Testando compatibilidade de argumentos de procedimento */
 	chamar InserirVariosVazio(varint, varreal, varchar, varlogico);
 	chamar InserirVariosVazio(varint, varreal, varlogico, varchar);
 	chamar InserirVariosVazio(varreal, varint, varlogico, varchar);
@@ -95,13 +108,10 @@ comandos:
 	var := InserirNenhum();
 
 	chamar varint();
-	/*
-	var := Inserir(varint, varint);
-	var := Inserir(varint);
-	var := Inserir(varint, varint, varint);
 
-	var := Inserir(varint, varreal);
-	var := Inserir(varint, varchar);
-	var := Inserir(varint, varlogico);
-	*/
+	/*Testando compatibilidade entre alguns tipos */
+	varreal := InserirReal(varreal);
+	varreal := InserirReal(varint);
+	varreal := InserirReal(varchar);
+	varreal := InserirReal(varlogico);
 }

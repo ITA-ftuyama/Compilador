@@ -74,7 +74,10 @@
 #define INCOMP_SE           "Expressao no Se deveria ser logico"
 #define INCOMP_TIPOSUB      "Tipo inadequado para subscrito"
 #define INCOMP_NARG         "Numero de argumentos diferente do numero de parametros"
-#define INCOMP_PARAM        "Incompatibilidade de parametros"    
+#define INCOMP_PARAM        "Incompatibilidade de parametros"  
+#define INCOMP_RETORNAR     "Incompatibilidade de expressao retornada"
+
+#define MISTAKEN(A,B)       "Esperado " #A". Obtido "#B 
 
 /*  Strings para nomes dos tipos de identificadores  */
 
@@ -499,9 +502,39 @@ ListExpr    :   Expressao { $$.nargs = 1;   $$.listtipo = InicListTipo ($1); }
                     $$.listtipo = ConcatListTipo ($1.listtipo, InicListTipo ($4));
                 }
             ;
-CmdRetornar :   RETORNAR  PVIRG {printf("retornar;\n");}
+CmdRetornar :   RETORNAR  PVIRG {
+                    printf("retornar;\n");
+                }
             |   RETORNAR        {printf("retornar ");}
-                Expressao PVIRG {printf(";\n");}
+                Expressao PVIRG {
+                    printf (";\n");
+                    if (escopo != NULL)
+                        if (((escopo->tvar == INTEGER || escopo->tvar == CHAR) &&
+                            ($3 == FLOAT || $3 == LOGIC)) ||
+                            (escopo->tvar == FLOAT && $3 == LOGIC) ||
+                            (escopo->tvar == LOGIC && $3 != LOGIC)) {
+                            
+                            if(escopo->tvar == INTEGER || escopo->tvar == CHAR)
+                                Exception(errorIncomp, MISTAKEN(int ou carac, real ou logico));
+                            else if (escopo->tvar == FLOAT)
+                                Exception(errorIncomp, MISTAKEN(int ou carac ou real, logico));
+                            else if (escopo->tvar == LOGIC)
+                                Exception(errorIncomp, MISTAKEN(logico, int ou carac ou real));
+                        }
+                        else if (escopo->tvar == VAZIO) {
+                            if ($3 == INTEGER)
+                                Exception (errorIncomp, MISTAKEN(nada, int));
+                            else if ($3 == FLOAT)
+                                Exception (errorIncomp, MISTAKEN(nada, real));
+                            else if ($3 == CHAR)
+                                Exception (errorIncomp, MISTAKEN(nada, carac));
+                            else if ($3 == LOGIC)
+                                Exception (errorIncomp, MISTAKEN(nada, logico));
+                        }
+                        else {
+                            printf("\n%d\n", $3);
+                        }
+                }
             ;
 CmdAtrib    :   Variavel {if ($1 != NULL) $1->inic = $1->ref = TRUE;}
                 ATRIB    {printf (" := ");}
@@ -771,7 +804,7 @@ simbolo InsereSimb (char *cadeia, int tid, int tvar, simbolo escopo) {
     s = tabsimb[i] = (simbolo) malloc (sizeof (celsimb));
     s->cadeia = (char*) malloc ((strlen(cadeia)+1) * sizeof(char));
     strcpy (s->cadeia, cadeia);
-    s->tid = tid;       s->tvar = tvar;     
+    s->tid = tid;       s->tvar = tvar;
     s->prox = aux;      s->escopo = escopo;
     s->listvardecl = s->listparam = s->listfunc = NULL;
 
@@ -943,17 +976,17 @@ void ChecArgumentos (pontexprtipo Ltiparg, listsimb Lparam) {
     q = Lparam->prox;
     while (p != NULL && q != NULL) {
         switch (q->simb->tvar) {
-            case INTEIRO: case CARAC:
-                if (p->tipo != INTEIRO && p->tipo != CARAC)
-                    Exception(errorIncomp, INCOMP_PARAM);
+            case INTEGER: case CHAR:
+                if (p->tipo != INTEGER && p->tipo != CHAR)
+                    Exception(errorIncomp, MISTAKEN("int, carac", "real, logico"));
                 break;
-            case REAL:
-                if (p->tipo != INTEIRO &&  p->tipo != CARAC && p->tipo != REAL)
-                    Exception(errorIncomp, INCOMP_PARAM);
+            case FLOAT:
+                if (p->tipo != INTEGER &&  p->tipo != CHAR && p->tipo != FLOAT)
+                    Exception(errorIncomp, MISTAKEN("int, carac, real", "logico"));
                 break;
-            case LOGICO:
-                if (p->tipo != LOGICO)
-                    Exception(errorIncomp, INCOMP_PARAM);
+            case LOGIC:
+                if (p->tipo != LOGIC)
+                    Exception(errorIncomp, MISTAKEN("logico", "int, carac, real"));
                 break;
             default:
                 if (q->simb->tvar != p->tipo)
@@ -963,3 +996,5 @@ void ChecArgumentos (pontexprtipo Ltiparg, listsimb Lparam) {
         p = p->prox; q = q->prox;
     }
 }
+
+
