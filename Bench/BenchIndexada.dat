@@ -24,9 +24,19 @@ comandos:
 	array[0][0][0] := 1;
 	array[0][0][0][0] := 1;
 	ler(arrayC);
+	escrever(arrayC);
 	ler(arrayC[0]);
 	var := arrayC[(2 - 1)];
 	var := arrayC[('b' - 'a')];
+	var := arrayC[false];
+	var := arrayC[1.0];
+}
+
+vazio Atrib () {
+locais:
+	int var1[10], var2[10];
+comandos:
+	var1 := var2;
 }
 
 principal {

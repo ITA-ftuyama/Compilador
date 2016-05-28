@@ -63,6 +63,12 @@ comandos:
 	;
 }
 
+vazio InserirRec(int a) {
+locais:
+	int var;
+comandos:
+	chamar InserirRec(var);
+}
 
 int InserirIntCorreto1 (int a) {
 locais:
@@ -76,6 +82,13 @@ locais:
 	carac var;
 comandos:
 	retornar var;
+}
+
+int InserirIntIncorreto () {
+locais:
+	real var;
+comandos:
+	retornar ;
 }
 
 int InserirIntIncorreto1 () {
@@ -197,6 +210,14 @@ locais:
 comandos:
 	retornar InserirIntCorreto2();
 }
+
+int FuncaoErrada (int InserirFuncao, int b) {
+locais:
+	int var;
+comandos:
+	retornar InserirIntCorreto2();
+}
+
 
 principal {
 locais:

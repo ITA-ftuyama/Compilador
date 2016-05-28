@@ -1,12 +1,12 @@
-Ôªø@echo off
+@echo off
 echo ######################################
-echo #        Analisador Sem√¢ntico        #
+echo #        Analisador Sem‚ntico        #
 echo #   para Linguagem COMP-ITA 2016     #
 echo ######################################
 
+cd ..
 :loop
 
-cd ..
 echo Chamando Flex
 flex Compilador/_Lab04.l
 
@@ -25,17 +25,15 @@ REM _Lab04  < Compilador/_Lab04Prog.dat > Compilador/_Lab04ProgOutput.dat
 
 goto Teste
 	echo.
-	echo ### Testes para Declara√ß√£o de Vari√°veis
+	echo ### Testes para DeclaraÁ„o de Vari·veis
 	_Lab04 < Compilador/Bench/BenchDeclaracao.dat > Compilador/Bench/oBenchDeclaracao.dat
 
 	echo.
-	echo ### Testes para fun√ß√£o Principal ###
-	_Lab04 < Compilador/Bench/BenchPrincipal1.dat > Compilador/Bench/oBenchPrincipal1.dat
-	_Lab04 < Compilador/Bench/BenchPrincipal2.dat > Compilador/Bench/oBenchPrincipal2.dat
-	_Lab04 < Compilador/Bench/BenchPrincipal3.dat > Compilador/Bench/oBenchPrincipal3.dat
+	echo ### Testes para funÁ„o Principal ###
+	_Lab04 < Compilador/Bench/BenchPrincipal.dat > Compilador/Bench/oBenchPrincipal.dat
 
 	echo.
-	echo ### Testes para Vari√°veis Indexadas
+	echo ### Testes para Vari·veis Indexadas
 	_Lab04 < Compilador/Bench/BenchIndexada.dat > Compilador/Bench/oBenchIndexada.dat
 
 	echo.
@@ -49,12 +47,10 @@ goto Teste
 	echo.
 	echo ### Testes para CallFunc
 	_Lab04 < Compilador/Bench/BenchCallFunc.dat > Compilador/Bench/oBenchCallFunc.dat
-
-:Teste
 	echo.
 	echo ### Testes para RetornoFunc
 	_Lab04 < Compilador/Bench/BenchRetornoFunc.dat > Compilador/Bench/oBenchRetornoFunc.dat
-
+:Teste
 
 echo.
 echo Completo

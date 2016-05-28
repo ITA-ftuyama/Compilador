@@ -1,41 +1,6 @@
 Especificações semânticas de COMP-ITA 2016 
 
 
-####################################################TO DO####################################################
-
-	#### Arquivo BenchCallFunc ####
-
-•	O identificador de uma chamada de procedimento e o identificador de uma chamada de função deve ser do tipo nome de função. 
-•	Um identificador de variável e de parâmetro deve ser do tipo nome de variável.
-•	O tipo de variável correspondente ao identificador de uma chamada de procedimento deve ser o tipo vazio.
-•	O tipo de variável correspondente ao identificador de uma chamada de função não deve ser o tipo vazio.
-•	O número de argumentos na chamada de uma função ou procedimento deve ser igual ao número de parâmetros do mesmo. 
-•	Deve haver compatibilidade entre um argumento de chamada de uma função ou procedimento e seu parâmetro correspondente, conforme a seguinte tabela:
-
-								Tipo do parâmetro	Tipo do argumento
-								Inteiro	Expressão inteira ou caractere
-								Real	Expressão inteira, real ou caractere
-								Caractere	Expressão inteira ou caractere
-								Lógico	Expressão de valor lógico
-
-	#### Arquivo BenchRetornoFunc ####
-
-•	Todo comando retornar dentro de uma função de tipo vazio não deve ser seguido de expressão e dentro de funções de outros tipos deve ser seguido por uma expressão. 
-•	Deve haver compatibilidade entre o tipo de uma função e o tipo da expressão de qualquer comando retornar em seu escopo, conforme a seguinte tabela:
-								Tipo da função	Tipo da expressão retornada
-								Inteiro	Inteiro ou Caractere
-								Real	Inteiro, Real ou Caractere
-								Caractere	Inteiro ou Caractere
-								Lógico	Lógico
-
-•	Funções não são usados como parâmetros ou argumentos de chamada de outras funções.
-•	A linguagem não admite recursividade.
-
-####################################################TEST####################################################
-
-
-####################################################DONE####################################################
-
 	#### Arquivo BenchDeclaracao ####
 
 •	Qualquer identificador deve ser declarado antes de usado.
@@ -49,6 +14,8 @@ Especificações semânticas de COMP-ITA 2016
 
 •	O programa deve ter uma e uma só função de cabeçalho principal, devendo esta ser a última função desse programa.
 •	Uma função não pode ter o mesmo nome que o de uma variável global.
+•	A linguagem não admite recursividade.
+
 
 	#### Arquivo BenchCompatibilidade ####
 
@@ -90,3 +57,31 @@ Especificações semânticas de COMP-ITA 2016
 •	A variável da inicialização do cabeçalho de um comando para deve ser escalar do tipo inteiro ou caractere.
 •	A variável da atualização do cabeçalho de um comando para deve ser a mesma daquela de sua inicialização.
 •	A primeira e a terceira expressão de um comando para deve ser do tipo inteiro ou caractere e a segunda expressão deve ser do tipo lógico.
+
+
+	#### Arquivo BenchCallFunc ####
+
+•	O identificador de uma chamada de procedimento e o identificador de uma chamada de função deve ser do tipo nome de função. 
+•	Um identificador de variável e de parâmetro deve ser do tipo nome de variável.
+•	O tipo de variável correspondente ao identificador de uma chamada de procedimento deve ser o tipo vazio.
+•	O tipo de variável correspondente ao identificador de uma chamada de função não deve ser o tipo vazio.
+•	O número de argumentos na chamada de uma função ou procedimento deve ser igual ao número de parâmetros do mesmo. 
+•	Deve haver compatibilidade entre um argumento de chamada de uma função ou procedimento e seu parâmetro correspondente, conforme a seguinte tabela:
+
+								Tipo do parâmetro	Tipo do argumento
+								Inteiro	Expressão inteira ou caractere
+								Real	Expressão inteira, real ou caractere
+								Caractere	Expressão inteira ou caractere
+								Lógico	Expressão de valor lógico
+
+	#### Arquivo BenchRetornoFunc ####
+
+•	Todo comando retornar dentro de uma função de tipo vazio não deve ser seguido de expressão e dentro de funções de outros tipos deve ser seguido por uma expressão. 
+•	Deve haver compatibilidade entre o tipo de uma função e o tipo da expressão de qualquer comando retornar em seu escopo, conforme a seguinte tabela:
+								Tipo da função	Tipo da expressão retornada
+								Inteiro	Inteiro ou Caractere
+								Real	Inteiro, Real ou Caractere
+								Caractere	Inteiro ou Caractere
+								Lógico	Lógico
+
+•	Funções não são usados como parâmetros ou argumentos de chamada de outras funções.

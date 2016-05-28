@@ -40,9 +40,33 @@ comandos:
 
 ***** Exception<Esperado>: Subscrito(s) *****
 );
+	escrever (arrayC
+
+***** Exception<Esperado>: Subscrito(s) *****
+);
 	ler (arrayC[0]);
 	var := arrayC[(2 - 1)];
 	var := arrayC[('b' - 'a')];
+	var := arrayC[false]
+
+***** Exception<Incompatibilidade>: Tipo inadequado para subscrito *****
+;
+	var := arrayC[1]
+
+***** Exception<Incompatibilidade>: Tipo inadequado para subscrito *****
+;
+}
+vazio Atrib () {
+locais:
+	int var1[10], var2[10];
+comandos:
+	var1
+
+***** Exception<Esperado>: Subscrito(s) *****
+ := var2
+
+***** Exception<Esperado>: Subscrito(s) *****
+;
 }
 principal {
 locais:
@@ -53,6 +77,7 @@ comandos:
 
 var: Nao Inicializada
 var: Nao Referenciada
+var2: Nao Inicializada
 arrayB: Nao Inicializada
 arrayB: Nao Referenciada
 
@@ -70,7 +95,11 @@ Classe 10:
   (Principal, IDFUNC, escopo: Global
 	Variaveis: var
 	Parametros: void);
+  (var1    , IDVAR, INTEGER, 1, 1, EH ARRAY
+	ndims = 1, dimensoes:  10, escopo: Atrib);
 Classe 11:
+  (var2    , IDVAR, INTEGER, 0, 1, EH ARRAY
+	ndims = 1, dimensoes:  10, escopo: Atrib);
   (arrayB  , IDVAR, INTEGER, 0, 0, EH ARRAY
 	ndims = 1, dimensoes:  0, escopo: Global);
 Classe 12:
@@ -79,7 +108,11 @@ Classe 12:
 Classe 14:
   (array   , IDVAR, INTEGER, 1, 1, EH ARRAY
 	ndims = 3, dimensoes:  4  4  4, escopo: Func);
+Classe 15:
+  (Atrib   , IDFUNC, escopo: Global
+	Variaveis: var1, var2
+	Parametros: void);
 Classe 18:
   (Global  , IDGLOB, escopo: NULL
 	Variaveis: arrayB, arrayC
-	Funcoes: Func, Principal);
+	Funcoes: Func, Atrib, Principal);

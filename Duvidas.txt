@@ -1,7 +1,0 @@
-1. Usar trataChar e trataCadeia? Imprimir bem formatado ou cagado?
-2. Inserir ou não um erro na tabela de símbolos
-3. Número real perde formato (1.0 -> 1)
-4. Exception em lugar bisonho? Ver BenchCompatibilidade
-5. Resolver erros (?) - yacc: w - line 615 of "Compilador/_Lab04.y", the default action assigns an undefined value to $$
-						yacc: 3 shift/reduce conflicts, 2 reduce/reduce conflicts.
-6. Requisito do repetir

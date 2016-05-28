@@ -35,7 +35,7 @@ comandos:
 	retornar var;
 
 
-***** Exception<Incompatibilidade>: Esperado nada. Obtido int *****
+***** Exception<Incompatibilidade>: Esperado "nada". Obtido "int" *****
 }
 vazio InserirVazioIncorreto2 () {
 locais:
@@ -44,7 +44,7 @@ comandos:
 	retornar var;
 
 
-***** Exception<Incompatibilidade>: Esperado nada. Obtido real *****
+***** Exception<Incompatibilidade>: Esperado "nada". Obtido "real" *****
 }
 vazio InserirVazioIncorreto3 () {
 locais:
@@ -53,7 +53,7 @@ comandos:
 	retornar var;
 
 
-***** Exception<Incompatibilidade>: Esperado nada. Obtido carac *****
+***** Exception<Incompatibilidade>: Esperado "nada". Obtido "carac" *****
 }
 vazio InserirVazioIncorreto4 () {
 locais:
@@ -62,7 +62,7 @@ comandos:
 	retornar var;
 
 
-***** Exception<Incompatibilidade>: Esperado nada. Obtido logico *****
+***** Exception<Incompatibilidade>: Esperado "nada". Obtido "logico" *****
 }
 vazio InserirVazio (int a) {
 locais:
@@ -70,21 +70,35 @@ locais:
 comandos:
 	;
 }
+vazio InserirRec (int a) {
+locais:
+	int var;
+comandos:
+	chamar InserirRec(
+
+***** Exception<Recursividade>: InserirRec *****
+var);
+}
 int InserirIntCorreto1 (int a) {
 locais:
 	int var;
 comandos:
 	retornar a;
-
-1
 }
 int InserirIntCorreto2 () {
 locais:
 	carac var;
 comandos:
 	retornar var;
+}
+int InserirIntIncorreto () {
+locais:
+	real var;
+comandos:
+	retornar;
 
-4
+
+***** Exception<Incompatibilidade>: Esperado "retorno". Obtido "nada" *****
 }
 int InserirIntIncorreto1 () {
 locais:
@@ -93,7 +107,7 @@ comandos:
 	retornar var;
 
 
-***** Exception<Incompatibilidade>: Esperado int ou carac. Obtido real ou logico *****
+***** Exception<Incompatibilidade>: Esperado "int ou carac". Obtido "real ou logico" *****
 }
 int InserirIntIncorreto2 () {
 locais:
@@ -102,23 +116,19 @@ comandos:
 	retornar var;
 
 
-***** Exception<Incompatibilidade>: Esperado int ou carac. Obtido real ou logico *****
+***** Exception<Incompatibilidade>: Esperado "int ou carac". Obtido "real ou logico" *****
 }
 carac InserirCaracIorreto1 (int a) {
 locais:
 	int var;
 comandos:
 	retornar a;
-
-1
 }
 carac InserirCaracIorreto2 () {
 locais:
 	carac var;
 comandos:
 	retornar var;
-
-4
 }
 carac InserirCaracIncorreto1 () {
 locais:
@@ -127,7 +137,7 @@ comandos:
 	retornar var;
 
 
-***** Exception<Incompatibilidade>: Esperado int ou carac. Obtido real ou logico *****
+***** Exception<Incompatibilidade>: Esperado "int ou carac". Obtido "real ou logico" *****
 }
 carac InserirCaracIncorreto2 () {
 locais:
@@ -136,31 +146,25 @@ comandos:
 	retornar var;
 
 
-***** Exception<Incompatibilidade>: Esperado int ou carac. Obtido real ou logico *****
+***** Exception<Incompatibilidade>: Esperado "int ou carac". Obtido "real ou logico" *****
 }
 real InserirRealCorreto1 () {
 locais:
 	int var;
 comandos:
 	retornar var;
-
-1
 }
 real InserirRealCorreto2 () {
 locais:
 	real var;
 comandos:
 	retornar var;
-
-3
 }
 real InserirRealCorreto3 () {
 locais:
 	carac var;
 comandos:
 	retornar var;
-
-4
 }
 real InserirRealIncorreto1 () {
 locais:
@@ -169,15 +173,13 @@ comandos:
 	retornar var;
 
 
-***** Exception<Incompatibilidade>: Esperado int ou carac ou real. Obtido logico *****
+***** Exception<Incompatibilidade>: Esperado "int ou carac ou real". Obtido "logico" *****
 }
 logico InserirLogicoCorreto1 () {
 locais:
 	logico var;
 comandos:
 	retornar var;
-
-2
 }
 logico InserirLogicoIncorreto1 () {
 locais:
@@ -186,7 +188,7 @@ comandos:
 	retornar var;
 
 
-***** Exception<Incompatibilidade>: Esperado logico. Obtido int ou carac ou real *****
+***** Exception<Incompatibilidade>: Esperado "logico". Obtido "int ou carac ou real" *****
 }
 logico InserirLogicoIncorreto2 () {
 locais:
@@ -195,7 +197,7 @@ comandos:
 	retornar var;
 
 
-***** Exception<Incompatibilidade>: Esperado logico. Obtido int ou carac ou real *****
+***** Exception<Incompatibilidade>: Esperado "logico". Obtido "int ou carac ou real" *****
 }
 logico InserirLogicoIncorreto3 () {
 locais:
@@ -204,7 +206,7 @@ comandos:
 	retornar var;
 
 
-***** Exception<Incompatibilidade>: Esperado logico. Obtido int ou carac ou real *****
+***** Exception<Incompatibilidade>: Esperado "logico". Obtido "int ou carac ou real" *****
 }
 int InserirParametro (int a, int b) {
 locais:
@@ -212,32 +214,30 @@ locais:
 comandos:
 	var := a + b;
 	retornar var;
-
-1
 }
 int InserirRecursivo (int a, int b) {
 locais:
 	int var;
 comandos:
-	retornar InserirRecursivo (a, b);
+	retornar InserirRecursivo (
 
-8109520
+***** Exception<Recursividade>: InserirRecursivo *****
+a, b);
 }
 int InserirFuncao (int a, int b) {
 locais:
 	int var;
 comandos:
 	retornar InserirIntCorreto2 ();
-
-8105960
 }
-int InserirVarios (int a, real b, carac c, logico d) {
+int FuncaoErrada (int InserirFuncao
+
+***** Exception<Nao Esperado>: Funcao no argumento *****
+, int b) {
 locais:
 	int var;
 comandos:
-	retornar a;
-
-1
+	retornar InserirIntCorreto2 ();
 }
 principal {
 locais:
@@ -254,7 +254,10 @@ chamar InserirVazioCorreto();
 
 /* Testando retorno de funcao nao vazia */
 
-	var := InserirIntCorreto1 (InserirIntCorreto2 ())
+	var := InserirIntCorreto1 (InserirIntCorreto2 ()
+
+***** Exception<Nao Esperado>: Funcao no parametro *****
+)
 
 ***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
 ;
@@ -284,8 +287,11 @@ var: Nao Referenciada
 var: Nao Inicializada
 var: Nao Inicializada
 var: Nao Inicializada
+var: Nao Referenciada
+var: Nao Inicializada
 var: Nao Inicializada
 var: Nao Referenciada
+var: Nao Inicializada
 var: Nao Inicializada
 var: Nao Referenciada
 var: Nao Inicializada
@@ -310,22 +316,24 @@ Classe 0:
 	Parametros: void);
   (varlogico, IDVAR, LOGIC  , 0, 0, escopo: Global);
 Classe 2:
+  (InserirFuncao, IDVAR, INTEGER, 1, 1, escopo: FuncaoErrada);
   (InserirFuncao, IDFUNC, escopo: Global
 	Variaveis: var
 	Parametros: a, b);
   (InserirRealIncorreto1, IDFUNC, escopo: Global
 	Variaveis: var
 	Parametros: void);
-Classe 3:
-  (InserirVarios, IDFUNC, escopo: Global
+  (InserirIntIncorreto, IDFUNC, escopo: Global
 	Variaveis: var
-	Parametros: a, b, c, d);
+	Parametros: void);
+  (InserirRec, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: a);
 Classe 4:
   (InserirLogicoCorreto1, IDFUNC, escopo: Global
 	Variaveis: var
 	Parametros: void);
 Classe 5:
-  (a       , IDVAR, INTEGER, 1, 1, escopo: InserirVarios);
   (a       , IDVAR, INTEGER, 1, 1, escopo: InserirFuncao);
   (a       , IDVAR, INTEGER, 1, 1, escopo: InserirRecursivo);
   (a       , IDVAR, INTEGER, 1, 1, escopo: InserirParametro);
@@ -334,9 +342,10 @@ Classe 5:
 	Variaveis: var
 	Parametros: void);
   (a       , IDVAR, INTEGER, 1, 1, escopo: InserirIntCorreto1);
+  (a       , IDVAR, INTEGER, 1, 1, escopo: InserirRec);
   (a       , IDVAR, INTEGER, 1, 1, escopo: InserirVazio);
 Classe 6:
-  (b       , IDVAR, FLOAT  , 1, 1, escopo: InserirVarios);
+  (b       , IDVAR, INTEGER, 1, 1, escopo: FuncaoErrada);
   (b       , IDVAR, INTEGER, 1, 1, escopo: InserirFuncao);
   (b       , IDVAR, INTEGER, 1, 1, escopo: InserirRecursivo);
   (b       , IDVAR, INTEGER, 1, 1, escopo: InserirParametro);
@@ -345,8 +354,7 @@ Classe 6:
 	Parametros: void);
 Classe 7:
   (var     , IDVAR, INTEGER, 1, 1, escopo: Principal);
-  (var     , IDVAR, INTEGER, 0, 0, escopo: InserirVarios);
-  (c       , IDVAR, CHAR   , 1, 1, escopo: InserirVarios);
+  (var     , IDVAR, INTEGER, 0, 0, escopo: FuncaoErrada);
   (var     , IDVAR, INTEGER, 0, 0, escopo: InserirFuncao);
   (var     , IDVAR, INTEGER, 0, 0, escopo: InserirRecursivo);
   (var     , IDVAR, INTEGER, 1, 1, escopo: InserirParametro);
@@ -364,8 +372,10 @@ Classe 7:
   (var     , IDVAR, INTEGER, 0, 0, escopo: InserirCaracIorreto1);
   (var     , IDVAR, LOGIC  , 0, 1, escopo: InserirIntIncorreto2);
   (var     , IDVAR, FLOAT  , 0, 1, escopo: InserirIntIncorreto1);
+  (var     , IDVAR, FLOAT  , 0, 0, escopo: InserirIntIncorreto);
   (var     , IDVAR, CHAR   , 0, 1, escopo: InserirIntCorreto2);
   (var     , IDVAR, INTEGER, 0, 0, escopo: InserirIntCorreto1);
+  (var     , IDVAR, INTEGER, 0, 1, escopo: InserirRec);
   (var     , IDVAR, INTEGER, 0, 0, escopo: InserirVazio);
   (var     , IDVAR, LOGIC  , 0, 1, escopo: InserirVazioIncorreto4);
   (var     , IDVAR, CHAR   , 0, 1, escopo: InserirVazioIncorreto3);
@@ -373,8 +383,6 @@ Classe 7:
   (var     , IDVAR, INTEGER, 0, 1, escopo: InserirVazioIncorreto1);
   (var     , IDVAR, INTEGER, 0, 0, escopo: InserirVazioCorreto);
   (varchar , IDVAR, CHAR   , 0, 0, escopo: Global);
-Classe 8:
-  (d       , IDVAR, LOGIC  , 1, 1, escopo: InserirVarios);
 Classe 9:
   (InserirVazioCorreto, IDFUNC, escopo: Global
 	Variaveis: var
@@ -425,7 +433,7 @@ Classe 18:
 	Parametros: void);
   (Global  , IDGLOB, escopo: NULL
 	Variaveis: varint, varreal, varchar, varlogico
-	Funcoes: InserirVazioCorreto, InserirVazioIncorreto1, InserirVazioIncorreto2, InserirVazioIncorreto3, InserirVazioIncorreto4, InserirVazio, InserirIntCorreto1, InserirIntCorreto2, InserirIntIncorreto1, InserirIntIncorreto2, InserirCaracIorreto1, InserirCaracIorreto2, InserirCaracIncorreto1, InserirCaracIncorreto2, InserirRealCorreto1, InserirRealCorreto2, InserirRealCorreto3, InserirRealIncorreto1, InserirLogicoCorreto1, InserirLogicoIncorreto1, InserirLogicoIncorreto2, InserirLogicoIncorreto3, InserirParametro, InserirRecursivo, InserirFuncao, InserirVarios, Principal);
+	Funcoes: InserirVazioCorreto, InserirVazioIncorreto1, InserirVazioIncorreto2, InserirVazioIncorreto3, InserirVazioIncorreto4, InserirVazio, InserirRec, InserirIntCorreto1, InserirIntCorreto2, InserirIntIncorreto, InserirIntIncorreto1, InserirIntIncorreto2, InserirCaracIorreto1, InserirCaracIorreto2, InserirCaracIncorreto1, InserirCaracIncorreto2, InserirRealCorreto1, InserirRealCorreto2, InserirRealCorreto3, InserirRealIncorreto1, InserirLogicoCorreto1, InserirLogicoIncorreto1, InserirLogicoIncorreto2, InserirLogicoIncorreto3, InserirParametro, InserirRecursivo, InserirFuncao, FuncaoErrada, Principal);
 Classe 19:
   (InserirRealCorreto3, IDFUNC, escopo: Global
 	Variaveis: var
@@ -451,6 +459,9 @@ Classe 21:
 	Variaveis: var
 	Parametros: void);
 Classe 22:
+  (FuncaoErrada, IDFUNC, escopo: Global
+	Variaveis: var
+	Parametros: InserirFuncao, b);
   (InserirVazioIncorreto3, IDFUNC, escopo: Global
 	Variaveis: var
 	Parametros: void);

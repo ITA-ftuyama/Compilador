@@ -11,23 +11,29 @@
  */
 
 globais:
-	int Inserir;
-	carac destruir;
+	int var, var;
+	logico var;
+
+	int variavelInt;
+	real variavelReal;
+	carac variavelCarac;
+	logico variavelLogico;
+
 	vazio variavelVoid;
 funcoes:
 
 vazio Inserir (int posic, vazio parametroVoid) {
 locais:
 	real vetor[3];
-	logico nope;
+	int var;
 comandos:
 	vetor[0] := 1.4;
-	nope := true;
 }
 
 vazio Destruir () {
 locais:
-	int naoInicializadaNaoReferenciada;
+	int varNaoInicializadaNaoReferenciada;
+	int var;
 comandos:
 	;
 }

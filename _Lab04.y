@@ -32,6 +32,7 @@
 #define     LOGIC       2
 #define     FLOAT       3
 #define     CHAR        4
+#define     FUNC        5
 
 /*   Definicao de outras constantes   */
 
@@ -49,6 +50,7 @@
 #define errorNaoDecl        "Nao Declarado"
 #define errorNaoEsperado    "Nao Esperado"
 #define errorTipoInadeq     "Tipo Inadequado"
+#define errorRecursiva      "Recursividade"
 
 /*  Definicao de mensagens de incompatibilidade */
 
@@ -333,7 +335,7 @@ Cabecalho   :   PRINCIPAL   {
                         Exception (errorIncomp, INCOMP_FUNPRIN1);
                     }
                     if  ( SimbDeclaradoEscopo($2, escopo->listfunc, escopo) != NULL
-                        || SimbDeclaradoEscopo($2, escopo->listvardecl, escopo) != NULL) {
+                       || SimbDeclaradoEscopo($2, escopo->listvardecl, escopo) != NULL) {
                         Exception (errorDeclIndevida, $2);
                     }
                     escopo = simb = 
@@ -353,8 +355,12 @@ ListParam   :   Parametro
             ;
 Parametro   :   Tipo  ID {
                     printf ("%s", $2);
+                    simb = SimbDeclarado ($2);
                     if  (SimbDeclaradoEscopo($2, escopo->listparam, escopo) != NULL) {
                         Exception (errorDeclRepetida, $2);
+                    }
+                    else if  (simb != NULL && simb->tid == IDFUNC) {
+                        Exception (errorNaoEsperado, "Funcao no argumento");
                     }
                     else if (tipocorrente == VAZIO) {
                         Exception (errorTipoInadeq, $2);
@@ -481,6 +487,8 @@ ChamadaProc :   CHAMAR ID ABPAR {
                         Exception (errorTipoInadeq, $2);
                     else if (simb->tvar != VAZIO)
                         Exception (errorTipoInadeq, $2);
+                    else if (escopo == simb)
+                        Exception (errorRecursiva, $2);
                     $<simb>$ = simb;
                 }
                 Argumentos FPAR PVIRG {
@@ -496,14 +504,19 @@ ChamadaProc :   CHAMAR ID ABPAR {
 Argumentos  :   { $$.nargs = 0;  $$.listtipo = NULL; }
             |   ListExpr
             ;
-ListExpr    :   Expressao { $$.nargs = 1;   $$.listtipo = InicListTipo ($1); }
+ListExpr    :   Expressao { 
+                    if ($1 == FUNC) Exception(errorNaoEsperado, "Funcao no parametro");
+                    $$.nargs = 1;   $$.listtipo = InicListTipo ($1); }
             |   ListExpr VIRG   {printf(", ");} Expressao {
+                    if ($4 == FUNC) Exception(errorNaoEsperado, "Funcao no parametro");
                     $$.nargs = $1.nargs + 1;
                     $$.listtipo = ConcatListTipo ($1.listtipo, InicListTipo ($4));
                 }
             ;
 CmdRetornar :   RETORNAR  PVIRG {
                     printf("retornar;\n");
+                    if (escopo != NULL && escopo->tvar != VAZIO)
+                        Exception(errorIncomp, MISTAKEN("retorno", "nada"));
                 }
             |   RETORNAR        {printf("retornar ");}
                 Expressao PVIRG {
@@ -515,24 +528,21 @@ CmdRetornar :   RETORNAR  PVIRG {
                             (escopo->tvar == LOGIC && $3 != LOGIC)) {
                             
                             if(escopo->tvar == INTEGER || escopo->tvar == CHAR)
-                                Exception(errorIncomp, MISTAKEN(int ou carac, real ou logico));
+                                Exception(errorIncomp, MISTAKEN("int ou carac", "real ou logico"));
                             else if (escopo->tvar == FLOAT)
-                                Exception(errorIncomp, MISTAKEN(int ou carac ou real, logico));
+                                Exception(errorIncomp, MISTAKEN("int ou carac ou real", "logico"));
                             else if (escopo->tvar == LOGIC)
-                                Exception(errorIncomp, MISTAKEN(logico, int ou carac ou real));
+                                Exception(errorIncomp, MISTAKEN("logico", "int ou carac ou real"));
                         }
                         else if (escopo->tvar == VAZIO) {
                             if ($3 == INTEGER)
-                                Exception (errorIncomp, MISTAKEN(nada, int));
+                                Exception (errorIncomp, MISTAKEN("nada", "int"));
                             else if ($3 == FLOAT)
-                                Exception (errorIncomp, MISTAKEN(nada, real));
+                                Exception (errorIncomp, MISTAKEN("nada", "real"));
                             else if ($3 == CHAR)
-                                Exception (errorIncomp, MISTAKEN(nada, carac));
+                                Exception (errorIncomp, MISTAKEN("nada", "carac"));
                             else if ($3 == LOGIC)
-                                Exception (errorIncomp, MISTAKEN(nada, logico));
-                        }
-                        else {
-                            printf("\n%d\n", $3);
+                                Exception (errorIncomp, MISTAKEN("nada", "logico"));
                         }
                 }
             ;
@@ -657,7 +667,7 @@ Fator       :   Variavel {
             }
             |   ABPAR           {printf("(");}
                 Expressao  FPAR {printf (")"); $$ = $3;}
-            |   ChamadaFunc
+            |   ChamadaFunc     {$$ = FUNC;}
             ;
 Variavel    :   ID {
                     printf ("%s", $1);
@@ -695,10 +705,10 @@ ChamadaFunc :   ID ABPAR {
                     simb = SimbDeclarado ($1);
                     if (! simb) 
                         Exception (errorNaoDecl, $1);
-                    else if (simb->tid != IDFUNC)
+                    else if (simb->tid != IDFUNC || simb->tvar == VAZIO)
                         Exception (errorTipoInadeq, $1);
-                    else if (simb->tvar == VAZIO)
-                        Exception (errorTipoInadeq, $1);
+                    else if (escopo == simb)
+                        Exception (errorRecursiva, $1);
                     $<simb>$ = simb;
                 }
                 Argumentos {printf(")");}
@@ -975,6 +985,8 @@ void ChecArgumentos (pontexprtipo Ltiparg, listsimb Lparam) {
     p = Ltiparg->prox;
     q = Lparam->prox;
     while (p != NULL && q != NULL) {
+        if (q->simb->tid == IDFUNC)
+            Exception(errorEsperado, "Esperado parâmetro");
         switch (q->simb->tvar) {
             case INTEGER: case CHAR:
                 if (p->tipo != INTEGER && p->tipo != CHAR)
