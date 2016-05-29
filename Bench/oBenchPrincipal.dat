@@ -47,7 +47,10 @@ int Destruir (
 locais:
 	int x;
 comandos:
-	x := Destruir ();
+	x := Destruir (
+
+***** Exception<Recursividade>: Destruir *****
+);
 }
 
 x: Nao Inicializada
@@ -67,32 +70,32 @@ Inserir: Nao Referenciada
    TABELA  DE  SIMBOLOS:
 
 Classe 5:
-  (x       , IDVAR, INTEGER, 1, 1, escopo: Destruir);
-  (x       , IDVAR, INTEGER, 0, 0, escopo: Inserir);
-  (x       , IDVAR, INTEGER, 0, 0, escopo: Principal);
+  (x       , IDVAR, int   , 1, 1, escopo: Destruir);
+  (x       , IDVAR, int   , 0, 0, escopo: Inserir);
+  (x       , IDVAR, int   , 0, 0, escopo: Principal);
 Classe 6:
-  (y       , IDVAR, INTEGER, 0, 0, escopo: Principal);
+  (y       , IDVAR, int   , 0, 0, escopo: Principal);
 Classe 7:
-  (variavel, IDVAR, INTEGER, 0, 0, escopo: Global);
+  (variavel, IDVAR, int   , 0, 0, escopo: Global);
 Classe 8:
-  (destruir, IDVAR, LOGIC  , 0, 0, escopo: Global);
+  (destruir, IDVAR, logico, 0, 0, escopo: Global);
 Classe 10:
-  (Principal, IDFUNC, escopo: Global
-	Variaveis: y
-	Parametros: void);
-  (Principal, IDFUNC, escopo: Global
-	Variaveis: x
-	Parametros: void);
+  (Principal, IDFUNC, vazio , escopo: Global
+	Variaveis: int y
+	Parametros: NULL);
+  (Principal, IDFUNC, vazio , escopo: Global
+	Variaveis: int x
+	Parametros: NULL);
 Classe 18:
-  (Global  , IDGLOB, escopo: NULL
-	Variaveis: variavel, Inserir, destruir
-	Funcoes: Principal, Principal, Inserir, Destruir);
+  (Global  , IDGLOB, null  , escopo: NULL
+	Variaveis: int variavel, int Inserir, logico destruir
+	Funcoes: vazio Principal, vazio Principal, int Inserir, int Destruir);
 Classe 19:
-  (Inserir , IDFUNC, escopo: Global
-	Variaveis: x
-	Parametros: void);
-  (Inserir , IDVAR, INTEGER, 0, 0, escopo: Global);
+  (Inserir , IDFUNC, int   , escopo: Global
+	Variaveis: int x
+	Parametros: NULL);
+  (Inserir , IDVAR, int   , 0, 0, escopo: Global);
 Classe 22:
-  (Destruir, IDFUNC, escopo: Global
-	Variaveis: x
-	Parametros: void);
+  (Destruir, IDFUNC, int   , escopo: Global
+	Variaveis: int x
+	Parametros: NULL);

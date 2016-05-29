@@ -91,37 +91,37 @@ var := InserirOne (varint);
 
 	var := InserirOne (varlogico)
 
-***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac *****
 ;
 	var := Inserir (varint, varint);
 	var := InserirVarios (varint, varreal, varchar, varlogico);
 	var := InserirVarios (varint, varint, varint, varint)
 
-***** Exception<Incompatibilidade>: Esperado "logico". Obtido "int, carac, real" *****
+***** Exception<Incompatibilidade>: Obtido: int. Esperado: logico *****
 ;
 	var := InserirVarios (varreal, varreal, varreal, varreal)
 
-***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
+***** Exception<Incompatibilidade>: Obtido: real. Esperado: int ou carac *****
 
 
-***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
+***** Exception<Incompatibilidade>: Obtido: real. Esperado: int ou carac *****
 
 
-***** Exception<Incompatibilidade>: Esperado "logico". Obtido "int, carac, real" *****
+***** Exception<Incompatibilidade>: Obtido: real. Esperado: logico *****
 ;
 	var := InserirVarios (varchar, varchar, varchar, varchar)
 
-***** Exception<Incompatibilidade>: Esperado "logico". Obtido "int, carac, real" *****
+***** Exception<Incompatibilidade>: Obtido: carac. Esperado: logico *****
 ;
 	var := InserirVarios (varlogico, varlogico, varlogico, varlogico)
 
-***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac *****
 
 
-***** Exception<Incompatibilidade>: Esperado "int, carac, real". Obtido "logico" *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac ou real *****
 
 
-***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac *****
 ;
 	var := InserirVazio (
 
@@ -146,20 +146,20 @@ varint);
 	chamar InserirVariosVazio(varint, varreal, varlogico, varchar);
 
 
-***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac *****
 
 
-***** Exception<Incompatibilidade>: Esperado "logico". Obtido "int, carac, real" *****
+***** Exception<Incompatibilidade>: Obtido: carac. Esperado: logico *****
 	chamar InserirVariosVazio(varreal, varint, varlogico, varchar);
 
 
-***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
+***** Exception<Incompatibilidade>: Obtido: real. Esperado: int ou carac *****
 
 
-***** Exception<Incompatibilidade>: Esperado "int, carac". Obtido "real, logico" *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac *****
 
 
-***** Exception<Incompatibilidade>: Esperado "logico". Obtido "int, carac, real" *****
+***** Exception<Incompatibilidade>: Obtido: carac. Esperado: logico *****
 	var := InserirNenhum (
 
 ***** Exception<Nao Declarado>: InserirNenhum *****
@@ -176,7 +176,7 @@ varint);
 	varreal := InserirReal (varchar);
 	varreal := InserirReal (varlogico)
 
-***** Exception<Incompatibilidade>: Esperado "int, carac, real". Obtido "logico" *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac ou real *****
 ;
 }
 
@@ -200,66 +200,66 @@ varint: Nao Inicializada
    TABELA  DE  SIMBOLOS:
 
 Classe 0:
-  (varlogico, IDVAR, LOGIC  , 0, 1, escopo: Global);
+  (varlogico, IDVAR, logico, 0, 1, escopo: Global);
 Classe 3:
-  (InserirVarios, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: a, b, c, d);
+  (InserirVarios, IDFUNC, int   , escopo: Global
+	Variaveis: int var
+	Parametros: int a, real b, carac c, logico d);
 Classe 5:
-  (a       , IDVAR, INTEGER, 1, 1, escopo: InserirVarios);
-  (a       , IDVAR, INTEGER, 1, 1, escopo: Inserir);
-  (a       , IDVAR, FLOAT  , 1, 1, escopo: InserirReal);
-  (a       , IDVAR, INTEGER, 1, 1, escopo: InserirOne);
-  (a       , IDVAR, INTEGER, 1, 1, escopo: InserirVariosVazio);
-  (a       , IDVAR, INTEGER, 1, 1, escopo: InserirVazio);
+  (a       , IDVAR, int   , 1, 1, escopo: InserirVarios);
+  (a       , IDVAR, int   , 1, 1, escopo: Inserir);
+  (a       , IDVAR, real  , 1, 1, escopo: InserirReal);
+  (a       , IDVAR, int   , 1, 1, escopo: InserirOne);
+  (a       , IDVAR, int   , 1, 1, escopo: InserirVariosVazio);
+  (a       , IDVAR, int   , 1, 1, escopo: InserirVazio);
 Classe 6:
-  (b       , IDVAR, FLOAT  , 1, 1, escopo: InserirVarios);
-  (b       , IDVAR, INTEGER, 1, 1, escopo: Inserir);
-  (b       , IDVAR, FLOAT  , 1, 1, escopo: InserirVariosVazio);
+  (b       , IDVAR, real  , 1, 1, escopo: InserirVarios);
+  (b       , IDVAR, int   , 1, 1, escopo: Inserir);
+  (b       , IDVAR, real  , 1, 1, escopo: InserirVariosVazio);
 Classe 7:
-  (var     , IDVAR, INTEGER, 1, 1, escopo: Principal);
-  (var     , IDVAR, INTEGER, 0, 0, escopo: InserirVarios);
-  (c       , IDVAR, CHAR   , 1, 1, escopo: InserirVarios);
-  (var     , IDVAR, INTEGER, 1, 1, escopo: Inserir);
-  (var     , IDVAR, INTEGER, 0, 0, escopo: InserirReal);
-  (var     , IDVAR, INTEGER, 0, 0, escopo: InserirOne);
-  (var     , IDVAR, INTEGER, 0, 0, escopo: InserirVariosVazio);
-  (c       , IDVAR, CHAR   , 1, 1, escopo: InserirVariosVazio);
-  (var     , IDVAR, INTEGER, 0, 0, escopo: InserirVazio);
-  (var     , IDVAR, INTEGER, 0, 0, escopo: InserirVazio);
-  (varchar , IDVAR, CHAR   , 0, 1, escopo: Global);
+  (var     , IDVAR, int   , 1, 1, escopo: Principal);
+  (var     , IDVAR, int   , 0, 0, escopo: InserirVarios);
+  (c       , IDVAR, carac , 1, 1, escopo: InserirVarios);
+  (var     , IDVAR, int   , 1, 1, escopo: Inserir);
+  (var     , IDVAR, int   , 0, 0, escopo: InserirReal);
+  (var     , IDVAR, int   , 0, 0, escopo: InserirOne);
+  (var     , IDVAR, int   , 0, 0, escopo: InserirVariosVazio);
+  (c       , IDVAR, carac , 1, 1, escopo: InserirVariosVazio);
+  (var     , IDVAR, int   , 0, 0, escopo: InserirVazio);
+  (var     , IDVAR, int   , 0, 0, escopo: InserirVazio);
+  (varchar , IDVAR, carac , 0, 1, escopo: Global);
 Classe 8:
-  (d       , IDVAR, LOGIC  , 1, 1, escopo: InserirVarios);
-  (d       , IDVAR, LOGIC  , 1, 1, escopo: InserirVariosVazio);
+  (d       , IDVAR, logico, 1, 1, escopo: InserirVarios);
+  (d       , IDVAR, logico, 1, 1, escopo: InserirVariosVazio);
 Classe 10:
-  (Principal, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
-  (InserirOne, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: a);
+  (Principal, IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: NULL);
+  (InserirOne, IDFUNC, int   , escopo: Global
+	Variaveis: int var
+	Parametros: int a);
 Classe 11:
-  (InserirVazio, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: a);
-  (InserirVazio, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
+  (InserirVazio, IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: int a);
+  (InserirVazio, IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: NULL);
 Classe 13:
-  (varreal , IDVAR, FLOAT  , 1, 1, escopo: Global);
+  (varreal , IDVAR, real  , 1, 1, escopo: Global);
 Classe 16:
-  (InserirReal, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: a);
-  (varint  , IDVAR, INTEGER, 0, 1, escopo: Global);
+  (InserirReal, IDFUNC, real  , escopo: Global
+	Variaveis: int var
+	Parametros: real a);
+  (varint  , IDVAR, int   , 0, 1, escopo: Global);
 Classe 18:
-  (InserirVariosVazio, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: a, b, c, d);
-  (Global  , IDGLOB, escopo: NULL
-	Variaveis: varint, varreal, varchar, varlogico
-	Funcoes: InserirVazio, InserirVazio, InserirVariosVazio, InserirOne, InserirReal, Inserir, InserirVarios, Principal);
+  (InserirVariosVazio, IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: int a, real b, carac c, logico d);
+  (Global  , IDGLOB, null  , escopo: NULL
+	Variaveis: int varint, real varreal, carac varchar, logico varlogico
+	Funcoes: vazio InserirVazio, vazio InserirVazio, vazio InserirVariosVazio, int InserirOne, real InserirReal, int Inserir, int InserirVarios, vazio Principal);
 Classe 19:
-  (Inserir , IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: a, b);
+  (Inserir , IDFUNC, int   , escopo: Global
+	Variaveis: int var
+	Parametros: int a, int b);

@@ -32,7 +32,8 @@
 #define     LOGIC       2
 #define     FLOAT       3
 #define     CHAR        4
-#define     FUNC        5
+#define     VOID        5
+#define     FUNC        6
 
 /*   Definicao de outras constantes   */
 
@@ -55,7 +56,6 @@
 /*  Definicao de mensagens de incompatibilidade */
 
 #define INCOMP_AND          "Operando improprio para AND"
-#define INCOMP_ATRIB        "Lado direito de comando de atribuicao improprio"
 #define INCOMP_ENQUANTO     "Expressao no Enquanto deveria ser logico"
 #define INCOMP_FUNPRIN1     "Funcao principal deveria ser a ultima"
 #define INCOMP_FUNPRIN2     "Funcao principal deveria ser unica"
@@ -77,9 +77,6 @@
 #define INCOMP_TIPOSUB      "Tipo inadequado para subscrito"
 #define INCOMP_NARG         "Numero de argumentos diferente do numero de parametros"
 #define INCOMP_PARAM        "Incompatibilidade de parametros"  
-#define INCOMP_RETORNAR     "Incompatibilidade de expressao retornada"
-
-#define MISTAKEN(A,B)       "Esperado " #A". Obtido "#B 
 
 /*  Strings para nomes dos tipos de identificadores  */
 
@@ -87,11 +84,17 @@ char *nometipid[4] = {" ", "IDGLOB", "IDFUNC", "IDVAR"};
 
 /*  Strings para nomes dos tipos de variaveis  */
 
-char *nometipvar[5] = {
-    "NOTVAR", "INTEGER", "LOGIC", "FLOAT", "CHAR"
+char *nometipvar[7] = {
+    "null", "int", "logico", "real", "carac", "vazio", "funcao"
 };
 
-/*    Declaracoes para a tabela de simbolos     */
+/*  Strings para nomes dos tipos esperados em atrib */
+
+char *nometipesp[7] = {
+    "null", "int ou carac", "logico", "int ou carac ou real", "int ou carac", "vazio", "funcao"
+};
+
+/* Declaracoes para a tabela de simbolos */
 
 typedef char bool;
 typedef struct celsimb celsimb;
@@ -122,7 +125,6 @@ struct exprtipo {
     pontexprtipo prox;
 };
 
-
 /*  
     Variaveis globais para a tabela de simbolos e analise semantica
 */
@@ -151,10 +153,9 @@ void InsereListSimb (simbolo, listsimb *);
 simbolo InsereSimb (char *, int, int, simbolo);
 void VerificaInicRef (void);
 
-/*  Verificação de Declaração de Símbolo */
+/*  Verificação de Declaracao de Simbolo */
 
 simbolo SimbDeclaradoEscopo (char *, listsimb, simbolo);
-
 simbolo SimbDeclarado (char *);
 
 /*  Testes de compatibilidade entre parametros 
@@ -163,9 +164,14 @@ simbolo SimbDeclarado (char *);
 pontexprtipo InicListTipo (int);
 pontexprtipo ConcatListTipo (pontexprtipo, pontexprtipo);
 
-/* Verificação de erros semânticos */
+/* Verificação de erros semanticos */
 
+void ExceptionIncomp (char *, char *, char *);
 void Exception (char *, char *);
+
+/* Verifica se os tipos sao incompativeis na atribuicao */
+
+char EhIncompativel (int, int);
 
 %}
 
@@ -225,11 +231,11 @@ void Exception (char *, char *);
 %token  ESCREVER
 %token  CHAMAR
 
-%token	INTEIRO
-%token	REAL
-%token	CARAC
-%token	LOGICO
-%token	VAZIO
+%token  INTEIRO
+%token  REAL
+%token  CARAC
+%token  LOGICO
+%token  VAZIO
 
 %token  ABCHAVE
 %token  ABCOL
@@ -243,7 +249,7 @@ void Exception (char *, char *);
 %token  PVIRG
 %token  VIRG
 
-%token	<carac> INVAL
+%token  <carac> INVAL
 
 %%
 
@@ -279,7 +285,7 @@ Tipo        :   INTEIRO {printf("int ");    tipocorrente = INTEGER;}
             |   REAL    {printf("real ");   tipocorrente = FLOAT;  }  
             |   CARAC   {printf("carac ");  tipocorrente = CHAR;   } 
             |   LOGICO  {printf("logico "); tipocorrente = LOGIC;  } 
-            |   VAZIO   {printf("vazio ");  tipocorrente = VAZIO;  } 
+            |   VAZIO   {printf("vazio ");  tipocorrente = VOID;  } 
             ;
 ListElemDecl:   ElemDecl
             |   ListElemDecl {printf(", ");} VIRG ElemDecl
@@ -289,7 +295,7 @@ ElemDecl    :   ID {
                     if  (SimbDeclaradoEscopo($1, escopo->listvardecl, escopo) != NULL) {
                         Exception (errorDeclRepetida, $1);
                     }
-                    else if (tipocorrente == VAZIO) {
+                    else if (tipocorrente == VOID) {
                         Exception (errorTipoInadeq, $1);
                     }
                     simb =  InsereSimb ($1, IDVAR, tipocorrente, escopo);
@@ -323,7 +329,7 @@ Cabecalho   :   PRINCIPAL   {
                         Exception (errorIncomp, INCOMP_FUNPRIN2);
                     }
                     escopo = simb = 
-                        InsereSimb ("Principal", IDFUNC, VAZIO, escopo);
+                        InsereSimb ("Principal", IDFUNC, VOID, escopo);
                     pontvardecl = simb->listvardecl;
                     pontparam = simb->listparam;
                     declfunc = FALSE;
@@ -331,9 +337,8 @@ Cabecalho   :   PRINCIPAL   {
             |   Tipo  ID ABPAR {
                     declparam = TRUE;
                     printf("%s (", $2);
-                    if (declfunc == FALSE) {
+                    if (declfunc == FALSE)
                         Exception (errorIncomp, INCOMP_FUNPRIN1);
-                    }
                     if  ( SimbDeclaradoEscopo($2, escopo->listfunc, escopo) != NULL
                        || SimbDeclaradoEscopo($2, escopo->listvardecl, escopo) != NULL) {
                         Exception (errorDeclIndevida, $2);
@@ -356,15 +361,12 @@ ListParam   :   Parametro
 Parametro   :   Tipo  ID {
                     printf ("%s", $2);
                     simb = SimbDeclarado ($2);
-                    if  (SimbDeclaradoEscopo($2, escopo->listparam, escopo) != NULL) {
+                    if  (SimbDeclaradoEscopo($2, escopo->listparam, escopo) != NULL)
                         Exception (errorDeclRepetida, $2);
-                    }
-                    else if  (simb != NULL && simb->tid == IDFUNC) {
+                    else if  (simb != NULL && simb->tid == IDFUNC)
                         Exception (errorNaoEsperado, "Funcao no argumento");
-                    }
-                    else if (tipocorrente == VAZIO) {
+                    else if (tipocorrente == VOID)
                         Exception (errorTipoInadeq, $2);
-                    }
                     simb =  InsereSimb ($2, IDVAR, tipocorrente, escopo);
                 }
             ;
@@ -483,9 +485,7 @@ ChamadaProc :   CHAMAR ID ABPAR {
                     simb = SimbDeclarado ($2);
                     if (! simb) 
                         Exception (errorNaoDecl, $2);
-                    else if (simb->tid != IDFUNC)
-                        Exception (errorTipoInadeq, $2);
-                    else if (simb->tvar != VAZIO)
+                    else if (simb->tid != IDFUNC || simb->tvar != VOID)
                         Exception (errorTipoInadeq, $2);
                     else if (escopo == simb)
                         Exception (errorRecursiva, $2);
@@ -515,47 +515,22 @@ ListExpr    :   Expressao {
             ;
 CmdRetornar :   RETORNAR  PVIRG {
                     printf("retornar;\n");
-                    if (escopo != NULL && escopo->tvar != VAZIO)
-                        Exception(errorIncomp, MISTAKEN("retorno", "nada"));
+                    if (escopo != NULL && escopo->tvar != VOID)
+                        ExceptionIncomp(errorIncomp, "vazio", nometipesp[escopo->tvar]);
                 }
             |   RETORNAR        {printf("retornar ");}
                 Expressao PVIRG {
                     printf (";\n");
-                    if (escopo != NULL)
-                        if (((escopo->tvar == INTEGER || escopo->tvar == CHAR) &&
-                            ($3 == FLOAT || $3 == LOGIC)) ||
-                            (escopo->tvar == FLOAT && $3 == LOGIC) ||
-                            (escopo->tvar == LOGIC && $3 != LOGIC)) {
-                            
-                            if(escopo->tvar == INTEGER || escopo->tvar == CHAR)
-                                Exception(errorIncomp, MISTAKEN("int ou carac", "real ou logico"));
-                            else if (escopo->tvar == FLOAT)
-                                Exception(errorIncomp, MISTAKEN("int ou carac ou real", "logico"));
-                            else if (escopo->tvar == LOGIC)
-                                Exception(errorIncomp, MISTAKEN("logico", "int ou carac ou real"));
-                        }
-                        else if (escopo->tvar == VAZIO) {
-                            if ($3 == INTEGER)
-                                Exception (errorIncomp, MISTAKEN("nada", "int"));
-                            else if ($3 == FLOAT)
-                                Exception (errorIncomp, MISTAKEN("nada", "real"));
-                            else if ($3 == CHAR)
-                                Exception (errorIncomp, MISTAKEN("nada", "carac"));
-                            else if ($3 == LOGIC)
-                                Exception (errorIncomp, MISTAKEN("nada", "logico"));
-                        }
+                    if (EhIncompativel($3, escopo->tvar) == TRUE)
+                        ExceptionIncomp(errorIncomp, nometipvar[$3], nometipesp[escopo->tvar]);
                 }
             ;
 CmdAtrib    :   Variavel {if ($1 != NULL) $1->inic = $1->ref = TRUE;}
                 ATRIB    {printf (" := ");}
                 Expressao PVIRG {
                     printf (";\n");
-                    if ($1 != NULL)
-                        if ((($1->tvar == INTEGER || $1->tvar == CHAR) &&
-                            ($5 == FLOAT || $5 == LOGIC)) ||
-                            ($1->tvar == FLOAT && $5 == LOGIC) ||
-                            ($1->tvar == LOGIC && $5 != LOGIC))
-                            Exception (errorIncomp, INCOMP_ATRIB);
+                    if ($1 != NULL && EhIncompativel($5, $1->tvar) == TRUE)
+                        ExceptionIncomp(errorIncomp, nometipvar[$5], nometipesp[$1->tvar]);
                 }
             ;
 Expressao   :   ExprAux1
@@ -649,7 +624,6 @@ Fator       :   Variavel {
                     if  ($1 != NULL)  {
                         $1->ref  =  TRUE;
                         $$ = $1->tvar;
-
                     }
                 }
             |   CTINT       {printf ("%d", $1); $$ = INTEGER; }
@@ -705,7 +679,7 @@ ChamadaFunc :   ID ABPAR {
                     simb = SimbDeclarado ($1);
                     if (! simb) 
                         Exception (errorNaoDecl, $1);
-                    else if (simb->tid != IDFUNC || simb->tvar == VAZIO)
+                    else if (simb->tid != IDFUNC || simb->tvar == VOID)
                         Exception (errorTipoInadeq, $1);
                     else if (escopo == simb)
                         Exception (errorRecursiva, $1);
@@ -760,11 +734,9 @@ void InicTabSimb () {
 simbolo SimbDeclaradoEscopo (char *cadeia, listsimb listHeader, simbolo escopo) {
     listsimb list;
     if (listHeader == NULL) return NULL;
-    for (list = listHeader->prox; list != NULL; list = list->prox) {
-        if (strcmp(cadeia, list->simb->cadeia) == 0) {
+    for (list = listHeader->prox; list != NULL; list = list->prox)
+        if (strcmp(cadeia, list->simb->cadeia) == 0)
             return list->simb;
-        }
-    }
     return NULL;
 }
 
@@ -814,7 +786,7 @@ simbolo InsereSimb (char *cadeia, int tid, int tvar, simbolo escopo) {
     s = tabsimb[i] = (simbolo) malloc (sizeof (celsimb));
     s->cadeia = (char*) malloc ((strlen(cadeia)+1) * sizeof(char));
     strcpy (s->cadeia, cadeia);
-    s->tid = tid;       s->tvar = tvar;
+    s->tid = tid;       s->tvar = tvar;     s->array = FALSE;
     s->prox = aux;      s->escopo = escopo;
     s->listvardecl = s->listparam = s->listfunc = NULL;
 
@@ -852,7 +824,6 @@ simbolo InsereSimb (char *cadeia, int tid, int tvar, simbolo escopo) {
         s->nparam = 0;
         InsereListSimb (s, &pontfunc);
     }
-
     return s;
 }
 
@@ -863,27 +834,24 @@ simbolo InsereSimb (char *cadeia, int tid, int tvar, simbolo escopo) {
 
 int hash (char *cadeia) {
     int i, h;
-    for (h = i = 0; cadeia[i]; i++) {h += cadeia[i];}
-    h = h % NCLASSHASH;
-    return h;
+    for (h = i = 0; cadeia[i]; i++) h += cadeia[i];
+    return h % NCLASSHASH;
 }
 
 /* ImprimeTabSimb: Imprime todo o conteudo da tabela de simbolos  */
 
 void ImprimeTabSimb () {
-    int i; simbolo s;
+    int i, j; simbolo s;
     printf ("\n\n   TABELA  DE  SIMBOLOS:\n\n");
     for (i = 0; i < NCLASSHASH; i++)
         if (tabsimb[i]) {
             printf ("Classe %d:\n", i);
             for (s = tabsimb[i]; s!=NULL; s = s->prox){
-                printf ("  (%-8s, %s", s->cadeia,  nometipid[s->tid]);
+                printf ("  (%-8s, %s, %-6s", s->cadeia, nometipid[s->tid], nometipvar[s->tvar]);
                 if (s->tid == IDVAR) {
-                    printf (", %-7s, %d, %d",
-                        nometipvar[s->tvar], s->inic, s->ref);
+                    printf (", %d, %d", s->inic, s->ref);
                     if (s->array == TRUE) 
                     { 
-                        int j;
                         printf (", EH ARRAY\n\tndims = %d, dimensoes:", s->ndims);
                         for (j = 1; j <= s->ndims; j++)
                             printf ("  %d", s->dims[j]);
@@ -903,28 +871,34 @@ void ImprimeTabSimb () {
   */
 
 void ImprimeDeclaracoes (simbolo s) {
-    listsimb aux;
+    listsimb aux; int j;
     if (s->listvardecl != NULL) {
         printf("\n\tVariaveis: ");
-        if (s->listvardecl->prox == NULL) printf("void");
+        if (s->listvardecl->prox == NULL) printf("NULL");
         for(aux = s->listvardecl->prox; aux != NULL; aux = aux->prox) {
-            printf("%s", aux->simb->cadeia);
+            printf("%s %s", nometipvar[aux->simb->tvar], aux->simb->cadeia);
+            if (aux->simb->array == TRUE)
+                for (j = 1; j <= aux->simb->ndims; j++)
+                    printf ("[%d]", aux->simb->dims[j]);
             if (aux->prox != NULL) printf(", ");
         }
     }
     if (s->listparam != NULL) {
         printf("\n\tParametros: ");
-        if (s->listparam->prox == NULL) printf("void");
+        if (s->listparam->prox == NULL) printf("NULL");
         for(aux = s->listparam->prox; aux != NULL; aux = aux->prox) {
-            printf("%s", aux->simb->cadeia);
+            printf("%s %s", nometipvar[aux->simb->tvar], aux->simb->cadeia);
+            if (aux->simb->array == TRUE)
+                for (j = 1; j <= aux->simb->ndims; j++)
+                    printf ("[%d]", aux->simb->dims[j]);
             if (aux->prox != NULL) printf(", ");
         }
     }
     if (s->listfunc != NULL) {
         printf("\n\tFuncoes: ");
-        if (s->listfunc->prox == NULL) printf("void");
+        if (s->listfunc->prox == NULL) printf("NULL");
         for(aux = s->listfunc->prox; aux != NULL; aux = aux->prox) {
-            printf("%s", aux->simb->cadeia);
+            printf("%s %s", nometipvar[aux->simb->tvar], aux->simb->cadeia);
             if (aux->prox != NULL) printf(", ");
         }
     }
@@ -946,12 +920,6 @@ void VerificaInicRef () {
                 }
 }
 
-/*  Mensagens de erros semanticos  */
-
-void Exception (char *type, char *error) {
-    printf ("\n\n***** Exception<%s>: %s *****\n", type, error);
-}
-
 /*  Inicializacao da lista de tipos     */
 
 pontexprtipo InicListTipo (int tvar) {
@@ -967,9 +935,8 @@ pontexprtipo InicListTipo (int tvar) {
 
 pontexprtipo ConcatListTipo (pontexprtipo lista1, pontexprtipo lista2) {
     pontexprtipo p = lista1->prox;
-    while(p->prox != NULL) {
+    while(p->prox != NULL)
         p = p->prox;
-    }
     p->prox = lista2->prox;
     free(lista2);
     return lista1;
@@ -978,35 +945,35 @@ pontexprtipo ConcatListTipo (pontexprtipo lista1, pontexprtipo lista2) {
 /* Funcao que checa os argumentos de uma chamada de funcao*/
 
 void ChecArgumentos (pontexprtipo Ltiparg, listsimb Lparam) {
-    pontexprtipo p;  
-    listsimb q;
-    if (Ltiparg == NULL || Lparam == NULL)
-        return;
-    p = Ltiparg->prox;
-    q = Lparam->prox;
-    while (p != NULL && q != NULL) {
+    if (Ltiparg == NULL || Lparam == NULL) return;
+    pontexprtipo p = Ltiparg->prox;
+    listsimb q = Lparam->prox;
+    for (; p != NULL && q != NULL;  p = p->prox, q = q->prox) {
         if (q->simb->tid == IDFUNC)
             Exception(errorEsperado, "Esperado parâmetro");
-        switch (q->simb->tvar) {
-            case INTEGER: case CHAR:
-                if (p->tipo != INTEGER && p->tipo != CHAR)
-                    Exception(errorIncomp, MISTAKEN("int, carac", "real, logico"));
-                break;
-            case FLOAT:
-                if (p->tipo != INTEGER &&  p->tipo != CHAR && p->tipo != FLOAT)
-                    Exception(errorIncomp, MISTAKEN("int, carac, real", "logico"));
-                break;
-            case LOGIC:
-                if (p->tipo != LOGIC)
-                    Exception(errorIncomp, MISTAKEN("logico", "int, carac, real"));
-                break;
-            default:
-                if (q->simb->tvar != p->tipo)
-                    Exception(errorIncomp, INCOMP_PARAM);
-                break;
-        }
-        p = p->prox; q = q->prox;
+
+        if (EhIncompativel(p->tipo, q->simb->tvar) == TRUE)
+            ExceptionIncomp(errorIncomp, nometipvar[p->tipo], nometipesp[q->simb->tvar]);
     }
 }
 
+/* Funcao que verifica compatibilidade entre dois lados de atribuicao */
+bool EhIncompativel (int tipoP, int tipoQ) {
+    if (  (tipoQ == INTEGER 
+        || tipoQ  == CHAR) && (tipoP == FLOAT || tipoP == LOGIC)
+        || tipoQ  == FLOAT && tipoP == LOGIC
+        || tipoQ  == LOGIC && tipoP != LOGIC
+        || tipoQ  == VOID)
+        return TRUE;
+    return FALSE;
+}
 
+/*  Mensagens de erros semanticos  */
+
+void ExceptionIncomp (char *type, char *got, char *expected) {
+    printf ("\n\n***** Exception<%s>: Obtido: %s. Esperado: %s *****\n", type, got, expected);
+}
+
+void Exception (char *type, char *error) {
+    printf ("\n\n***** Exception<%s>: %s *****\n", type, error);
+}

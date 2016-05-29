@@ -85,34 +85,34 @@ arrayB: Nao Referenciada
    TABELA  DE  SIMBOLOS:
 
 Classe 5:
-  (Func    , IDFUNC, escopo: Global
-	Variaveis: var, array
-	Parametros: void);
+  (Func    , IDFUNC, vazio , escopo: Global
+	Variaveis: int var, int array[4][4][4]
+	Parametros: NULL);
 Classe 7:
-  (var     , IDVAR, INTEGER, 0, 0, escopo: Principal);
-  (var     , IDVAR, INTEGER, 1, 1, escopo: Func);
+  (var     , IDVAR, int   , 0, 0, escopo: Principal);
+  (var     , IDVAR, int   , 1, 1, escopo: Func);
 Classe 10:
-  (Principal, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
-  (var1    , IDVAR, INTEGER, 1, 1, EH ARRAY
+  (Principal, IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: NULL);
+  (var1    , IDVAR, int   , 1, 1, EH ARRAY
 	ndims = 1, dimensoes:  10, escopo: Atrib);
 Classe 11:
-  (var2    , IDVAR, INTEGER, 0, 1, EH ARRAY
+  (var2    , IDVAR, int   , 0, 1, EH ARRAY
 	ndims = 1, dimensoes:  10, escopo: Atrib);
-  (arrayB  , IDVAR, INTEGER, 0, 0, EH ARRAY
+  (arrayB  , IDVAR, int   , 0, 0, EH ARRAY
 	ndims = 1, dimensoes:  0, escopo: Global);
 Classe 12:
-  (arrayC  , IDVAR, INTEGER, 1, 1, EH ARRAY
+  (arrayC  , IDVAR, int   , 1, 1, EH ARRAY
 	ndims = 1, dimensoes:  1, escopo: Global);
 Classe 14:
-  (array   , IDVAR, INTEGER, 1, 1, EH ARRAY
+  (array   , IDVAR, int   , 1, 1, EH ARRAY
 	ndims = 3, dimensoes:  4  4  4, escopo: Func);
 Classe 15:
-  (Atrib   , IDFUNC, escopo: Global
-	Variaveis: var1, var2
-	Parametros: void);
+  (Atrib   , IDFUNC, vazio , escopo: Global
+	Variaveis: int var1[10], int var2[10]
+	Parametros: NULL);
 Classe 18:
-  (Global  , IDGLOB, escopo: NULL
-	Variaveis: arrayB, arrayC
-	Funcoes: Func, Atrib, Principal);
+  (Global  , IDGLOB, null  , escopo: NULL
+	Variaveis: int arrayB[0], int arrayC[1]
+	Funcoes: vazio Func, vazio Atrib, vazio Principal);

@@ -1,6 +1,6 @@
 @echo off
 echo ######################################
-echo #        Analisador Semântico        #
+echo #        Analisador Semantico        #
 echo #   para Linguagem COMP-ITA 2016     #
 echo ######################################
 
@@ -23,17 +23,17 @@ echo Compilando programa
 REM _Lab04  < Compilador/_Lab04Teste.dat > Compilador/_Lab04TesteOutput.dat
 REM _Lab04  < Compilador/_Lab04Prog.dat > Compilador/_Lab04ProgOutput.dat
 
-goto Teste
+REM goto Teste
 	echo.
-	echo ### Testes para Declaração de Variáveis
+	echo ### Testes para Declaracao de Variaveis
 	_Lab04 < Compilador/Bench/BenchDeclaracao.dat > Compilador/Bench/oBenchDeclaracao.dat
 
 	echo.
-	echo ### Testes para função Principal ###
+	echo ### Testes para Funcao Principal
 	_Lab04 < Compilador/Bench/BenchPrincipal.dat > Compilador/Bench/oBenchPrincipal.dat
 
 	echo.
-	echo ### Testes para Variáveis Indexadas
+	echo ### Testes para Variaveis Indexadas 
 	_Lab04 < Compilador/Bench/BenchIndexada.dat > Compilador/Bench/oBenchIndexada.dat
 
 	echo.
@@ -41,14 +41,14 @@ goto Teste
 	_Lab04 < Compilador/Bench/BenchCompatibilidade.dat > Compilador/Bench/oBenchCompatibilidade.dat
 
 	echo.
-	echo ### Testes para Para
+	echo ### Testes para Comando Para
 	_Lab04 < Compilador/Bench/BenchPara.dat > Compilador/Bench/oBenchPara.dat
 
 	echo.
-	echo ### Testes para CallFunc
+	echo ### Testes para CallFuncao
 	_Lab04 < Compilador/Bench/BenchCallFunc.dat > Compilador/Bench/oBenchCallFunc.dat
 	echo.
-	echo ### Testes para RetornoFunc
+	echo ### Testes para RetornoFuncao
 	_Lab04 < Compilador/Bench/BenchRetornoFunc.dat > Compilador/Bench/oBenchRetornoFunc.dat
 :Teste
 

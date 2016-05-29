@@ -41,11 +41,11 @@ comandos:
 	var := varReal;
 
 
-***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+***** Exception<Incompatibilidade>: Obtido: real. Esperado: int ou carac *****
 	var := varLogico;
 
 
-***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac *****
 }
 vazio Real () {
 locais:
@@ -57,7 +57,7 @@ comandos:
 	var := varLogico;
 
 
-***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac ou real *****
 }
 vazio Carac () {
 locais:
@@ -68,11 +68,11 @@ comandos:
 	var := varReal;
 
 
-***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+***** Exception<Incompatibilidade>: Obtido: real. Esperado: int ou carac *****
 	var := varLogico;
 
 
-***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac *****
 }
 vazio Logico () {
 locais:
@@ -81,15 +81,15 @@ comandos:
 	var := varInteiro;
 
 
-***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+***** Exception<Incompatibilidade>: Obtido: int. Esperado: logico *****
 	var := varCarac;
 
 
-***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+***** Exception<Incompatibilidade>: Obtido: carac. Esperado: logico *****
 	var := varReal;
 
 
-***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+***** Exception<Incompatibilidade>: Obtido: real. Esperado: logico *****
 	var := varLogico;
 }
 vazio ExprAritmetica () {
@@ -105,7 +105,7 @@ comandos:
 );
 
 
-***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+***** Exception<Incompatibilidade>: Obtido: int. Esperado: logico *****
 }
 vazio ExprRelacional () {
 locais:
@@ -114,15 +114,15 @@ comandos:
 	exprI := (2 = 1);
 
 
-***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac *****
 	exprC := (2 != 1);
 
 
-***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac *****
 	exprR := (2 >= 1);
 
 
-***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac ou real *****
 	exprL := (2 > 1);
 }
 vazio ExprLogica () {
@@ -132,15 +132,15 @@ comandos:
 	exprI := (true || false);
 
 
-***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac *****
 	exprC := (true && true);
 
 
-***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac *****
 	exprR := (!true);
 
 
-***** Exception<Incompatibilidade>: Lado direito de comando de atribuicao improprio *****
+***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac ou real *****
 	exprL := (!false);
 }
 vazio OpLogico () {
@@ -234,75 +234,75 @@ varCarac: Nao Inicializada
    TABELA  DE  SIMBOLOS:
 
 Classe 0:
-  (exprR   , IDVAR, FLOAT  , 1, 1, escopo: Global);
+  (exprR   , IDVAR, real  , 1, 1, escopo: Global);
 Classe 1:
-  (varInteiro, IDVAR, INTEGER, 1, 1, escopo: Global);
+  (varInteiro, IDVAR, int   , 1, 1, escopo: Global);
 Classe 4:
-  (varReal , IDVAR, FLOAT  , 1, 1, escopo: Global);
+  (varReal , IDVAR, real  , 1, 1, escopo: Global);
 Classe 6:
-  (OpIgualdade, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
+  (OpIgualdade, IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: NULL);
 Classe 7:
-  (var     , IDVAR, INTEGER, 0, 0, escopo: Principal);
-  (var     , IDVAR, INTEGER, 0, 0, escopo: OpAritmetico);
-  (var     , IDVAR, INTEGER, 0, 0, escopo: OpIgualdade);
-  (var     , IDVAR, INTEGER, 0, 0, escopo: OpRelacional);
-  (var     , IDVAR, INTEGER, 0, 0, escopo: OpLogico);
-  (var     , IDVAR, INTEGER, 0, 0, escopo: ExprLogica);
-  (var     , IDVAR, INTEGER, 0, 0, escopo: ExprRelacional);
-  (ExprRelacional, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
-  (var     , IDVAR, INTEGER, 0, 0, escopo: ExprAritmetica);
-  (var     , IDVAR, LOGIC  , 1, 1, escopo: Logico);
-  (Logico  , IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
-  (var     , IDVAR, CHAR   , 1, 1, escopo: Carac);
-  (var     , IDVAR, FLOAT  , 1, 1, escopo: Real);
-  (var     , IDVAR, INTEGER, 1, 1, escopo: Inteiro);
+  (var     , IDVAR, int   , 0, 0, escopo: Principal);
+  (var     , IDVAR, int   , 0, 0, escopo: OpAritmetico);
+  (var     , IDVAR, int   , 0, 0, escopo: OpIgualdade);
+  (var     , IDVAR, int   , 0, 0, escopo: OpRelacional);
+  (var     , IDVAR, int   , 0, 0, escopo: OpLogico);
+  (var     , IDVAR, int   , 0, 0, escopo: ExprLogica);
+  (var     , IDVAR, int   , 0, 0, escopo: ExprRelacional);
+  (ExprRelacional, IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: NULL);
+  (var     , IDVAR, int   , 0, 0, escopo: ExprAritmetica);
+  (var     , IDVAR, logico, 1, 1, escopo: Logico);
+  (Logico  , IDFUNC, vazio , escopo: Global
+	Variaveis: logico var
+	Parametros: NULL);
+  (var     , IDVAR, carac , 1, 1, escopo: Carac);
+  (var     , IDVAR, real  , 1, 1, escopo: Real);
+  (var     , IDVAR, int   , 1, 1, escopo: Inteiro);
 Classe 8:
-  (exprC   , IDVAR, CHAR   , 1, 1, escopo: Global);
+  (exprC   , IDVAR, carac , 1, 1, escopo: Global);
 Classe 10:
-  (Principal, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
+  (Principal, IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: NULL);
 Classe 13:
-  (OpAritmetico, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
-  (OpRelacional, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
+  (OpAritmetico, IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: NULL);
+  (OpRelacional, IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: NULL);
 Classe 14:
-  (OpLogico, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
-  (Carac   , IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
-  (varLogico, IDVAR, LOGIC  , 1, 1, escopo: Global);
-  (exprI   , IDVAR, INTEGER, 1, 1, escopo: Global);
+  (OpLogico, IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: NULL);
+  (Carac   , IDFUNC, vazio , escopo: Global
+	Variaveis: carac var
+	Parametros: NULL);
+  (varLogico, IDVAR, logico, 1, 1, escopo: Global);
+  (exprI   , IDVAR, int   , 1, 1, escopo: Global);
 Classe 16:
-  (ExprAritmetica, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
+  (ExprAritmetica, IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: NULL);
 Classe 17:
-  (ExprLogica, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
-  (Inteiro , IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
-  (exprL   , IDVAR, LOGIC  , 1, 1, escopo: Global);
+  (ExprLogica, IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: NULL);
+  (Inteiro , IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: NULL);
+  (exprL   , IDVAR, logico, 1, 1, escopo: Global);
 Classe 18:
-  (Global  , IDGLOB, escopo: NULL
-	Variaveis: varInteiro, exprI, varReal, exprR, varCarac, exprC, varLogico, exprL
-	Funcoes: Inteiro, Real, Carac, Logico, ExprAritmetica, ExprRelacional, ExprLogica, OpLogico, OpRelacional, OpIgualdade, OpAritmetico, Principal);
+  (Global  , IDGLOB, null  , escopo: NULL
+	Variaveis: int varInteiro, int exprI, real varReal, real exprR, carac varCarac, carac exprC, logico varLogico, logico exprL
+	Funcoes: vazio Inteiro, vazio Real, vazio Carac, vazio Logico, vazio ExprAritmetica, vazio ExprRelacional, vazio ExprLogica, vazio OpLogico, vazio OpRelacional, vazio OpIgualdade, vazio OpAritmetico, vazio Principal);
 Classe 20:
-  (Real    , IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
+  (Real    , IDFUNC, vazio , escopo: Global
+	Variaveis: real var
+	Parametros: NULL);
 Classe 21:
-  (varCarac, IDVAR, CHAR   , 0, 1, escopo: Global);
+  (varCarac, IDVAR, carac , 0, 1, escopo: Global);

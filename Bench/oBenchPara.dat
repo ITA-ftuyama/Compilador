@@ -146,36 +146,36 @@ varCarac: Nao Inicializada
    TABELA  DE  SIMBOLOS:
 
 Classe 1:
-  (varInteiro, IDVAR, INTEGER, 0, 1, escopo: Global);
+  (varInteiro, IDVAR, int   , 0, 1, escopo: Global);
 Classe 4:
-  (varReal , IDVAR, FLOAT  , 0, 1, escopo: Global);
+  (varReal , IDVAR, real  , 0, 1, escopo: Global);
 Classe 7:
-  (var     , IDVAR, INTEGER, 0, 0, escopo: Principal);
-  (c       , IDVAR, CHAR   , 1, 1, escopo: Para);
-  (var     , IDVAR, INTEGER, 0, 1, escopo: SeEnquanto);
+  (var     , IDVAR, int   , 0, 0, escopo: Principal);
+  (c       , IDVAR, carac , 1, 1, escopo: Para);
+  (var     , IDVAR, int   , 0, 1, escopo: SeEnquanto);
 Classe 10:
-  (Principal, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
+  (Principal, IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: NULL);
 Classe 13:
-  (i       , IDVAR, INTEGER, 1, 1, escopo: Para);
+  (i       , IDVAR, int   , 1, 1, escopo: Para);
 Classe 14:
-  (varLogico, IDVAR, LOGIC  , 0, 1, escopo: Global);
+  (varLogico, IDVAR, logico, 0, 1, escopo: Global);
 Classe 15:
-  (SeEnquanto, IDFUNC, escopo: Global
-	Variaveis: var
-	Parametros: void);
+  (SeEnquanto, IDFUNC, vazio , escopo: Global
+	Variaveis: int var
+	Parametros: NULL);
 Classe 16:
-  (l       , IDVAR, LOGIC  , 1, 1, escopo: Para);
+  (l       , IDVAR, logico, 1, 1, escopo: Para);
 Classe 18:
-  (Global  , IDGLOB, escopo: NULL
-	Variaveis: varInteiro, varReal, varCarac, varLogico
-	Funcoes: SeEnquanto, Para, Principal);
+  (Global  , IDGLOB, null  , escopo: NULL
+	Variaveis: int varInteiro, real varReal, carac varCarac, logico varLogico
+	Funcoes: vazio SeEnquanto, vazio Para, vazio Principal);
 Classe 20:
-  (Para    , IDFUNC, escopo: Global
-	Variaveis: i, c, r, l
-	Parametros: void);
+  (Para    , IDFUNC, vazio , escopo: Global
+	Variaveis: int i, carac c, real r, logico l
+	Parametros: NULL);
 Classe 21:
-  (varCarac, IDVAR, CHAR   , 0, 1, escopo: Global);
+  (varCarac, IDVAR, carac , 0, 1, escopo: Global);
 Classe 22:
-  (r       , IDVAR, FLOAT  , 1, 1, escopo: Para);
+  (r       , IDVAR, real  , 1, 1, escopo: Para);

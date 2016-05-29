@@ -13,6 +13,8 @@
 globais:
 	int var, var;
 	logico var;
+	real var;
+	carac var;
 
 	int variavelInt;
 	real variavelReal;
