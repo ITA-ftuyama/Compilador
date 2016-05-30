@@ -128,55 +128,55 @@ comandos:
    TABELA  DE  SIMBOLOS:
 
 Classe 0:
-  (ExibirTabela, IDFUNC, escopo: Global
-	Variaveis: i, j, fim
-	Parametros: void);
+  (ExibirTabela, IDFUNC, vazio , escopo: Global
+	Variaveis: int i, int j, logico fim
+	Parametros: NULL);
 Classe 3:
-  (compara , IDVAR, INTEGER, 1, 1, escopo: Procura);
+  (compara , IDVAR, int   , 1, 1, escopo: Procura);
 Classe 7:
-  (c       , IDVAR, CHAR   , 1, 1, escopo: Principal);
-  (ntab    , IDVAR, INTEGER, 1, 1, escopo: Global);
-  (palavra , IDVAR, CHAR   , 1, 1, EH ARRAY
+  (c       , IDVAR, carac , 1, 1, escopo: Principal);
+  (ntab    , IDVAR, int   , 1, 1, escopo: Global);
+  (palavra , IDVAR, carac , 1, 1, EH ARRAY
 	ndims = 1, dimensoes:  10, escopo: Global);
 Classe 10:
-  (Principal, IDFUNC, escopo: Global
-	Variaveis: c, posic, i, fim
-	Parametros: void);
+  (Principal, IDFUNC, vazio , escopo: Global
+	Variaveis: carac c, int posic, int i, logico fim
+	Parametros: NULL);
 Classe 11:
-  (med     , IDVAR, INTEGER, 1, 1, escopo: Procura);
+  (med     , IDVAR, int   , 1, 1, escopo: Procura);
 Classe 13:
-  (i       , IDVAR, INTEGER, 1, 1, escopo: Principal);
-  (posic   , IDVAR, INTEGER, 1, 1, escopo: Principal);
-  (i       , IDVAR, INTEGER, 1, 1, escopo: ExibirTabela);
-  (i       , IDVAR, INTEGER, 1, 1, escopo: Inserir);
-  (posic   , IDVAR, INTEGER, 1, 1, escopo: Inserir);
-  (posic   , IDVAR, INTEGER, 1, 1, escopo: Procura);
-  (i       , IDVAR, INTEGER, 1, 1, escopo: Procura);
+  (i       , IDVAR, int   , 1, 1, escopo: Principal);
+  (posic   , IDVAR, int   , 1, 1, escopo: Principal);
+  (i       , IDVAR, int   , 1, 1, escopo: ExibirTabela);
+  (i       , IDVAR, int   , 1, 1, escopo: Inserir);
+  (posic   , IDVAR, int   , 1, 1, escopo: Inserir);
+  (posic   , IDVAR, int   , 1, 1, escopo: Procura);
+  (i       , IDVAR, int   , 1, 1, escopo: Procura);
 Classe 14:
-  (j       , IDVAR, INTEGER, 1, 1, escopo: ExibirTabela);
-  (j       , IDVAR, INTEGER, 1, 1, escopo: Inserir);
-  (fimteste, IDVAR, LOGIC  , 1, 1, escopo: Procura);
+  (j       , IDVAR, int   , 1, 1, escopo: ExibirTabela);
+  (j       , IDVAR, int   , 1, 1, escopo: Inserir);
+  (fimteste, IDVAR, logico, 1, 1, escopo: Procura);
 Classe 15:
-  (nocorr  , IDVAR, INTEGER, 1, 1, EH ARRAY
+  (nocorr  , IDVAR, int   , 1, 1, EH ARRAY
 	ndims = 1, dimensoes:  50, escopo: Global);
 Classe 17:
-  (fim     , IDVAR, LOGIC  , 1, 1, escopo: Principal);
-  (fim     , IDVAR, LOGIC  , 1, 1, escopo: ExibirTabela);
-  (fim     , IDVAR, LOGIC  , 1, 1, escopo: Inserir);
-  (nomes   , IDVAR, CHAR   , 1, 1, EH ARRAY
+  (fim     , IDVAR, logico, 1, 1, escopo: Principal);
+  (fim     , IDVAR, logico, 1, 1, escopo: ExibirTabela);
+  (fim     , IDVAR, logico, 1, 1, escopo: Inserir);
+  (nomes   , IDVAR, carac , 1, 1, EH ARRAY
 	ndims = 2, dimensoes:  50  10, escopo: Global);
 Classe 18:
-  (inf     , IDVAR, INTEGER, 1, 1, escopo: Procura);
-  (Global  , IDGLOB, escopo: NULL
-	Variaveis: nomes, palavra, ntab, nocorr
-	Funcoes: Procura, Inserir, ExibirTabela, Principal);
+  (inf     , IDVAR, int   , 1, 1, escopo: Procura);
+  (Global  , IDGLOB, null  , escopo: NULL
+	Variaveis: carac nomes[50][10], carac palavra[10], int ntab, int nocorr[50]
+	Funcoes: int Procura, vazio Inserir, vazio ExibirTabela, vazio Principal);
 Classe 19:
-  (Inserir , IDFUNC, escopo: Global
-	Variaveis: i, j, fim
-	Parametros: posic);
-  (Procura , IDFUNC, escopo: Global
-	Variaveis: i, inf, sup, med, posic, compara, achou, fimteste
-	Parametros: void);
+  (Inserir , IDFUNC, vazio , escopo: Global
+	Variaveis: int i, int j, logico fim
+	Parametros: int posic);
+  (Procura , IDFUNC, int   , escopo: Global
+	Variaveis: int i, int inf, int sup, int med, int posic, int compara, logico achou, logico fimteste
+	Parametros: NULL);
 Classe 22:
-  (achou   , IDVAR, LOGIC  , 1, 1, escopo: Procura);
-  (sup     , IDVAR, INTEGER, 1, 1, escopo: Procura);
+  (achou   , IDVAR, logico, 1, 1, escopo: Procura);
+  (sup     , IDVAR, int   , 1, 1, escopo: Procura);

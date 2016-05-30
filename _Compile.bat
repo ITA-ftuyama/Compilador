@@ -20,8 +20,7 @@ gcc y.tab.c main.c yyerror.c -o _Lab04 -lfl
 echo.
 echo Compilando programa
 
-REM _Lab04  < Compilador/_Lab04Teste.dat > Compilador/_Lab04TesteOutput.dat
-REM _Lab04  < Compilador/_Lab04Prog.dat > Compilador/_Lab04ProgOutput.dat
+_Lab04  < Compilador/_Lab04Prog.dat > Compilador/_Lab04ProgOutput.dat
 
 REM goto Teste
 	echo.
