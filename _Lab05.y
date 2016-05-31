@@ -141,7 +141,7 @@ bool declparam, declfunc;
 
 /*  Tabulacao para prettyPrinter  */
 
-void Tabular();
+void tabular();
 
 /*  Manipulacao da Tabela de Simbolos  */
 
@@ -171,6 +171,7 @@ void Exception (char *, char *);
 
 /* Verifica se os tipos sao incompativeis na atribuicao */
 
+void ChecArgumentos (pontexprtipo, listsimb);
 char EhIncompativel (int, int);
 
 %}
