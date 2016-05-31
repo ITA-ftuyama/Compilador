@@ -1,6 +1,6 @@
 @echo off
 echo ######################################
-echo #        Analisador Semantico        #
+echo #  Gerador de Código Intermediário   #
 echo #   para Linguagem COMP-ITA 2016     #
 echo ######################################
 
@@ -8,19 +8,19 @@ cd ..
 :loop
 
 echo Chamando Flex
-flex Compilador/_Lab04.l
+flex Compilador/_Lab05.l
 
 echo Chamando Yacc
-yacc -v Compilador/_Lab04.y
+yacc -v Compilador/_Lab05.y
 
 echo.
 echo Compilando arquivo
-gcc y.tab.c main.c yyerror.c -o _Lab04 -lfl
+gcc y.tab.c main.c yyerror.c -o _Lab05 -lfl
 
 echo.
 echo Compilando programa
 
-_Lab04  < Compilador/_Lab04Prog.dat > Compilador/_Lab04ProgOutput.dat
+_Lab04  < Compilador/_Lab05Prog.dat > Compilador/_Lab05ProgOutput.dat
 
 REM goto Teste
 	echo.

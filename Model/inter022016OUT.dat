@@ -1,0 +1,117 @@
+teste {
+locais :
+int i , j , n , v , h , a ;
+real b , c ;
+comandos :
+i := 4 ;
+j := 3 ;
+v := i / j ;
+h := i % j ;
+se ( i < j )
+{
+i := i + 3 ;
+n := v / h ;
+}
+se ( i < j )
+{
+i := i + 3 ;
+n := v / h ;
+}
+senao {
+v := h ;
+i := j ;
+}
+n := v ;
+enquanto ( i < j )
+i := j + h ;
+i := 0 ;
+ler ( a , b , c ) ;
+escrever ( "Valor de a+b:" , a + b , "Valor de c:" , c ) ;
+}
+
+
+
+   TABELA  DE  SIMBOLOS:
+
+Classe 3:
+  (v, IDVAR, INTEGER, 1, 1)
+Classe 4:
+  (##1, IDVAR, INTEGER, 1, 1)
+Classe 5:
+  (##2, IDVAR, INTEGER, 1, 1)
+  (a, IDVAR, INTEGER, 1, 1)
+Classe 6:
+  (##10, IDVAR, INTEGER, 1, 1)
+  (##3, IDVAR, LOGIC, 1, 1)
+  (b, IDVAR, FLOAT, 1, 1)
+Classe 7:
+  (##11, IDVAR, FLOAT, 1, 1)
+  (##4, IDVAR, INTEGER, 1, 1)
+  (c, IDVAR, FLOAT, 1, 1)
+Classe 8:
+  (##5, IDVAR, INTEGER, 1, 1)
+Classe 9:
+  (##6, IDVAR, LOGIC, 1, 1)
+Classe 10:
+  (##7, IDVAR, INTEGER, 1, 1)
+Classe 11:
+  (##8, IDVAR, INTEGER, 1, 1)
+Classe 12:
+  (##9, IDVAR, LOGIC, 1, 1)
+  (h, IDVAR, INTEGER, 1, 1)
+Classe 13:
+  (i, IDVAR, INTEGER, 1, 1)
+Classe 14:
+  (j, IDVAR, INTEGER, 1, 1)
+Classe 18:
+  (n, IDVAR, INTEGER, 1, 1)
+Classe 20:
+  (teste, IDPROG)
+
+
+Quadruplas do modulo teste:
+
+	   1) OPENMOD, (MODULO, teste), (IDLE), (IDLE)
+	   2) ATRIB, (INT, 4), (IDLE), (VAR, i)
+	   3) ATRIB, (INT, 3), (IDLE), (VAR, j)
+	   4) DIV, (VAR, i), (VAR, j), (VAR, ##1)
+	   5) ATRIB, (VAR, ##1), (IDLE), (VAR, v)
+	   6) RESTO, (VAR, i), (VAR, j), (VAR, ##2)
+	   7) ATRIB, (VAR, ##2), (IDLE), (VAR, h)
+	   8) LT, (VAR, i), (VAR, j), (VAR, ##3)
+	   9) JF, (VAR, ##3), (IDLE), (ROTULO, 14)
+	  10) MAIS, (VAR, i), (INT, 3), (VAR, ##4)
+	  11) ATRIB, (VAR, ##4), (IDLE), (VAR, i)
+	  12) DIV, (VAR, v), (VAR, h), (VAR, ##5)
+	  13) ATRIB, (VAR, ##5), (IDLE), (VAR, n)
+	  14) NOP, (IDLE), (IDLE), (IDLE)
+	  15) LT, (VAR, i), (VAR, j), (VAR, ##6)
+	  16) JF, (VAR, ##6), (IDLE), (ROTULO, 22)
+	  17) MAIS, (VAR, i), (INT, 3), (VAR, ##7)
+	  18) ATRIB, (VAR, ##7), (IDLE), (VAR, i)
+	  19) DIV, (VAR, v), (VAR, h), (VAR, ##8)
+	  20) ATRIB, (VAR, ##8), (IDLE), (VAR, n)
+	  21) JUMP, (IDLE), (IDLE), (ROTULO, 25)
+	  22) NOP, (IDLE), (IDLE), (IDLE)
+	  23) ATRIB, (VAR, h), (IDLE), (VAR, v)
+	  24) ATRIB, (VAR, j), (IDLE), (VAR, i)
+	  25) NOP, (IDLE), (IDLE), (IDLE)
+	  26) ATRIB, (VAR, v), (IDLE), (VAR, n)
+	  27) NOP, (IDLE), (IDLE), (IDLE)
+	  28) LT, (VAR, i), (VAR, j), (VAR, ##9)
+	  29) JF, (VAR, ##9), (IDLE), (ROTULO, 33)
+	  30) MAIS, (VAR, j), (VAR, h), (VAR, ##10)
+	  31) ATRIB, (VAR, ##10), (IDLE), (VAR, i)
+	  32) JUMP, (IDLE), (IDLE), (ROTULO, 27)
+	  33) NOP, (IDLE), (IDLE), (IDLE)
+	  34) ATRIB, (INT, 0), (IDLE), (VAR, i)
+	  35) PARAM, (VAR, a), (IDLE), (IDLE)
+	  36) PARAM, (VAR, b), (IDLE), (IDLE)
+	  37) PARAM, (VAR, c), (IDLE), (IDLE)
+	  38) READ, (INT, 3), (IDLE), (IDLE)
+	  39) PARAM, (CADEIA, Valor de a+b:), (IDLE), (IDLE)
+	  40) MAIS, (VAR, a), (VAR, b), (VAR, ##11)
+	  41) PARAM, (VAR, ##11), (IDLE), (IDLE)
+	  42) PARAM, (CADEIA, Valor de c:), (IDLE), (IDLE)
+	  43) PARAM, (VAR, c), (IDLE), (IDLE)
+	  44) WRITE, (INT, 4), (IDLE), (IDLE)
