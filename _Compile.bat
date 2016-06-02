@@ -1,6 +1,6 @@
 @echo off
 echo ######################################
-echo #  Gerador de Código Intermediário   #
+echo #  Gerador de Cï¿½digo Intermediï¿½rio   #
 echo #   para Linguagem COMP-ITA 2016     #
 echo ######################################
 
