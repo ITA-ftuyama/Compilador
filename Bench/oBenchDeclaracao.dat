@@ -94,7 +94,7 @@ variavelCarac: Nao Inicializada
 variavelCarac: Nao Referenciada
 
 
-   TABELA  DE  SIMBOLOS:
+	TABELA  DE  SIMBOLOS:
 
 Classe 4:
   (variavelReal, IDVAR, real  , 0, 0, escopo: Global);
@@ -137,3 +137,8 @@ Classe 22:
   (Destruir, IDFUNC, vazio , escopo: Global
 	Variaveis: int varNaoInicializadaNaoReferenciada, int var
 	Parametros: NULL);
+
+
+	CODIGO INTEMEDIARIO:
+
+

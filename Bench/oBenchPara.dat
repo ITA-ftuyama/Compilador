@@ -143,7 +143,7 @@ varLogico: Nao Inicializada
 varCarac: Nao Inicializada
 
 
-   TABELA  DE  SIMBOLOS:
+	TABELA  DE  SIMBOLOS:
 
 Classe 1:
   (varInteiro, IDVAR, int   , 0, 1, escopo: Global);
@@ -179,3 +179,8 @@ Classe 21:
   (varCarac, IDVAR, carac , 0, 1, escopo: Global);
 Classe 22:
   (r       , IDVAR, real  , 1, 1, escopo: Para);
+
+
+	CODIGO INTEMEDIARIO:
+
+

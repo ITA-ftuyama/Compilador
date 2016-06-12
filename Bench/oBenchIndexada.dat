@@ -82,7 +82,7 @@ arrayB: Nao Inicializada
 arrayB: Nao Referenciada
 
 
-   TABELA  DE  SIMBOLOS:
+	TABELA  DE  SIMBOLOS:
 
 Classe 5:
   (Func    , IDFUNC, vazio , escopo: Global
@@ -116,3 +116,8 @@ Classe 18:
   (Global  , IDGLOB, null  , escopo: NULL
 	Variaveis: int arrayB[0], int arrayC[1]
 	Funcoes: vazio Func, vazio Atrib, vazio Principal);
+
+
+	CODIGO INTEMEDIARIO:
+
+

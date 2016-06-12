@@ -67,7 +67,7 @@ Inserir: Nao Inicializada
 Inserir: Nao Referenciada
 
 
-   TABELA  DE  SIMBOLOS:
+	TABELA  DE  SIMBOLOS:
 
 Classe 5:
   (x       , IDVAR, int   , 1, 1, escopo: Destruir);
@@ -99,3 +99,8 @@ Classe 22:
   (Destruir, IDFUNC, int   , escopo: Global
 	Variaveis: int x
 	Parametros: NULL);
+
+
+	CODIGO INTEMEDIARIO:
+
+

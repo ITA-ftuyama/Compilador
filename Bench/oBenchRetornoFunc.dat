@@ -305,7 +305,7 @@ varint: Nao Inicializada
 varint: Nao Referenciada
 
 
-   TABELA  DE  SIMBOLOS:
+	TABELA  DE  SIMBOLOS:
 
 Classe 0:
   (InserirVazioIncorreto4, IDFUNC, vazio , escopo: Global
@@ -462,3 +462,8 @@ Classe 22:
   (InserirVazioIncorreto3, IDFUNC, vazio , escopo: Global
 	Variaveis: carac var
 	Parametros: NULL);
+
+
+	CODIGO INTEMEDIARIO:
+
+

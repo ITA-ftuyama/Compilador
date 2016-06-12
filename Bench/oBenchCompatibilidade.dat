@@ -231,7 +231,7 @@ var: Nao Referenciada
 varCarac: Nao Inicializada
 
 
-   TABELA  DE  SIMBOLOS:
+	TABELA  DE  SIMBOLOS:
 
 Classe 0:
   (exprR   , IDVAR, real  , 1, 1, escopo: Global);
@@ -306,3 +306,8 @@ Classe 20:
 	Parametros: NULL);
 Classe 21:
   (varCarac, IDVAR, carac , 0, 1, escopo: Global);
+
+
+	CODIGO INTEMEDIARIO:
+
+

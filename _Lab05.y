@@ -5,6 +5,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+/****************************************************/
+/*                                                  */
+/*          Análise Sintática - Definições          */
+/*                                                  */
+/****************************************************/
+
 /* Definicao dos atributos dos atomos operadores */
 
 #define     LT          1
@@ -42,6 +48,12 @@
 #define FALSE           0
 #define MAXDIMS         10
 
+/****************************************************/
+/*                                                  */
+/*          Análise Semântica - Exceptions          */
+/*                                                  */
+/****************************************************/
+
 /*  Mensagens de erros semanticos  */
 
 #define errorDeclIndevida   "Declaracao Indevida"
@@ -76,7 +88,57 @@
 #define INCOMP_SE           "Expressao no Se deveria ser logico"
 #define INCOMP_TIPOSUB      "Tipo inadequado para subscrito"
 #define INCOMP_NARG         "Numero de argumentos diferente do numero de parametros"
-#define INCOMP_PARAM        "Incompatibilidade de parametros"  
+#define INCOMP_PARAM        "Incompatibilidade de parametros"
+
+/****************************************************/
+/*                                                  */
+/*          Código Intermediário - Operandos        */
+/*                                                  */
+/****************************************************/
+
+/*  Definicao de constantes para os operadores de quadruplas */
+
+#define     OPOR            1
+#define     OPAND           2
+#define     OPLT            3
+#define     OPLE            4
+#define     OPGT            5
+#define     OPGE            6
+#define     OPEQ            7
+#define     OPNE            8
+#define     OPMAIS          9
+#define     OPMENOS         10
+#define     OPMULTIP        11
+#define     OPDIV           12
+#define     OPRESTO         13
+#define     OPMENUN         14
+#define     OPNOT           15
+#define     OPATRIB         16
+#define     OPENMOD         17
+#define     NOP             18
+#define     OPJUMP          19
+#define     OPJF            20
+#define     PARAM           21
+#define     OPREAD          22
+#define     OPWRITE         23
+
+/* Definicao de constantes para os tipos de operandos de quadruplas */
+
+#define     IDLEOPND        0
+#define     VAROPND         1
+#define     INTOPND         2
+#define     REALOPND        3
+#define     CHAROPND        4
+#define     LOGICOPND       5
+#define     CADOPND         6
+#define     ROTOPND         7
+#define     MODOPND         8
+
+/****************************************************/
+/*                                                  */
+/*    Análise Sintática & Semântica - Undefines     */
+/*                                                  */
+/****************************************************/
 
 /*  Strings para nomes dos tipos de identificadores  */
 
@@ -93,6 +155,32 @@ char *nometipvar[7] = {
 char *nometipesp[7] = {
     "null", "int ou carac", "logico", "int ou carac ou real", "int ou carac", "vazio", "funcao"
 };
+
+/****************************************************/
+/*                                                  */
+/*          Código Intermediário - Undefines        */
+/*                                                  */
+/****************************************************/
+
+/* Strings para operadores de quadruplas */
+
+char *nomeoperquad[24] = {"",
+    "OR", "AND", "LT", "LE", "GT", "GE", "EQ", "NE", "MAIS",
+    "MENOS", "MULT", "DIV", "RESTO", "MENUN", "NOT", "ATRIB",
+    "OPENMOD", "NOP", "JUMP", "JF", "PARAM", "READ", "WRITE"
+};
+
+/* Strings para tipos de operandos de quadruplas */
+
+char *nometipoopndquad[9] = {"IDLE",
+    "VAR", "INT", "REAL", "CARAC", "LOGIC", "CADEIA", "ROTULO", "MODULO"
+};
+
+/****************************************************/
+/*                                                  */
+/*   Análise Sintática & Semântica - Declarações    */
+/*                                                  */
+/****************************************************/
 
 /* Declaracoes para a tabela de simbolos */
 
@@ -174,6 +262,75 @@ void Exception (char *, char *);
 void ChecArgumentos (pontexprtipo, listsimb);
 char EhIncompativel (int, int);
 
+/****************************************************/
+/*                                                  */
+/*          Código Intermediário - Declarações      */
+/*                                                  */
+/****************************************************/
+
+/* Declaracoes para a estrutura do codigo intermediario */
+
+typedef union atribopnd atribopnd;
+typedef struct operando operando;
+typedef struct celquad celquad;
+typedef celquad *quadrupla;
+typedef struct celmodhead celmodhead;
+typedef celmodhead *modhead;
+
+union atribopnd {
+    simbolo simb; int valint; float valfloat;
+    char valchar; char vallogic; char *valcad;
+    quadrupla rotulo; modhead modulo;
+};
+
+struct operando {
+    int tipo; atribopnd atr;
+};
+
+struct celquad {
+    int num, oper; operando opnd1, opnd2, result;
+    quadrupla prox;
+};
+
+struct celmodhead {
+    simbolo modname; modhead prox;
+   int modtip;
+    quadrupla listquad;
+};
+
+/* Variaveis globais para o codigo intermediario */
+
+quadrupla quadcorrente, quadaux;
+modhead codintermed, modcorrente;
+int oper, numquadcorrente;
+operando opnd1, opnd2, result, opndaux;
+int numtemp;
+const operando opndidle = {IDLEOPND, 0};
+
+/* Prototipos das funcoes para o codigo intermediario */
+
+void InicCodIntermed (void);
+void InicCodIntermMod (simbolo);
+void ImprimeQuadruplas (void);
+void ImprimeTipoOpnd (operando);
+quadrupla GeraQuadrupla (int, operando, operando, operando);
+simbolo NovaTemp (int);
+void RenumQuadruplas (quadrupla, quadrupla);
+
+/* Declaracoes para atributos das expressoes e variaveis */
+
+typedef struct infoexpressao infoexpressao;
+struct infoexpressao {
+    int tipo;
+    operando opnd;
+};
+
+typedef struct infovariavel infovariavel;
+struct infovariavel {
+    simbolo simb;
+    operando opnd;
+};
+
 %}
 
 /* Definicao do tipo de yylval e dos atributos dos nao terminais */
@@ -184,9 +341,17 @@ char EhIncompativel (int, int);
     float valreal;
     char carac;
     simbolo simb;
-    int tipoexpr, nsubscr;
     infolistexpr infolexpr;
+    infovariavel infovar;
+    int tipoexpr, nsubscr, nargs;
+    quadrupla quad;
 }
+
+/****************************************************/
+/*                                                  */
+/*          Análise Sintática - Types, Tokens       */
+/*                                                  */
+/****************************************************/
 
 /* Declaracao dos atributos dos tokens e dos nao-terminais */
 
@@ -254,15 +419,21 @@ char EhIncompativel (int, int);
 
 %%
 
+/****************************************************/
+/*                                                  */
+/*      Linguagem COMP ITA 2016 - Gramática         */
+/*                                                  */
+/****************************************************/
+
 /* Producoes da gramatica:
 
     Os terminais sao escritos e, depois de alguns,
     para alguma estetica, ha mudanca de linha       
 */
 
-Programa    :   {InicTabSimb();}
+Programa    :   {InicTabSimb(); InicCodIntermed (); numtemp = 0;}
                 DeclGlobs   Funcoes 
-                {VerificaInicRef (); ImprimeTabSimb ();}
+                {VerificaInicRef (); ImprimeTabSimb (); ImprimeQuadruplas ();}
             ;
 DeclGlobs   :
             |   GLOBAIS  DPONTS  {
@@ -701,6 +872,12 @@ ChamadaFunc :   ID ABPAR {
 
 #include "lex.yy.c"
 
+/****************************************************/
+/*                                                  */
+/*          Compilador - Funções Auxiliares         */
+/*                                                  */
+/****************************************************/
+
 /*
      Funções Auxiliares
 */
@@ -839,11 +1016,13 @@ int hash (char *cadeia) {
     return h % NCLASSHASH;
 }
 
-/* ImprimeTabSimb: Imprime todo o conteudo da tabela de simbolos  */
+/* 
+    ImprimeTabSimb: Imprime todo o conteudo da tabela de simbolos  
+*/
 
 void ImprimeTabSimb () {
     int i, j; simbolo s;
-    printf ("\n\n   TABELA  DE  SIMBOLOS:\n\n");
+    printf ("\n\n\tTABELA  DE  SIMBOLOS:\n\n");
     for (i = 0; i < NCLASSHASH; i++)
         if (tabsimb[i]) {
             printf ("Classe %d:\n", i);
@@ -867,7 +1046,8 @@ void ImprimeTabSimb () {
         }
 }
 
-/* ImprimeDeclaracoes(simbolo): Imprime todo o conteudo da 
+/* 
+    ImprimeDeclaracoes(simbolo): Imprime todo o conteudo da 
     Lista de Variaveis, Parametros e Funcoes do dado simbolo
   */
 
@@ -959,6 +1139,7 @@ void ChecArgumentos (pontexprtipo Ltiparg, listsimb Lparam) {
 }
 
 /* Funcao que verifica compatibilidade entre dois lados de atribuicao */
+
 bool EhIncompativel (int tipoP, int tipoQ) {
     if (  (tipoQ == INTEGER 
         || tipoQ  == CHAR) && (tipoP == FLOAT || tipoP == LOGIC)
@@ -977,4 +1158,102 @@ void ExceptionIncomp (char *type, char *got, char *expected) {
 
 void Exception (char *type, char *error) {
     printf ("\n\n***** Exception<%s>: %s *****\n", type, error);
+}
+
+
+/****************************************************/
+/*                                                  */
+/*    Código Intermediário - Funções Auxiliares     */
+/*                                                  */
+/****************************************************/
+
+void InicCodIntermed () {
+    modcorrente = codintermed = malloc (sizeof (celmodhead));
+    modcorrente->listquad = NULL;
+    modcorrente->prox = NULL;
+}
+
+void InicCodIntermMod (simbolo simb) {
+    modcorrente->prox = malloc (sizeof (celmodhead));
+    modcorrente = modcorrente->prox;
+    modcorrente->prox = NULL;
+    modcorrente->modname = simb;
+    modcorrente->modtip = simb->tid;
+    modcorrente->listquad = malloc (sizeof (celquad));
+    quadcorrente = modcorrente->listquad;
+    quadcorrente->prox = NULL;
+    numquadcorrente = 0;
+    quadcorrente->num = numquadcorrente;
+}
+
+quadrupla GeraQuadrupla (int oper, operando opnd1, operando opnd2,
+    operando result) {
+    quadcorrente->prox = malloc (sizeof (celquad));
+    quadcorrente = quadcorrente->prox;
+    quadcorrente->oper = oper;
+    quadcorrente->opnd1 = opnd1;
+    quadcorrente->opnd2 = opnd2;
+    quadcorrente->result = result;
+    quadcorrente->prox = NULL;
+    numquadcorrente ++;
+    quadcorrente->num = numquadcorrente;
+    return quadcorrente;
+}
+
+simbolo NovaTemp (int tip) {
+    simbolo simb; int temp, i, j;
+    char nometemp[10] = "##", s[10] = {0};
+
+    numtemp ++; temp = numtemp;
+    for (i = 0; temp > 0; temp /= 10, i++)
+        s[i] = temp % 10 + '0';
+    i --;
+    for (j = 0; j <= i; j++)
+        nometemp[2+i-j] = s[j];
+    simb = InsereSimb (nometemp, IDVAR, tip, escopo);
+    simb->inic = simb->ref = TRUE;
+    simb->array = FALSE;
+    return simb;
+}
+
+void ImprimeQuadruplas () {
+    modhead p;
+    quadrupla q;
+    printf ("\n\n\tCODIGO INTEMEDIARIO:\n\n");
+    for (p = codintermed->prox; p != NULL; p = p->prox) {
+        printf ("\n\nQuadruplas do modulo %s:\n", p->modname->cadeia);
+        for (q = p->listquad->prox; q != NULL; q = q->prox) {
+            printf ("\n\t%4d) %s", q->num, nomeoperquad[q->oper]);
+            printf (", (%s, ", nometipoopndquad[q->opnd1.tipo]);
+            ImprimeTipoOpnd(q->opnd1);
+            printf ("), (%s, ", nometipoopndquad[q->opnd2.tipo]);
+            ImprimeTipoOpnd(q->opnd2);
+            printf ("), (%s, ", nometipoopndquad[q->result.tipo]);
+            ImprimeTipoOpnd(q->result);
+            printf (")");
+        }
+    }
+   printf ("\n");
+}
+
+void ImprimeTipoOpnd (operando op) {
+    switch (op.tipo) {
+        case IDLEOPND:                                                 break;
+        case VAROPND:   printf ("%s", op.atr.simb->cadeia);            break;
+        case INTOPND:   printf ("%d", op.atr.valint);                  break;
+        case REALOPND:  printf ("%g", op.atr.valfloat);                break;
+        case CHAROPND:  printf ("%c", op.atr.valchar);                 break;
+        case LOGICOPND: printf ("%d", op.atr.vallogic);                break;
+        case CADOPND:   printf ("%s", op.atr.valcad);                  break;
+        case ROTOPND:   printf ("%d", op.atr.rotulo->num);             break;
+        case MODOPND:   printf ("%s", op.atr.modulo->modname->cadeia); break;
+    } 
+}
+
+void RenumQuadruplas (quadrupla quad1, quadrupla quad2) {
+    quadrupla q; int nquad;
+    for (q = quad1->prox, nquad = quad1->num; q != quad2; q = q->prox) {
+      nquad++;
+        q->num = nquad;
+    }
 }
