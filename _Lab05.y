@@ -341,6 +341,7 @@ struct infovariavel {
     float valreal;
     char carac;
     simbolo simb;
+    infoexpressao infoexpr;
     infolistexpr infolexpr;
     infovariavel infovar;
     int tipoexpr, nsubscr, nargs;
@@ -356,8 +357,8 @@ struct infovariavel {
 /* Declaracao dos atributos dos tokens e dos nao-terminais */
 
 %type   <infovar>   Variavel
-%type   <tipoexpr>  Expressao   ExprAux1    ExprAux2    
-                    Termo       Fator       ExprAux3    ExprAux4
+%type   <infoexpr>  Expressao   ExprAux1    ExprAux2    Termo 
+                    ExprAux3    ExprAux4    Fator  
 %type   <nsubscr>   ListSubscr
 %type   <nargs>     ListLeit    ListEscr
 %type   <infolexpr> ListExpr    Argumentos
@@ -575,7 +576,7 @@ CmdComposto :
             ;
 CmdSe       :   {printf("se (");} 
                 SE  ABPAR Expressao 
-                FPAR {printf (") "); if ($4 != LOGIC)
+                FPAR {printf (") "); if ($4.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_SE);
                     } CmdInside CmdSenao
             ;
@@ -589,7 +590,7 @@ CmdSenao    :
                 Comando
             ;
 CmdEnquanto :   ENQUANTO  ABPAR {printf("enquanto (");} Expressao
-                FPAR {printf (") "); if ($4 != LOGIC)
+                FPAR {printf (") "); if ($4.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_ENQUANTO); 
                     } Comando
             ;
@@ -598,7 +599,7 @@ CmdRepetir  :   REPETIR  {printf("repetir ");}
                 ENQUANTO   ABPAR  
                 Expressao FPAR PVIRG  {
                     printf(");\n"); 
-                    if ($7 != LOGIC)
+                    if ($7.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_REPETIR); 
                 }
             ;
@@ -614,12 +615,12 @@ CmdPara     :   PARA  ABPAR {printf("para (");}
                 ATRIB
                 Expressao PVIRG {
                     printf ("; ");
-                    if (!($7 == INTEGER || $7 == CHAR)) 
+                    if (!($7.tipo == INTEGER || $7.tipo == CHAR)) 
                         Exception (errorIncomp, INCOMP_PARAEXP1);
                 } 
                 Expressao PVIRG {
                     printf("; "); 
-                    if ($10 != LOGIC) 
+                    if ($10.tipo != LOGIC) 
                         Exception (errorIncomp, INCOMP_PARAEXP2); 
                 }
                 Variavel        {
@@ -634,7 +635,7 @@ CmdPara     :   PARA  ABPAR {printf("para (");}
                 }
                 ATRIB
                 Expressao FPAR  {
-                    if (!($16 == INTEGER || $16 == CHAR)) 
+                    if (!($16.tipo == INTEGER || $16.tipo == CHAR)) 
                         Exception (errorIncomp, INCOMP_PARAEXP3);
                     printf (") ");
                 }
@@ -682,12 +683,12 @@ Argumentos  :   { $$.nargs = 0;  $$.listtipo = NULL; }
             |   ListExpr
             ;
 ListExpr    :   Expressao { 
-                    if ($1 == FUNC) Exception(errorNaoEsperado, "Funcao no parametro");
-                    $$.nargs = 1;   $$.listtipo = InicListTipo ($1); }
+                    if ($1.tipo == FUNC) Exception(errorNaoEsperado, "Funcao no parametro");
+                    $$.nargs = 1;   $$.listtipo = InicListTipo ($1.tipo); }
             |   ListExpr VIRG   {printf(", ");} Expressao {
-                    if ($4 == FUNC) Exception(errorNaoEsperado, "Funcao no parametro");
+                    if ($4.tipo == FUNC) Exception(errorNaoEsperado, "Funcao no parametro");
                     $$.nargs = $1.nargs + 1;
-                    $$.listtipo = ConcatListTipo ($1.listtipo, InicListTipo ($4));
+                    $$.listtipo = ConcatListTipo ($1.listtipo, InicListTipo ($4.tipo));
                 }
             ;
 CmdRetornar :   RETORNAR  PVIRG {
@@ -698,37 +699,37 @@ CmdRetornar :   RETORNAR  PVIRG {
             |   RETORNAR        {printf("retornar ");}
                 Expressao PVIRG {
                     printf (";\n");
-                    if (EhIncompativel($3, escopo->tvar) == TRUE)
-                        ExceptionIncomp(errorIncomp, nometipvar[$3], nometipesp[escopo->tvar]);
+                    if (EhIncompativel($3.tipo, escopo->tvar) == TRUE)
+                        ExceptionIncomp(errorIncomp, nometipvar[$3.tipo], nometipesp[escopo->tvar]);
                 }
             ;
 CmdAtrib    :   Variavel {if ($1.simb != NULL) $1.simb->inic = $1.simb->ref = TRUE;}
                 ATRIB    {printf (" := ");}
                 Expressao PVIRG {
                     printf (";\n");
-                    if ($1.simb != NULL && EhIncompativel($5, $1.simb->tvar) == TRUE)
-                        ExceptionIncomp(errorIncomp, nometipvar[$5], nometipesp[$1.simb->tvar]);
+                    if ($1.simb != NULL && EhIncompativel($5.tipo, $1.simb->tvar) == TRUE)
+                        ExceptionIncomp(errorIncomp, nometipvar[$5.tipo], nometipesp[$1.simb->tvar]);
                 }
             ;
 Expressao   :   ExprAux1
             |   Expressao  OR {printf(" || ");} ExprAux1 {
-                    if ($1 != LOGIC || $4 != LOGIC)
+                    if ($1.tipo != LOGIC || $4.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_OR);
-                    $$ = LOGIC;
+                    $$.tipo = LOGIC;
                 }
             ;
 ExprAux1    :   ExprAux2
             |   ExprAux1  AND {printf(" && ");} ExprAux2 {
-                    if ($1 != LOGIC || $4 != LOGIC)
+                    if ($1.tipo != LOGIC || $4.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_AND);
-                    $$ = LOGIC;
+                    $$.tipo = LOGIC;
                 }
             ;
 ExprAux2    :   ExprAux3
             |   NOT {printf ("!");}  ExprAux3  {
-                    if ($3 != LOGIC)
+                    if ($3.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_NOT);
-                    $$ = LOGIC;
+                    $$.tipo = LOGIC;
                 }
             ;
 ExprAux3    :   ExprAux4
@@ -745,16 +746,16 @@ ExprAux3    :   ExprAux4
             }   ExprAux4 {
                 switch ($2) {
                     case LT: case LE: case GT: case GE:
-                        if ($1 != INTEGER && $1 != FLOAT && $1 != CHAR 
-                         || $4 != INTEGER && $4 != FLOAT && $4 != CHAR)
+                        if ($1.tipo != INTEGER && $1.tipo != FLOAT && $1.tipo != CHAR 
+                         || $4.tipo != INTEGER && $4.tipo != FLOAT && $4.tipo != CHAR)
                             Exception (errorIncomp, INCOMP_OPREL);
                         break;
                     case EQ: case NE:
-                        if (($1 == LOGIC || $4 == LOGIC) && $1 != $4)
+                        if (($1.tipo == LOGIC || $4.tipo == LOGIC) && $1.tipo != $4.tipo)
                             Exception (errorIncomp, INCOMP_OPREL);
                         break;
                     }
-                    $$ = LOGIC;
+                    $$.tipo = LOGIC;
                 }
             ;
 ExprAux4    :   Termo
@@ -765,10 +766,11 @@ ExprAux4    :   Termo
                     case MENOS : printf (" - "); break;
                 }
             } Termo  {
-                if ($1 != INTEGER && $1 != FLOAT && $1 != CHAR || $4 != INTEGER && $4!=FLOAT && $4!=CHAR)
+                if ($1.tipo != INTEGER && $1.tipo != FLOAT && $1.tipo != CHAR 
+                 || $4.tipo != INTEGER && $4.tipo != FLOAT && $4.tipo != CHAR)
                     Exception (errorIncomp, INCOMP_OPARIT);
-                if ($1 == FLOAT || $4 == FLOAT) $$ = FLOAT;
-                else $$ = INTEGER;
+                if ($1.tipo == FLOAT || $4.tipo == FLOAT) $$.tipo = FLOAT;
+                else $$.tipo = INTEGER;
             }
             ;
 Termo       :   Fator
@@ -782,17 +784,17 @@ Termo       :   Fator
             }  Fator {
                 switch ($2) {
                     case MULT: case DIV:
-                        if ($1 != INTEGER && $1 != FLOAT && $1 != CHAR
-                         || $4 != INTEGER && $4 != FLOAT && $4 != CHAR)
+                        if ($1.tipo != INTEGER && $1.tipo != FLOAT && $1.tipo != CHAR
+                         || $4.tipo != INTEGER && $4.tipo != FLOAT && $4.tipo != CHAR)
                             Exception (errorIncomp, INCOMP_OPARIT);
-                        if ($1 == FLOAT || $4 == FLOAT) $$ = FLOAT;
-                        else $$ = INTEGER;
+                        if ($1.tipo == FLOAT || $4.tipo == FLOAT) $$.tipo = FLOAT;
+                        else $$.tipo = INTEGER;
                     break;
                     case RESTO:
-                        if ($1 != INTEGER && $1 != CHAR
-                        ||  $4 != INTEGER && $4 != CHAR)
+                        if ($1.tipo != INTEGER && $1.tipo != CHAR
+                        ||  $4.tipo != INTEGER && $4.tipo != CHAR)
                             Exception (errorIncomp, INCOMP_OPREST);
-                        $$ = INTEGER;
+                        $$.tipo = INTEGER;
                     break;
                 }
             }
@@ -800,25 +802,25 @@ Termo       :   Fator
 Fator       :   Variavel {
                     if  ($1.simb != NULL)  {
                         $1.simb->ref  =  TRUE;
-                        $$ = $1.simb->tvar;
+                        $$.tipo = $1.simb->tvar;
                     }
                 }
-            |   CTINT       {printf ("%d", $1); $$ = INTEGER; }
-            |   CTREAL      {printf ("%g", $1); $$ = FLOAT;   }
-            |   CTCARAC     {printf ("%s", $1); $$ = CHAR;    }
-            |   CADEIA      {printf ("%s", $1); $$ = CADEIA;  }
-            |   VERDADE     {printf ("true");   $$ = LOGIC;   }
-            |   FALSO       {printf ("false");  $$ = LOGIC;   }
+            |   CTINT       {printf ("%d", $1); $$.tipo = INTEGER; }
+            |   CTREAL      {printf ("%g", $1); $$.tipo = FLOAT;   }
+            |   CTCARAC     {printf ("%s", $1); $$.tipo = CHAR;    }
+            |   CADEIA      {printf ("%s", $1); $$.tipo = CADEIA;  }
+            |   VERDADE     {printf ("true");   $$.tipo = LOGIC;   }
+            |   FALSO       {printf ("false");  $$.tipo = LOGIC;   }
             |   NEG         {printf ("~");}  Fator  
             {
-                if ($3 != INTEGER && $3 != FLOAT && $3 != CHAR)
+                if ($3.tipo != INTEGER && $3.tipo != FLOAT && $3.tipo != CHAR)
                     Exception (errorIncomp, INCOMP_OPNEG);
-                if ($3 == FLOAT) $$ = FLOAT;
-                else $$ = INTEGER;
+                if ($3.tipo == FLOAT) $$.tipo = FLOAT;
+                else $$.tipo = INTEGER;
             }
             |   ABPAR           {printf("(");}
                 Expressao  FPAR {printf (")"); $$ = $3;}
-            |   ChamadaFunc     {$$ = FUNC;}
+            |   ChamadaFunc     {$$.tipo = FUNC;}
             ;
 Variavel    :   ID {
                     printf ("%s", $1);
@@ -847,7 +849,7 @@ Subscrito   :   ABCOL   {printf("[");}
                 ExprAux4
                 FCOL    {
                     printf("]");
-                    if ($3 != INTEGER && $3 != CHAR)
+                    if ($3.tipo != INTEGER && $3.tipo != CHAR)
                         Exception (errorIncomp, INCOMP_TIPOSUB);
                 }
             ;
