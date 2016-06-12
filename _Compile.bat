@@ -22,7 +22,7 @@ echo Compilando programa
 
 _Lab05  < Compilador/_Lab05Proga.dat > Compilador/_Lab05ProgOutput.dat
 
-REM goto Teste
+ goto Teste
 	echo ### Testes - Declaracao de Variaveis
 	_Lab05 < Compilador/Bench/BenchDeclaracao.dat > Compilador/Bench/oBenchDeclaracao.dat
 

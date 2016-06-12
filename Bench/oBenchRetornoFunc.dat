@@ -460,15 +460,4 @@ Classe 22:
   (FuncaoErrada, IDFUNC, int   , escopo: Global
 	Variaveis: int var
 	Parametros: int InserirFuncao, int b);
-  (InserirVazioIncorreto3, IDFUNC, vazio , escopo: Global
-	Variaveis: carac var
-	Parametros: NULL);
-
-
-	CODIGO INTEMEDIARIO:
-
-
-Quadruplas do modulo Global:
-
-	   1# OPENMOD, (MODULO, Global), (IDLE), (IDLE)
-	   2# MAIS, (VAR, a), (VAR, b), (VAR, ##1)
+  (Ins

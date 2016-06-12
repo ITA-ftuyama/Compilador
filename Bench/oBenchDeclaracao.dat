@@ -145,3 +145,5 @@ Classe 22:
 Quadruplas do modulo Global:
 
 	   1# OPENMOD, (MODULO, Global), (IDLE), (IDLE)
+	   2# ATRIB, (REAL, 1.4), (IDLE), (IDLE)
+	   3# ATRIB, (VAR, naoInicializadaReferenciada), (IDLE), (IDLE)

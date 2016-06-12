@@ -749,6 +749,7 @@ CmdAtrib    :   Variavel {if ($1.simb != NULL) $1.simb->inic = $1.simb->ref = TR
                     printf (";\n");
                     if ($1.simb != NULL && EhIncompativel($5.tipo, $1.simb->tvar) == TRUE)
                         ExceptionIncomp(errorIncomp, nometipvar[$5.tipo], nometipesp[$1.simb->tvar]);
+                    GeraQuadrupla (OPATRIB, $5.opnd, opndidle, $1.opnd);
                 }
             ;
 Expressao   :   ExprAux1
@@ -818,8 +819,7 @@ ExprAux3    :   ExprAux4
                 }
             ;
 ExprAux4    :   Termo
-            |   ExprAux4 OPAD 
-            {
+            |   ExprAux4 OPAD {
                 switch ($2) {
                     case MAIS  : printf (" + "); break;
                     case MENOS : printf (" - "); break;
