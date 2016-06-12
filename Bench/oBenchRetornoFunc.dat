@@ -468,8 +468,7 @@ Classe 22:
 	CODIGO INTEMEDIARIO:
 
 
-
 Quadruplas do modulo Global:
 
-	   1) OPENMOD, (MODULO, Global), (IDLE), (IDLE)
-	   2) MAIS, (VAR, a), (VAR, b), (VAR, ##1)
+	   1# OPENMOD, (MODULO, Global), (IDLE), (IDLE)
+	   2# MAIS, (VAR, a), (VAR, b), (VAR, ##1)

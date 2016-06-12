@@ -29,8 +29,8 @@ REM goto Teste
 	echo ### Testes - Funcao Principal
 	_Lab05 < Compilador/Bench/BenchPrincipal.dat > Compilador/Bench/oBenchPrincipal.dat
 
-	echo ### Testes - Variaveis Indexadas 
-	_Lab05 < Compilador/Bench/BenchIndexada.dat > Compilador/Bench/oBenchIndexada.dat
+	REM echo ### Testes - Variaveis Indexadas 
+	REM _Lab05 < Compilador/Bench/BenchIndexada.dat > Compilador/Bench/oBenchIndexada.dat
 
 	echo ### Testes - Compatibilidade
 	_Lab05 < Compilador/Bench/BenchCompatibilidade.dat > Compilador/Bench/oBenchCompatibilidade.dat

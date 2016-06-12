@@ -655,23 +655,39 @@ CmdPara     :   PARA  ABPAR {printf("para (");}
                 Comando
             ;
 CmdLer      :   LER  ABPAR  {printf("ler (");}
-                ListLeit    {printf(");\n");}
-                FPAR  PVIRG 
+                ListLeit    {
+                    opnd1.tipo = INTOPND;
+                    opnd1.atr.valint = $4;
+                    GeraQuadrupla (OPREAD, opnd1, opndidle, opndidle);
+                }    
+                FPAR  PVIRG {printf(");\n");}
             ;
-ListLeit    :   Variavel {if ($1.simb != NULL) $1.simb->inic = $1.simb->ref = TRUE;}
+ListLeit    :   Variavel {
+                    if ($1.simb != NULL) $1.simb->inic = $1.simb->ref = TRUE;
+                    $$ = 1;
+                    GeraQuadrupla (PARAM, $1.opnd, opndidle, opndidle);
+                }
             |   ListLeit 
-                VIRG   {printf(", ");} Variavel
+                VIRG   {printf(", ");} Variavel {
+                    if ($4.simb != NULL) $4.simb->inic = $4.simb->ref = TRUE;
+                    $$ = $1 + 1;
+                    GeraQuadrupla (PARAM, $4.opnd, opndidle, opndidle);
+                }
             ;
-CmdEscrever :   ESCREVER  ABPAR  {printf("escrever (");}
-                ListEscr  FPAR  PVIRG  {printf(");\n");}
+CmdEscrever :   ESCREVER  ABPAR  {printf("escrever (");} ListEscr {
+                    opnd1.tipo = INTOPND;
+                    opnd1.atr.valint = $4;
+                    GeraQuadrupla (OPWRITE, opnd1, opndidle, opndidle);
+                } 
+                FPAR  PVIRG  {printf(");\n");}
             ;
 ListEscr    :   ElemEscr {
                     $$ = 1;
-                    //GeraQuadrupla (PARAM, $1.opnd, opndidle, opndidle);
+                    GeraQuadrupla (PARAM, $1.opnd, opndidle, opndidle);
                 }
             |   ListEscr VIRG {printf (", ");}  ElemEscr {
                     $$ = $1 + 1;
-                    //GeraQuadrupla (PARAM, $4.opnd, opndidle, opndidle);
+                    GeraQuadrupla (PARAM, $4.opnd, opndidle, opndidle);
                 }
             ;
 ElemEscr    :   CADEIA  {
@@ -1316,9 +1332,9 @@ void ImprimeQuadruplas () {
     quadrupla q;
     printf ("\n\n\tCODIGO INTEMEDIARIO:\n\n");
     for (p = codintermed->prox; p != NULL; p = p->prox) {
-        printf ("\n\nQuadruplas do modulo %s:\n", p->modname->cadeia);
+        printf ("\nQuadruplas do modulo %s:\n", p->modname->cadeia);
         for (q = p->listquad->prox; q != NULL; q = q->prox) {
-            printf ("\n\t%4d) %s", q->num, nomeoperquad[q->oper]);
+            printf ("\n\t%4d# %s", q->num, nomeoperquad[q->oper]);
             printf (", (%s", nometipoopndquad[q->opnd1.tipo]);
             ImprimeTipoOpnd(q->opnd1);
             printf ("), (%s", nometipoopndquad[q->opnd2.tipo]);
