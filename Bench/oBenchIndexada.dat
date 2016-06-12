@@ -46,7 +46,7 @@ comandos:
 );
 	ler (arrayC[0]);
 	var := arrayC[(2 - 1)];
-	var := arrayC[('b' - 'a')];
+	var := arrayC[('b'  - 'a' )];
 	var := arrayC[false]
 
 ***** Exception<Incompatibilidade>: Tipo inadequado para subscrito *****
@@ -129,4 +129,4 @@ Quadruplas do modulo Global:
 
 	   1) OPENMOD, (MODULO, Global), (IDLE), (IDLE)
 	   2) MENOS, (INT, 2), (INT, 1), (VAR, ##1)
-	   3) MENOS, (CARAC, 'b'), (CARAC, 'a'), (VAR, ##2)
+	   3) MENOS, (CARAC, b), (CARAC, a), (VAR, ##2)

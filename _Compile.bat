@@ -20,7 +20,7 @@ gcc y.tab.c main.c yyerror.c -o _Lab05 -lfl
 echo.
 echo Compilando programa
 
-_Lab05  < Compilador/_Lab05Prog.dat > Compilador/_Lab05ProgOutput.dat
+_Lab05  < Compilador/_Lab05Proga.dat > Compilador/_Lab05ProgOutput.dat
 
 REM goto Teste
 	echo ### Testes - Declaracao de Variaveis

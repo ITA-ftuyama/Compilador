@@ -280,7 +280,7 @@ typedef celmodhead *modhead;
 
 union atribopnd {
     simbolo simb; int valint; float valfloat;
-    char *valchar; bool vallogic; char *valcad;
+    char valchar; bool vallogic; char *valcad;
     quadrupla rotulo; modhead modulo;
 };
 
@@ -366,7 +366,7 @@ struct infovariavel {
 %type   <simb>      ChamadaFunc ChamadaProc
 
 %token  <cadeia>    ID
-%token  <cadeia>    CTCARAC
+%token  <carac>     CTCARAC
 %token  <valint>    CTINT
 %token  <valreal>   CTREAL
 %token  <cadeia>    CADEIA
@@ -464,7 +464,7 @@ Tipo        :   INTEIRO {printf("int ");    tipocorrente = INTEGER;}
             |   REAL    {printf("real ");   tipocorrente = FLOAT;  }  
             |   CARAC   {printf("carac ");  tipocorrente = CHAR;   } 
             |   LOGICO  {printf("logico "); tipocorrente = LOGIC;  } 
-            |   VAZIO   {printf("vazio ");  tipocorrente = VOID;  } 
+            |   VAZIO   {printf("vazio ");  tipocorrente = VOID;   } 
             ;
 ListElemDecl:   ElemDecl
             |   ListElemDecl {printf(", ");} VIRG ElemDecl
@@ -597,14 +597,14 @@ CmdEnquanto :   ENQUANTO  ABPAR {
                     if ($4.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_ENQUANTO); 
                     opndaux.tipo = ROTOPND;
-                    //$<quad>$ = GeraQuadrupla (OPJF, $4.opnd, opndidle, opndaux);
+                    $<quad>$ = GeraQuadrupla (OPJF, $4.opnd, opndidle, opndaux);
                 }
                 FPAR { printf (") "); } Comando  {
                     opndaux.tipo = ROTOPND;
                     opndaux.atr.rotulo = $<quad>3;
-                    //GeraQuadrupla (OPJUMP, opndidle, opndidle, opndaux);
-                    //$<quad>5->result.atr.rotulo =
-                    //    GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
+                    GeraQuadrupla (OPJUMP, opndidle, opndidle, opndaux);
+                    $<quad>5->result.atr.rotulo =
+                    GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
                 }
             ;
 CmdRepetir  :   REPETIR  {printf("repetir ");}
@@ -675,7 +675,7 @@ ListEscr    :   ElemEscr {
                 }
             ;
 ElemEscr    :   CADEIA  {
-                    printf("%s", $1);
+                    printf("\"%s\"", $1);
                     $$.opnd.tipo = CADOPND;
                     $$.opnd.atr.valcad = malloc (strlen($1) + 1);
                     strcpy ($$.opnd.atr.valcad, $1);
@@ -873,13 +873,12 @@ Fator       :   Variavel {
                 $$.opnd.atr.valfloat = $1;
             }
             |   CTCARAC {
-                printf ("%s", $1); $$.tipo = CHAR;
+                printf ("\'%c\' ", $1); $$.tipo = CHAR;
                 $$.opnd.tipo = CHAROPND;
-                $$.opnd.atr.valchar = malloc (strlen($1) + 1);
-                strcpy($$.opnd.atr.valchar, $1);
+                $$.opnd.atr.valchar = $1;
             }
             |   CADEIA {
-                printf ("%s", $1); $$.tipo = CADEIA;
+                printf ("\"%s\"", $1); $$.tipo = CADEIA;
                 $$.opnd.tipo = CADOPND;
                 $$.opnd.atr.valcad = malloc (strlen($1) + 1);
                 strcpy($$.opnd.atr.valcad, $1);
@@ -1338,7 +1337,7 @@ void ImprimeTipoOpnd (operando op) {
         case VAROPND:   printf (", %s", op.atr.simb->cadeia);            break;
         case INTOPND:   printf (", %d", op.atr.valint);                  break;
         case REALOPND:  printf (", %g", op.atr.valfloat);                break;
-        case CHAROPND:  printf (", %s", op.atr.valchar);                 break;
+        case CHAROPND:  printf (", %c", op.atr.valchar);                 break;
         case LOGICOPND: printf (", %d", op.atr.vallogic);                break;
         case CADOPND:   printf (", %s", op.atr.valcad);                  break;
         case ROTOPND:   printf (", %d", op.atr.rotulo->num);             break;

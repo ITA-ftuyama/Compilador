@@ -46,8 +46,9 @@ logico|LOGICO      	{return LOGICO;}
 vazio|VAZIO       	{return VAZIO;}
 
 {id}		{strcpy (yylval.cadeia, yytext);    return ID;		}
-{ctcarac}	{strcpy (yylval.cadeia, yytext);	return CTCARAC;	}
-{cadeia}	{strcpy (yylval.cadeia, yytext);    return CADEIA;	}
+{ctcarac}	{yylval.carac = tratachar (yytext);	return CTCARAC;	}
+{cadeia}	{strcpy (yylval.cadeia, yytext);
+				tratacadeia (yylval.cadeia);    return CADEIA;	}
 {ctint}		{yylval.valint  = atoi(yytext);     return CTINT;	}
 {ctreal}    {yylval.valreal = atof(yytext);     return CTREAL;	}
 
