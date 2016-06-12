@@ -355,11 +355,12 @@ struct infovariavel {
 
 /* Declaracao dos atributos dos tokens e dos nao-terminais */
 
-%type   <simb>      Variavel
+%type   <infovar>   Variavel
 %type   <tipoexpr>  Expressao   ExprAux1    ExprAux2    
-                Termo   Fator   ExprAux3    ExprAux4
+                    Termo       Fator       ExprAux3    ExprAux4
 %type   <nsubscr>   ListSubscr
-%type   <infolexpr> ListExpr   Argumentos
+%type   <nargs>     ListLeit    ListEscr
+%type   <infolexpr> ListExpr    Argumentos
 %type   <simb>      ChamadaFunc ChamadaProc
 
 %token  <cadeia>    ID
@@ -441,6 +442,10 @@ DeclGlobs   :
                     tab = 1; declparam = FALSE; declfunc = TRUE;
                     escopo = simb = 
                         InsereSimb("Global", IDGLOB, NOTVAR, NULL);
+                    InicCodIntermMod (simb);
+                    opnd1.tipo = MODOPND;
+                    opnd1.atr.modulo = modcorrente;
+                    GeraQuadrupla (OPENMOD, opnd1, opndidle, opndidle);
                     pontvardecl = simb->listvardecl;
                     pontfunc = simb->listfunc;
                 }
@@ -599,9 +604,9 @@ CmdRepetir  :   REPETIR  {printf("repetir ");}
             ;
 CmdPara     :   PARA  ABPAR {printf("para (");}
                 Variavel    {
-                    if ($4 != NULL) {
-                        $4->inic = $4->ref = TRUE;
-                        if (!($4->tvar == INTEGER || $4->tvar == CHAR))
+                    if ($4.simb != NULL) {
+                        $4.simb->inic = $4.simb->ref = TRUE;
+                        if (!($4.simb->tvar == INTEGER || $4.simb->tvar == CHAR))
                             Exception (errorIncomp, INCOMP_PARAVAR1);
                     }
                     printf(" := ");
@@ -618,11 +623,11 @@ CmdPara     :   PARA  ABPAR {printf("para (");}
                         Exception (errorIncomp, INCOMP_PARAEXP2); 
                 }
                 Variavel        {
-                    if ($13 != NULL) {
-                        $13->ref = TRUE;
-                        if (!($13->tvar == INTEGER || $13->tvar == CHAR))
+                    if ($13.simb != NULL) {
+                        $13.simb->ref = TRUE;
+                        if (!($13.simb->tvar == INTEGER || $13.simb->tvar == CHAR))
                             Exception (errorIncomp, INCOMP_PARAVAR2);
-                        if (strcmp($4->cadeia, $13->cadeia)!=0)
+                        if (strcmp($4.simb->cadeia, $13.simb->cadeia)!=0)
                             Exception(errorIncomp, INCOMP_PARAVAR12);
                     }
                     printf(" := ");
@@ -639,7 +644,7 @@ CmdLer      :   LER  ABPAR  {printf("ler (");}
                 ListLeit    {printf(");\n");}
                 FPAR  PVIRG 
             ;
-ListLeit    :   Variavel {if ($1 != NULL) $1->inic = $1->ref = TRUE;}
+ListLeit    :   Variavel {if ($1.simb != NULL) $1.simb->inic = $1.simb->ref = TRUE;}
             |   ListLeit 
                 VIRG   {printf(", ");} Variavel
             ;
@@ -697,12 +702,12 @@ CmdRetornar :   RETORNAR  PVIRG {
                         ExceptionIncomp(errorIncomp, nometipvar[$3], nometipesp[escopo->tvar]);
                 }
             ;
-CmdAtrib    :   Variavel {if ($1 != NULL) $1->inic = $1->ref = TRUE;}
+CmdAtrib    :   Variavel {if ($1.simb != NULL) $1.simb->inic = $1.simb->ref = TRUE;}
                 ATRIB    {printf (" := ");}
                 Expressao PVIRG {
                     printf (";\n");
-                    if ($1 != NULL && EhIncompativel($5, $1->tvar) == TRUE)
-                        ExceptionIncomp(errorIncomp, nometipvar[$5], nometipesp[$1->tvar]);
+                    if ($1.simb != NULL && EhIncompativel($5, $1.simb->tvar) == TRUE)
+                        ExceptionIncomp(errorIncomp, nometipvar[$5], nometipesp[$1.simb->tvar]);
                 }
             ;
 Expressao   :   ExprAux1
@@ -793,9 +798,9 @@ Termo       :   Fator
             }
             ;
 Fator       :   Variavel {
-                    if  ($1 != NULL)  {
-                        $1->ref  =  TRUE;
-                        $$ = $1->tvar;
+                    if  ($1.simb != NULL)  {
+                        $1.simb->ref  =  TRUE;
+                        $$ = $1.simb->tvar;
                     }
                 }
             |   CTINT       {printf ("%d", $1); $$ = INTEGER; }
@@ -824,13 +829,13 @@ Variavel    :   ID {
                         Exception (errorTipoInadeq, $1);
                     $<simb>$ = simb;
                 } ListSubscr  {
-                    $$ = $<simb>2;
-                    if ($$ != NULL) {
-                        if ($$->array == FALSE && $3 > 0)
+                    $$.simb = $<simb>2;
+                    if ($$.simb != NULL) {
+                        if ($$.simb->array == FALSE && $3 > 0)
                             Exception (errorNaoEsperado, "Subscrito\(s)");
-                        else if ($$->array == TRUE && $3 == 0)
+                        else if ($$.simb->array == TRUE && $3 == 0)
                             Exception (errorEsperado, "Subscrito\(s)");
-                        else if ($$->ndims != $3)
+                        else if ($$.simb->ndims != $3)
                             Exception (errorIncomp, INCOMP_NUMSUB);
                     }
                 }
@@ -1224,11 +1229,11 @@ void ImprimeQuadruplas () {
         printf ("\n\nQuadruplas do modulo %s:\n", p->modname->cadeia);
         for (q = p->listquad->prox; q != NULL; q = q->prox) {
             printf ("\n\t%4d) %s", q->num, nomeoperquad[q->oper]);
-            printf (", (%s, ", nometipoopndquad[q->opnd1.tipo]);
+            printf (", (%s", nometipoopndquad[q->opnd1.tipo]);
             ImprimeTipoOpnd(q->opnd1);
-            printf ("), (%s, ", nometipoopndquad[q->opnd2.tipo]);
+            printf ("), (%s", nometipoopndquad[q->opnd2.tipo]);
             ImprimeTipoOpnd(q->opnd2);
-            printf ("), (%s, ", nometipoopndquad[q->result.tipo]);
+            printf ("), (%s", nometipoopndquad[q->result.tipo]);
             ImprimeTipoOpnd(q->result);
             printf (")");
         }
@@ -1238,15 +1243,15 @@ void ImprimeQuadruplas () {
 
 void ImprimeTipoOpnd (operando op) {
     switch (op.tipo) {
-        case IDLEOPND:                                                 break;
-        case VAROPND:   printf ("%s", op.atr.simb->cadeia);            break;
-        case INTOPND:   printf ("%d", op.atr.valint);                  break;
-        case REALOPND:  printf ("%g", op.atr.valfloat);                break;
-        case CHAROPND:  printf ("%c", op.atr.valchar);                 break;
-        case LOGICOPND: printf ("%d", op.atr.vallogic);                break;
-        case CADOPND:   printf ("%s", op.atr.valcad);                  break;
-        case ROTOPND:   printf ("%d", op.atr.rotulo->num);             break;
-        case MODOPND:   printf ("%s", op.atr.modulo->modname->cadeia); break;
+        case IDLEOPND:                                                   break;
+        case VAROPND:   printf (", %s", op.atr.simb->cadeia);            break;
+        case INTOPND:   printf (", %d", op.atr.valint);                  break;
+        case REALOPND:  printf (", %g", op.atr.valfloat);                break;
+        case CHAROPND:  printf (", %c", op.atr.valchar);                 break;
+        case LOGICOPND: printf (", %d", op.atr.vallogic);                break;
+        case CADOPND:   printf (", %s", op.atr.valcad);                  break;
+        case ROTOPND:   printf (", %d", op.atr.rotulo->num);             break;
+        case MODOPND:   printf (", %s", op.atr.modulo->modname->cadeia); break;
     } 
 }
 
