@@ -38,18 +38,18 @@ comandos:
 		;
 	se (var > varInteiro) 
 		;
-	enquanto (varInteiro) 
+	enquanto (varInteiro
 
 ***** Exception<Incompatibilidade>: Expressao no Enquanto deveria ser logico *****
-;
-	enquanto (varReal) 
+) ;
+	enquanto (varReal
 
 ***** Exception<Incompatibilidade>: Expressao no Enquanto deveria ser logico *****
-;
-	enquanto (varCarac) 
+) ;
+	enquanto (varCarac
 
 ***** Exception<Incompatibilidade>: Expressao no Enquanto deveria ser logico *****
-;
+) ;
 	enquanto (varLogico) ;
 	enquanto (var > varInteiro) ;
 	repetir 
@@ -148,22 +148,42 @@ varCarac: Nao Inicializada
 Classe 1:
   (varInteiro, IDVAR, int   , 0, 1, escopo: Global);
 Classe 4:
+  (##1     , IDVAR, logico, 1, 1, escopo: SeEnquanto);
   (varReal , IDVAR, real  , 0, 1, escopo: Global);
+Classe 5:
+  (##2     , IDVAR, logico, 1, 1, escopo: SeEnquanto);
+Classe 6:
+  (##10    , IDVAR, logico, 1, 1, escopo: Para);
+  (##3     , IDVAR, logico, 1, 1, escopo: SeEnquanto);
 Classe 7:
   (var     , IDVAR, int   , 0, 0, escopo: Principal);
+  (##11    , IDVAR, logico, 1, 1, escopo: Para);
+  (##4     , IDVAR, logico, 1, 1, escopo: Para);
   (c       , IDVAR, carac , 1, 1, escopo: Para);
   (var     , IDVAR, int   , 0, 1, escopo: SeEnquanto);
+Classe 8:
+  (##12    , IDVAR, logico, 1, 1, escopo: Para);
+  (##5     , IDVAR, int   , 1, 1, escopo: Para);
+Classe 9:
+  (##13    , IDVAR, int   , 1, 1, escopo: Para);
+  (##6     , IDVAR, logico, 1, 1, escopo: Para);
 Classe 10:
   (Principal, IDFUNC, vazio , escopo: Global
 	Variaveis: int var
 	Parametros: NULL);
+  (##14    , IDVAR, int   , 1, 1, escopo: Para);
+  (##7     , IDVAR, int   , 1, 1, escopo: Para);
+Classe 11:
+  (##8     , IDVAR, logico, 1, 1, escopo: Para);
+Classe 12:
+  (##9     , IDVAR, real  , 1, 1, escopo: Para);
 Classe 13:
   (i       , IDVAR, int   , 1, 1, escopo: Para);
 Classe 14:
   (varLogico, IDVAR, logico, 0, 1, escopo: Global);
 Classe 15:
   (SeEnquanto, IDFUNC, vazio , escopo: Global
-	Variaveis: int var
+	Variaveis: int var, logico ##1, logico ##2, logico ##3
 	Parametros: NULL);
 Classe 16:
   (l       , IDVAR, logico, 1, 1, escopo: Para);
@@ -173,7 +193,7 @@ Classe 18:
 	Funcoes: vazio SeEnquanto, vazio Para, vazio Principal);
 Classe 20:
   (Para    , IDFUNC, vazio , escopo: Global
-	Variaveis: int i, carac c, real r, logico l
+	Variaveis: int i, carac c, real r, logico l, logico ##4, int ##5, logico ##6, int ##7, logico ##8, real ##9, logico ##10, logico ##11, logico ##12, int ##13, int ##14
 	Parametros: NULL);
 Classe 21:
   (varCarac, IDVAR, carac , 0, 1, escopo: Global);
@@ -188,3 +208,22 @@ Classe 22:
 Quadruplas do modulo Global:
 
 	   1) OPENMOD, (MODULO, Global), (IDLE), (IDLE)
+	   2) GT, (VAR, var), (VAR, varInteiro), (VAR, ##1)
+	   3) NOP, (IDLE), (IDLE), (IDLE)
+	   4) NOP, (IDLE), (IDLE), (IDLE)
+	   5) NOP, (IDLE), (IDLE), (IDLE)
+	   6) NOP, (IDLE), (IDLE), (IDLE)
+	   7) NOP, (IDLE), (IDLE), (IDLE)
+	   8) GT, (VAR, var), (VAR, varInteiro), (VAR, ##2)
+	   9) GT, (INT, 1), (INT, 0), (VAR, ##3)
+	  10) LT, (VAR, i), (INT, 10), (VAR, ##4)
+	  11) MAIS, (VAR, i), (INT, 1), (VAR, ##5)
+	  12) LT, (VAR, c), (CARAC, 'z'), (VAR, ##6)
+	  13) MAIS, (VAR, c), (INT, 1), (VAR, ##7)
+	  14) LT, (VAR, r), (REAL, 10), (VAR, ##8)
+	  15) MAIS, (VAR, r), (REAL, 1), (VAR, ##9)
+	  16) NE, (VAR, l), (LOGIC, 0), (VAR, ##10)
+	  17) NOT, (VAR, l), (IDLE), (VAR, ##11)
+	  18) LT, (VAR, c), (CARAC, 'z'), (VAR, ##12)
+	  19) MAIS, (INT, 2), (INT, 2), (VAR, ##13)
+	  20) MAIS, (VAR, i), (INT, 1), (VAR, ##14)

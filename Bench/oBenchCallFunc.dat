@@ -205,6 +205,8 @@ Classe 3:
   (InserirVarios, IDFUNC, int   , escopo: Global
 	Variaveis: int var
 	Parametros: int a, real b, carac c, logico d);
+Classe 4:
+  (##1     , IDVAR, int   , 1, 1, escopo: Inserir);
 Classe 5:
   (a       , IDVAR, int   , 1, 1, escopo: InserirVarios);
   (a       , IDVAR, int   , 1, 1, escopo: Inserir);
@@ -261,7 +263,7 @@ Classe 18:
 	Funcoes: vazio InserirVazio, vazio InserirVazio, vazio InserirVariosVazio, int InserirOne, real InserirReal, int Inserir, int InserirVarios, vazio Principal);
 Classe 19:
   (Inserir , IDFUNC, int   , escopo: Global
-	Variaveis: int var
+	Variaveis: int var, int ##1
 	Parametros: int a, int b);
 
 
@@ -272,3 +274,4 @@ Classe 19:
 Quadruplas do modulo Global:
 
 	   1) OPENMOD, (MODULO, Global), (IDLE), (IDLE)
+	   2) MAIS, (VAR, a), (VAR, b), (VAR, ##1)

@@ -327,6 +327,7 @@ Classe 2:
 	Variaveis: int var
 	Parametros: int a);
 Classe 4:
+  (##1     , IDVAR, int   , 1, 1, escopo: InserirParametro);
   (InserirLogicoCorreto1, IDFUNC, logico, escopo: Global
 	Variaveis: logico var
 	Parametros: NULL);
@@ -410,7 +411,7 @@ Classe 15:
 	Variaveis: int var
 	Parametros: int a, int b);
   (InserirParametro, IDFUNC, int   , escopo: Global
-	Variaveis: int var
+	Variaveis: int var, int ##1
 	Parametros: int a, int b);
 Classe 16:
   (varint  , IDVAR, int   , 0, 0, escopo: Global);
@@ -471,3 +472,4 @@ Classe 22:
 Quadruplas do modulo Global:
 
 	   1) OPENMOD, (MODULO, Global), (IDLE), (IDLE)
+	   2) MAIS, (VAR, a), (VAR, b), (VAR, ##1)

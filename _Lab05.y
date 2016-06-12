@@ -129,6 +129,7 @@
 #define     INTOPND         2
 #define     REALOPND        3
 #define     CHAROPND        4
+#define     CHAROPND        4
 #define     LOGICOPND       5
 #define     CADOPND         6
 #define     ROTOPND         7
@@ -279,7 +280,7 @@ typedef celmodhead *modhead;
 
 union atribopnd {
     simbolo simb; int valint; float valfloat;
-    char valchar; char vallogic; char *valcad;
+    char *valchar; bool vallogic; char *valcad;
     quadrupla rotulo; modhead modulo;
 };
 
@@ -470,13 +471,12 @@ ListElemDecl:   ElemDecl
             ;
 ElemDecl    :   ID {
                     printf ("%s", $1);
-                    if  (SimbDeclaradoEscopo($1, escopo->listvardecl, escopo) != NULL) {
+                    if  (SimbDeclaradoEscopo($1, escopo->listvardecl, escopo) != NULL) 
                         Exception (errorDeclRepetida, $1);
-                    }
-                    else if (tipocorrente == VOID) {
+                    else if (tipocorrente == VOID)
                         Exception (errorTipoInadeq, $1);
-                    }
                     simb =  InsereSimb ($1, IDVAR, tipocorrente, escopo);
+                    simb->array = FALSE; simb->ndims = 0;
                 } ListDims
             ;
 ListDims    :
@@ -589,10 +589,23 @@ CmdSenao    :
             |   SENAO {tabular(); printf("senao ");}
                 Comando
             ;
-CmdEnquanto :   ENQUANTO  ABPAR {printf("enquanto (");} Expressao
-                FPAR {printf (") "); if ($4.tipo != LOGIC)
+CmdEnquanto :   ENQUANTO  ABPAR {
+                    printf("enquanto (");
+                    $<quad>$ = GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
+                } 
+                Expressao {
+                    if ($4.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_ENQUANTO); 
-                    } Comando
+                    opndaux.tipo = ROTOPND;
+                    //$<quad>$ = GeraQuadrupla (OPJF, $4.opnd, opndidle, opndaux);
+                }
+                FPAR { printf (") "); } Comando  {
+                    opndaux.tipo = ROTOPND;
+                    opndaux.atr.rotulo = $<quad>3;
+                    //GeraQuadrupla (OPJUMP, opndidle, opndidle, opndaux);
+                    //$<quad>5->result.atr.rotulo =
+                    //    GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
+                }
             ;
 CmdRepetir  :   REPETIR  {printf("repetir ");}
                 CmdInside {tabular(); printf("enquanto (");}
@@ -727,6 +740,9 @@ Expressao   :   ExprAux1
                     if ($1.tipo != LOGIC || $4.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_OR);
                     $$.tipo = LOGIC;
+                    $$.opnd.tipo = VAROPND;
+                    $$.opnd.atr.simb = NovaTemp ($$.tipo);
+                    GeraQuadrupla (OPOR, $1.opnd, $4.opnd, $$.opnd);
                 }
             ;
 ExprAux1    :   ExprAux2
@@ -734,6 +750,9 @@ ExprAux1    :   ExprAux2
                     if ($1.tipo != LOGIC || $4.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_AND);
                     $$.tipo = LOGIC;
+                    $$.opnd.tipo = VAROPND;
+                    $$.opnd.atr.simb = NovaTemp ($$.tipo);
+                    GeraQuadrupla (OPAND, $1.opnd, $4.opnd, $$.opnd);
                 }
             ;
 ExprAux2    :   ExprAux3
@@ -741,6 +760,9 @@ ExprAux2    :   ExprAux3
                     if ($3.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_NOT);
                     $$.tipo = LOGIC;
+                    $$.opnd.tipo = VAROPND;
+                    $$.opnd.atr.simb = NovaTemp ($3.tipo);
+                    GeraQuadrupla (OPNOT, $3.opnd, opndidle, $$.opnd);
                 }
             ;
 ExprAux3    :   ExprAux4
@@ -767,6 +789,16 @@ ExprAux3    :   ExprAux4
                         break;
                     }
                     $$.tipo = LOGIC;
+                    $$.opnd.tipo = VAROPND;
+                    $$.opnd.atr.simb = NovaTemp ($$.tipo);
+                    switch ($2) {
+                        case LT: GeraQuadrupla (OPLT, $1.opnd, $4.opnd, $$.opnd); break;
+                        case LE: GeraQuadrupla (OPLE, $1.opnd, $4.opnd, $$.opnd); break;
+                        case GT: GeraQuadrupla (OPGT, $1.opnd, $4.opnd, $$.opnd); break;
+                        case GE: GeraQuadrupla (OPGE, $1.opnd, $4.opnd, $$.opnd); break;
+                        case EQ: GeraQuadrupla (OPEQ, $1.opnd, $4.opnd, $$.opnd); break;
+                        case NE: GeraQuadrupla (OPNE, $1.opnd, $4.opnd, $$.opnd); break;
+                    }
                 }
             ;
 ExprAux4    :   Termo
@@ -782,6 +814,11 @@ ExprAux4    :   Termo
                     Exception (errorIncomp, INCOMP_OPARIT);
                 if ($1.tipo == FLOAT || $4.tipo == FLOAT) $$.tipo = FLOAT;
                 else $$.tipo = INTEGER;
+                $$.opnd.tipo = VAROPND;
+                $$.opnd.atr.simb = NovaTemp ($$.tipo);
+                if ($2 == MAIS)
+                     GeraQuadrupla (OPMAIS, $1.opnd, $4.opnd, $$.opnd);
+                else GeraQuadrupla (OPMENOS, $1.opnd, $4.opnd, $$.opnd);
             }
             ;
 Termo       :   Fator
@@ -800,12 +837,20 @@ Termo       :   Fator
                             Exception (errorIncomp, INCOMP_OPARIT);
                         if ($1.tipo == FLOAT || $4.tipo == FLOAT) $$.tipo = FLOAT;
                         else $$.tipo = INTEGER;
+                        $$.opnd.tipo = VAROPND;
+                        $$.opnd.atr.simb = NovaTemp ($$.tipo);
+                        if ($2 == MULT)
+                             GeraQuadrupla (OPMULTIP, $1.opnd, $4.opnd, $$.opnd);
+                        else GeraQuadrupla (OPDIV, $1.opnd, $4.opnd, $$.opnd);
                     break;
                     case RESTO:
                         if ($1.tipo != INTEGER && $1.tipo != CHAR
                         ||  $4.tipo != INTEGER && $4.tipo != CHAR)
                             Exception (errorIncomp, INCOMP_OPREST);
                         $$.tipo = INTEGER;
+                        $$.opnd.tipo = VAROPND;
+                        $$.opnd.atr.simb = NovaTemp ($$.tipo);
+                        GeraQuadrupla (OPRESTO, $1.opnd, $4.opnd, $$.opnd);
                     break;
                 }
             }
@@ -814,23 +859,53 @@ Fator       :   Variavel {
                     if  ($1.simb != NULL)  {
                         $1.simb->ref  =  TRUE;
                         $$.tipo = $1.simb->tvar;
+                        $$.opnd = $1.opnd;
                     }
                 }
-            |   CTINT       {printf ("%d", $1); $$.tipo = INTEGER; }
-            |   CTREAL      {printf ("%g", $1); $$.tipo = FLOAT;   }
-            |   CTCARAC     {printf ("%s", $1); $$.tipo = CHAR;    }
-            |   CADEIA      {printf ("%s", $1); $$.tipo = CADEIA;  }
-            |   VERDADE     {printf ("true");   $$.tipo = LOGIC;   }
-            |   FALSO       {printf ("false");  $$.tipo = LOGIC;   }
-            |   NEG         {printf ("~");}  Fator  
+            |   CTINT {
+                printf ("%d", $1); $$.tipo = INTEGER; 
+                $$.opnd.tipo = INTOPND;
+                $$.opnd.atr.valint = $1;
+            }
+            |   CTREAL {
+                printf ("%g", $1); $$.tipo = FLOAT;
+                $$.opnd.tipo = REALOPND;
+                $$.opnd.atr.valfloat = $1;
+            }
+            |   CTCARAC {
+                printf ("%s", $1); $$.tipo = CHAR;
+                $$.opnd.tipo = CHAROPND;
+                $$.opnd.atr.valchar = malloc (strlen($1) + 1);
+                strcpy($$.opnd.atr.valchar, $1);
+            }
+            |   CADEIA {
+                printf ("%s", $1); $$.tipo = CADEIA;
+                $$.opnd.tipo = CADOPND;
+                $$.opnd.atr.valcad = malloc (strlen($1) + 1);
+                strcpy($$.opnd.atr.valcad, $1);
+            }
+            |   VERDADE {
+                printf ("true");   $$.tipo = LOGIC;
+                $$.opnd.tipo = LOGICOPND;
+                $$.opnd.atr.vallogic = TRUE;
+            }
+            |   FALSO {
+                printf ("false");  $$.tipo = LOGIC;
+                $$.opnd.tipo = LOGICOPND;
+                $$.opnd.atr.vallogic = FALSE;
+            }
+            |   NEG {printf ("~");} Fator  
             {
                 if ($3.tipo != INTEGER && $3.tipo != FLOAT && $3.tipo != CHAR)
                     Exception (errorIncomp, INCOMP_OPNEG);
                 if ($3.tipo == FLOAT) $$.tipo = FLOAT;
                 else $$.tipo = INTEGER;
+                $$.opnd.tipo = VAROPND;
+                $$.opnd.atr.simb = NovaTemp ($$.tipo);
+                GeraQuadrupla  (OPMENUN, $3.opnd, opndidle, $$.opnd);
             }
             |   ABPAR           {printf("(");}
-                Expressao  FPAR {printf (")"); $$ = $3;}
+                Expressao  FPAR {printf (")"); $$.tipo = $3.tipo; $$.opnd = $3.opnd;}
             |   ChamadaFunc     {$$.tipo = FUNC;}
             ;
 Variavel    :   ID {
@@ -850,6 +925,9 @@ Variavel    :   ID {
                             Exception (errorEsperado, "Subscrito\(s)");
                         else if ($$.simb->ndims != $3)
                             Exception (errorIncomp, INCOMP_NUMSUB);
+                        $$.opnd.tipo = VAROPND;
+                        if ($3 == 0)
+                            $$.opnd.atr.simb = $$.simb;
                     }
                 }
             ;
@@ -1260,7 +1338,7 @@ void ImprimeTipoOpnd (operando op) {
         case VAROPND:   printf (", %s", op.atr.simb->cadeia);            break;
         case INTOPND:   printf (", %d", op.atr.valint);                  break;
         case REALOPND:  printf (", %g", op.atr.valfloat);                break;
-        case CHAROPND:  printf (", %c", op.atr.valchar);                 break;
+        case CHAROPND:  printf (", %s", op.atr.valchar);                 break;
         case LOGICOPND: printf (", %d", op.atr.vallogic);                break;
         case CADOPND:   printf (", %s", op.atr.valcad);                  break;
         case ROTOPND:   printf (", %d", op.atr.rotulo->num);             break;
