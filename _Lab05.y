@@ -358,7 +358,7 @@ struct infovariavel {
 
 %type   <infovar>   Variavel
 %type   <infoexpr>  Expressao   ExprAux1    ExprAux2    Termo 
-                    ExprAux3    ExprAux4    Fator  
+                    ElemEscr    ExprAux3    ExprAux4    Fator  
 %type   <nsubscr>   ListSubscr
 %type   <nargs>     ListLeit    ListEscr
 %type   <infolexpr> ListExpr    Argumentos
@@ -652,10 +652,21 @@ ListLeit    :   Variavel {if ($1.simb != NULL) $1.simb->inic = $1.simb->ref = TR
 CmdEscrever :   ESCREVER  ABPAR  {printf("escrever (");}
                 ListEscr  FPAR  PVIRG  {printf(");\n");}
             ;
-ListEscr    :   ElemEscr
-            |   ListEscr VIRG {printf(", ");} ElemEscr
+ListEscr    :   ElemEscr {
+                    $$ = 1;
+                    //GeraQuadrupla (PARAM, $1.opnd, opndidle, opndidle);
+                }
+            |   ListEscr VIRG {printf (", ");}  ElemEscr {
+                    $$ = $1 + 1;
+                    //GeraQuadrupla (PARAM, $4.opnd, opndidle, opndidle);
+                }
             ;
-ElemEscr    :   CADEIA      {printf("%s", $1);}
+ElemEscr    :   CADEIA  {
+                    printf("%s", $1);
+                    $$.opnd.tipo = CADOPND;
+                    $$.opnd.atr.valcad = malloc (strlen($1) + 1);
+                    strcpy ($$.opnd.atr.valcad, $1);
+                }
             |   Expressao
             ;
 ChamadaProc :   CHAMAR ID ABPAR {
