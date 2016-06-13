@@ -567,17 +567,31 @@ Comando     :   CmdComposto
             |   CmdAtrib
             |   ChamadaProc
             |   CmdRetornar
-            |   PVIRG           {printf(";\n");}
+            |   PVIRG           {printf(";\n"); GeraQuadrupla (NOP, opndidle, opndidle, opndidle);}
             ;
-CmdComposto :   
-                ABCHAVE {printf ("{\n"); tab++;}  ListCmds FCHAVE
+CmdComposto :   ABCHAVE {printf ("{\n"); tab++;}  ListCmds FCHAVE
                 {tab--; tabular (); printf ("}\n");}
             ;
-CmdSe       :   {printf("se (");} 
-                SE  ABPAR Expressao 
-                FPAR {printf (") "); if ($4.tipo != LOGIC)
+CmdSe       :   SE  ABPAR {printf("se (");} Expressao {
+                    if ($4.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_SE);
-                    } CmdInside CmdSenao
+                    opndaux.tipo = ROTOPND;
+                        $<quad>$ = 
+                            GeraQuadrupla (OPJF, $4.opnd, opndidle, opndaux);
+                }  
+                FPAR {printf (") "); } CmdInside {
+                    $<quad>$ = quadcorrente;
+                    $<quad>5->result.atr.rotulo =
+                        GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
+                } CmdSenao {
+                    if ($<quad>9->prox != quadcorrente) {
+                        quadaux = $<quad>9->prox;
+                        $<quad>9->prox = quadaux->prox;
+                        quadaux->prox = $<quad>9->prox->prox;
+                        $<quad>9->prox->prox = quadaux;
+                        RenumQuadruplas ($<quad>9, quadcorrente);
+                    }
+                }
             ;
 CmdInside   :   CmdComposto
             |   {printf("\n"); tab++; tabular();}
@@ -585,8 +599,15 @@ CmdInside   :   CmdComposto
                 {tab--;}
             ;
 CmdSenao    :
-            |   SENAO {tabular(); printf("senao ");}
-                Comando
+            |   SENAO {
+                    tabular(); printf("senao ");
+                    opndaux.tipo = ROTOPND;
+                    $<quad>$ = GeraQuadrupla (OPJUMP, opndidle, opndidle, opndaux);
+                }
+                Comando {
+                    $<quad>2->result.atr.rotulo =
+                        GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
+                }
             ;
 CmdEnquanto :   ENQUANTO  ABPAR {
                     printf("enquanto (");
