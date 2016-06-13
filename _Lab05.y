@@ -129,7 +129,6 @@
 #define     INTOPND         2
 #define     REALOPND        3
 #define     CHAROPND        4
-#define     CHAROPND        4
 #define     LOGICOPND       5
 #define     CADOPND         6
 #define     ROTOPND         7
@@ -921,7 +920,7 @@ Fator       :   Variavel {
             }
             |   ABPAR           {printf("(");}
                 Expressao  FPAR {printf (")"); $$.tipo = $3.tipo; $$.opnd = $3.opnd;}
-            |   ChamadaFunc     {$$.tipo = FUNC;}
+            |   ChamadaFunc     {$$.tipo = LOGIC; $$.opnd.tipo = LOGICOPND; $$.opnd.atr.vallogic = TRUE;}
             ;
 Variavel    :   ID {
                     printf ("%s", $1);
