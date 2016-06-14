@@ -602,7 +602,8 @@ CmdSenao    :
             |   SENAO {
                     tabular(); printf("senao ");
                     opndaux.tipo = ROTOPND;
-                    $<quad>$ = GeraQuadrupla (OPJUMP, opndidle, opndidle, opndaux);
+                    $<quad>$ = 
+                        GeraQuadrupla (OPJUMP, opndidle, opndidle, opndaux);
                 }
                 Comando {
                     $<quad>2->result.atr.rotulo =
@@ -611,13 +612,15 @@ CmdSenao    :
             ;
 CmdEnquanto :   ENQUANTO  ABPAR {
                     printf("enquanto (");
-                    $<quad>$ = GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
+                    $<quad>$ = 
+                        GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
                 } 
                 Expressao {
                     if ($4.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_ENQUANTO); 
                     opndaux.tipo = ROTOPND;
-                    $<quad>$ = GeraQuadrupla (OPJF, $4.opnd, opndidle, opndaux);
+                    $<quad>$ = 
+                        GeraQuadrupla (OPJF, $4.opnd, opndidle, opndaux);
                 }
                 FPAR { printf (") "); } Comando  {
                     opndaux.tipo = ROTOPND;
@@ -628,12 +631,18 @@ CmdEnquanto :   ENQUANTO  ABPAR {
                 }
             ;
 CmdRepetir  :   REPETIR  {printf("repetir ");}
-                CmdInside {tabular(); printf("enquanto (");}
-                ENQUANTO   ABPAR  
+                CmdInside ENQUANTO   ABPAR  {
+                    tabular(); printf("enquanto ("); 
+                    $<quad>$ =
+                        GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
+                }
                 Expressao FPAR PVIRG  {
                     printf(");\n"); 
                     if ($7.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_REPETIR); 
+                    opndaux.tipo = ROTOPND;
+                    opndaux.atr.rotulo = $<quad>6;
+                    GeraQuadrupla (OPJF, $7.opnd, opndidle, opndaux);
                 }
             ;
 CmdPara     :   PARA  ABPAR {printf("para (");}
@@ -1272,7 +1281,7 @@ void ChecArgumentos (pontexprtipo Ltiparg, listsimb Lparam) {
 /* Funcao que verifica compatibilidade entre dois lados de atribuicao */
 
 bool EhIncompativel (int tipoP, int tipoQ) {
-    if (  (tipoQ == INTEGER 
+    if (  (tipoQ == INTEGER
         || tipoQ  == CHAR) && (tipoP == FLOAT || tipoP == LOGIC)
         || tipoQ  == FLOAT && tipoP == LOGIC
         || tipoQ  == LOGIC && tipoP != LOGIC
@@ -1290,7 +1299,6 @@ void ExceptionIncomp (char *type, char *got, char *expected) {
 void Exception (char *type, char *error) {
     printf ("\n\n***** Exception<%s>: %s *****\n", type, error);
 }
-
 
 /****************************************************/
 /*                                                  */
