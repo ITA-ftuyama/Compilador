@@ -300,7 +300,7 @@ struct celmodhead {
 
 /* Variaveis globais para o codigo intermediario */
 
-quadrupla quadcorrente, quadaux;
+quadrupla quadcorrente, quadaux, quadaux2;
 modhead codintermed, modcorrente;
 int oper, numquadcorrente;
 operando opnd1, opnd2, result, opndaux;
@@ -654,34 +654,55 @@ CmdPara     :   PARA  ABPAR {printf("para (");}
                     }
                     printf(" := ");
                 }
-                ATRIB
-                Expressao PVIRG {
+                ATRIB Expressao PVIRG {
                     printf ("; ");
                     if (!($7.tipo == INTEGER || $7.tipo == CHAR)) 
                         Exception (errorIncomp, INCOMP_PARAEXP1);
+                    $<quad>$ = 
+                        GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
                 } 
-                Expressao PVIRG {
-                    printf("; "); 
+                Expressao {
                     if ($10.tipo != LOGIC) 
                         Exception (errorIncomp, INCOMP_PARAEXP2); 
+                    opndaux.tipo = ROTOPND;
+                    $<quad>$ = 
+                        GeraQuadrupla (OPJF, $10.opnd, opndidle, opndaux);
+                } PVIRG {
+                    printf("; ");
+                    $<quad>$ = 
+                        GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
                 }
-                Variavel        {
-                    if ($13.simb != NULL) {
-                        $13.simb->ref = TRUE;
-                        if (!($13.simb->tvar == INTEGER || $13.simb->tvar == CHAR))
+                Variavel {
+                    if ($14.simb != NULL) {
+                        $14.simb->ref = TRUE;
+                        if (!($14.simb->tvar == INTEGER || $14.simb->tvar == CHAR))
                             Exception (errorIncomp, INCOMP_PARAVAR2);
-                        if (strcmp($4.simb->cadeia, $13.simb->cadeia)!=0)
+                        if (strcmp($4.simb->cadeia, $14.simb->cadeia)!=0)
                             Exception(errorIncomp, INCOMP_PARAVAR12);
                     }
                     printf(" := ");
                 }
-                ATRIB
-                Expressao FPAR  {
-                    if (!($16.tipo == INTEGER || $16.tipo == CHAR)) 
+                ATRIB Expressao FPAR  {
+                    if (!($17.tipo == INTEGER || $17.tipo == CHAR)) 
                         Exception (errorIncomp, INCOMP_PARAEXP3);
                     printf (") ");
+                    $<quad>$ = quadcorrente;
+                }{ 
+                        $<quad>$ = 
+                        GeraQuadrupla (NOP, opndidle, opndidle, opndidle); 
                 }
-                Comando
+                Comando {
+                    quadaux = quadcorrente;
+                    opndaux.tipo = ROTOPND;  opndaux.atr.rotulo = $<quad>9;
+                    quadaux2 = GeraQuadrupla (OPJUMP, opndidle, opndidle, opndaux);
+                    $<quad>11->result.atr.rotulo = 
+                        GeraQuadrupla (NOP, opndidle, opndidle, opndidle); 
+                    // Correcao da ordem das quadruplas
+                    $<quad>11->prox = $<quad>20;
+                    quadaux->prox = $<quad>13;
+                    $<quad>19->prox = quadaux2;
+                    RenumQuadruplas ($<quad>11,  quadcorrente);
+                }
             ;
 CmdLer      :   LER  ABPAR  {printf("ler (");}
                 ListLeit    {
