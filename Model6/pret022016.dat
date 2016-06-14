@@ -1,0 +1,14 @@
+teste {
+locais:
+	int i, j, k; real x, y; logico a, b; carac m, n;
+comandos:
+	ler (i, j, x, b);
+	escrever ("i: ", i, "; j: ", j, "; x: ", x, "; b: ", b);
+	k := i + j;
+	y := x + 3.4;
+	a := i < j;
+	escrever ("k: ", k, "; y: ", y, "; a: ", a);
+  	ler (m);
+  	n := m + ' ';
+	escrever ("m: ", m, "; n: ", n);
+}
