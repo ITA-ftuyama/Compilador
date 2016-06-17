@@ -123,6 +123,7 @@
 #define     OPWRITE         23
 #define     OPEXIT          24
 #define     OPCALL          25
+#define     OPRETURN        26
 
 /* Definicao de constantes para os tipos de operandos de quadruplas */
 
@@ -166,11 +167,11 @@ char *nometipesp[7] = {
 
 /* Strings para operadores de quadruplas */
 
-char *nomeoperquad[26] = {"",
+char *nomeoperquad[27] = {"",
     "OR", "AND", "LT", "LE", "GT", "GE", "EQ", "NE", "MAIS",
     "MENOS", "MULT", "DIV", "RESTO", "MENUN", "NOT", "ATRIB",
     "OPENMOD", "NOP", "JUMP", "JF", "PARAM", "READ", "WRITE",
-    "EXIT", "CALL"
+    "EXIT", "CALL", "RET"
 };
 
 /* Strings para tipos de operandos de quadruplas */
@@ -801,12 +802,14 @@ CmdRetornar :   RETORNAR  PVIRG {
                     printf("retornar;\n");
                     if (escopo != NULL && escopo->tvar != VOID)
                         ExceptionIncomp(errorIncomp, "vazio", nometipesp[escopo->tvar]);
+                    GeraQuadrupla (OPRETURN, opndidle, opndidle, opndidle);
                 }
             |   RETORNAR        {printf("retornar ");}
                 Expressao PVIRG {
                     printf (";\n");
                     if (EhIncompativel($3.tipo, escopo->tvar) == TRUE)
                         ExceptionIncomp(errorIncomp, nometipvar[$3.tipo], nometipesp[escopo->tvar]);
+                    GeraQuadrupla (OPRETURN, $3.opnd, opndidle, opndidle);
                 }
             ;
 CmdAtrib    :   Variavel {if ($1.simb != NULL) $1.simb->inic = $1.simb->ref = TRUE;}
