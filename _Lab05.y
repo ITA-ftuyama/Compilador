@@ -122,6 +122,7 @@
 #define     OPREAD          22
 #define     OPWRITE         23
 #define     OPEXIT          24
+#define     OPCALL          25
 
 /* Definicao de constantes para os tipos de operandos de quadruplas */
 
@@ -165,11 +166,11 @@ char *nometipesp[7] = {
 
 /* Strings para operadores de quadruplas */
 
-char *nomeoperquad[25] = {"",
+char *nomeoperquad[26] = {"",
     "OR", "AND", "LT", "LE", "GT", "GE", "EQ", "NE", "MAIS",
     "MENOS", "MULT", "DIV", "RESTO", "MENUN", "NOT", "ATRIB",
     "OPENMOD", "NOP", "JUMP", "JF", "PARAM", "READ", "WRITE",
-    "EXIT"
+    "EXIT", "CALL"
 };
 
 /* Strings para tipos de operandos de quadruplas */
@@ -517,6 +518,11 @@ Cabecalho   :   PRINCIPAL   {
                     pontvardecl = simb->listvardecl;
                     pontparam = simb->listparam;
                     declfunc = FALSE;
+
+                    InicCodIntermMod (simb);
+                    opnd1.tipo = MODOPND;
+                    opnd1.atr.modulo = modcorrente;
+                    GeraQuadrupla (OPENMOD, opnd1, opndidle, opndidle);
                 }
             |   Tipo  ID ABPAR {
                     declparam = TRUE;
@@ -531,16 +537,19 @@ Cabecalho   :   PRINCIPAL   {
                         InsereSimb ($2, IDFUNC, tipocorrente, escopo);
                     pontvardecl = simb->listvardecl;
                     pontparam = simb->listparam; 
+
+                    InicCodIntermMod (simb);
+                    opnd1.tipo = MODOPND;
+                    opnd1.atr.modulo = modcorrente;
+                    GeraQuadrupla (OPENMOD, opnd1, opndidle, opndidle);
                 } 
-                Params FPAR  
-                {declparam = FALSE; printf(")");}
+                Params FPAR {declparam = FALSE; printf(")");} 
             ;
 Params      :
             |   ListParam
             ;
 ListParam   :   Parametro
-            |   ListParam 
-                VIRG {printf(", ");} Parametro
+            |   ListParam VIRG {printf(", ");} Parametro
             ;
 Parametro   :   Tipo  ID {
                     printf ("%s", $2);
@@ -1390,9 +1399,9 @@ simbolo NovaTemp (int tip) {
 void ImprimeQuadruplas () {
     modhead p;
     quadrupla q;
-    printf ("\n\n\tCODIGO INTEMEDIARIO:\n\n");
+    printf ("\n\n\tCODIGO INTEMEDIARIO:\n");
     for (p = codintermed->prox; p != NULL; p = p->prox) {
-        printf ("\nQuadruplas do modulo %s:\n", p->modname->cadeia);
+        printf ("\n\nQuadruplas do modulo %s:\n", p->modname->cadeia);
         for (q = p->listquad->prox; q != NULL; q = q->prox) {
             printf ("\n\t%4d# %7s", q->num, nomeoperquad[q->oper]);
             printf (", (%s", nometipoopndquad[q->opnd1.tipo]);
