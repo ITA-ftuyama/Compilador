@@ -121,6 +121,7 @@
 #define     PARAM           21
 #define     OPREAD          22
 #define     OPWRITE         23
+#define     OPEXIT          24
 
 /* Definicao de constantes para os tipos de operandos de quadruplas */
 
@@ -164,10 +165,11 @@ char *nometipesp[7] = {
 
 /* Strings para operadores de quadruplas */
 
-char *nomeoperquad[24] = {"",
+char *nomeoperquad[25] = {"",
     "OR", "AND", "LT", "LE", "GT", "GE", "EQ", "NE", "MAIS",
     "MENOS", "MULT", "DIV", "RESTO", "MENUN", "NOT", "ATRIB",
-    "OPENMOD", "NOP", "JUMP", "JF", "PARAM", "READ", "WRITE"
+    "OPENMOD", "NOP", "JUMP", "JF", "PARAM", "READ", "WRITE",
+    "EXIT"
 };
 
 /* Strings para tipos de operandos de quadruplas */
@@ -304,7 +306,7 @@ quadrupla quadcorrente, quadaux, quadaux2;
 modhead codintermed, modcorrente;
 int oper, numquadcorrente;
 operando opnd1, opnd2, result, opndaux;
-int numtemp;
+int numtemp = 0;
 const operando opndidle = {IDLEOPND, 0};
 
 /* Prototipos das funcoes para o codigo intermediario */
@@ -433,14 +435,8 @@ struct infovariavel {
     para alguma estetica, ha mudanca de linha       
 */
 
-Programa    :   {InicTabSimb(); InicCodIntermed (); numtemp = 0;}
-                DeclGlobs   Funcoes 
-                {VerificaInicRef (); ImprimeTabSimb (); ImprimeQuadruplas ();}
-            ;
-DeclGlobs   :
-            |   GLOBAIS  DPONTS  {
-                    printf("globais:\n");
-                    tab = 1; declparam = FALSE; declfunc = TRUE;
+Programa    :   {
+                    InicTabSimb(); InicCodIntermed ();
                     escopo = simb = 
                         InsereSimb("Global", IDGLOB, NOTVAR, NULL);
                     InicCodIntermMod (simb);
@@ -449,6 +445,17 @@ DeclGlobs   :
                     GeraQuadrupla (OPENMOD, opnd1, opndidle, opndidle);
                     pontvardecl = simb->listvardecl;
                     pontfunc = simb->listfunc;
+                    declparam = FALSE; declfunc = TRUE;
+                }
+                DeclGlobs   Funcoes 
+                {
+                    GeraQuadrupla (OPEXIT, opndidle, opndidle, opndidle);
+                    VerificaInicRef (); ImprimeTabSimb (); ImprimeQuadruplas ();
+                }
+            ;
+DeclGlobs   :
+            |   GLOBAIS  DPONTS  {
+                    printf("globais:\n"); tab = 1; 
                 }
                 ListDecl
             ;
@@ -475,7 +482,7 @@ ElemDecl    :   ID {
                     else if (tipocorrente == VOID)
                         Exception (errorTipoInadeq, $1);
                     simb =  InsereSimb ($1, IDVAR, tipocorrente, escopo);
-                    simb->array = FALSE; simb->ndims = 0;
+                    simb->ndims = 0;
                 } ListDims
             ;
 ListDims    :
@@ -627,7 +634,7 @@ CmdEnquanto :   ENQUANTO  ABPAR {
                     opndaux.atr.rotulo = $<quad>3;
                     GeraQuadrupla (OPJUMP, opndidle, opndidle, opndaux);
                     $<quad>5->result.atr.rotulo =
-                    GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
+                        GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
                 }
             ;
 CmdRepetir  :   REPETIR  {printf("repetir ");}
@@ -929,49 +936,53 @@ Fator       :   Variavel {
                     }
                 }
             |   CTINT {
-                printf ("%d", $1); $$.tipo = INTEGER; 
-                $$.opnd.tipo = INTOPND;
-                $$.opnd.atr.valint = $1;
-            }
+                    printf ("%d", $1); $$.tipo = INTEGER; 
+                    $$.opnd.tipo = INTOPND;
+                    $$.opnd.atr.valint = $1;
+                }
             |   CTREAL {
-                printf ("%g", $1); $$.tipo = FLOAT;
-                $$.opnd.tipo = REALOPND;
-                $$.opnd.atr.valfloat = $1;
-            }
+                    printf ("%g", $1); $$.tipo = FLOAT;
+                    $$.opnd.tipo = REALOPND;
+                    $$.opnd.atr.valfloat = $1;
+                }
             |   CTCARAC {
-                printf ("\'%c\' ", $1); $$.tipo = CHAR;
-                $$.opnd.tipo = CHAROPND;
-                $$.opnd.atr.valchar = $1;
-            }
+                    printf ("\'%c\' ", $1); $$.tipo = CHAR;
+                    $$.opnd.tipo = CHAROPND;
+                    $$.opnd.atr.valchar = $1;
+                }
             |   CADEIA {
-                printf ("\"%s\"", $1); $$.tipo = CADEIA;
-                $$.opnd.tipo = CADOPND;
-                $$.opnd.atr.valcad = malloc (strlen($1) + 1);
-                strcpy($$.opnd.atr.valcad, $1);
-            }
+                    printf ("\"%s\"", $1); $$.tipo = CADEIA;
+                    $$.opnd.tipo = CADOPND;
+                    $$.opnd.atr.valcad = malloc (strlen($1) + 1);
+                    strcpy($$.opnd.atr.valcad, $1);
+                }
             |   VERDADE {
-                printf ("true");   $$.tipo = LOGIC;
-                $$.opnd.tipo = LOGICOPND;
-                $$.opnd.atr.vallogic = TRUE;
-            }
+                    printf ("true");   $$.tipo = LOGIC;
+                    $$.opnd.tipo = LOGICOPND;
+                    $$.opnd.atr.vallogic = TRUE;
+                }
             |   FALSO {
-                printf ("false");  $$.tipo = LOGIC;
-                $$.opnd.tipo = LOGICOPND;
-                $$.opnd.atr.vallogic = FALSE;
-            }
+                    printf ("false");  $$.tipo = LOGIC;
+                    $$.opnd.tipo = LOGICOPND;
+                    $$.opnd.atr.vallogic = FALSE;
+                }
             |   NEG {printf ("~");} Fator  
-            {
-                if ($3.tipo != INTEGER && $3.tipo != FLOAT && $3.tipo != CHAR)
-                    Exception (errorIncomp, INCOMP_OPNEG);
-                if ($3.tipo == FLOAT) $$.tipo = FLOAT;
-                else $$.tipo = INTEGER;
-                $$.opnd.tipo = VAROPND;
-                $$.opnd.atr.simb = NovaTemp ($$.tipo);
-                GeraQuadrupla  (OPMENUN, $3.opnd, opndidle, $$.opnd);
-            }
+                {
+                    if ($3.tipo != INTEGER && $3.tipo != FLOAT && $3.tipo != CHAR)
+                        Exception (errorIncomp, INCOMP_OPNEG);
+                    if ($3.tipo == FLOAT) $$.tipo = FLOAT;
+                    else $$.tipo = INTEGER;
+                    $$.opnd.tipo = VAROPND;
+                    $$.opnd.atr.simb = NovaTemp ($$.tipo);
+                    GeraQuadrupla  (OPMENUN, $3.opnd, opndidle, $$.opnd);
+                }
             |   ABPAR           {printf("(");}
                 Expressao  FPAR {printf (")"); $$.tipo = $3.tipo; $$.opnd = $3.opnd;}
-            |   ChamadaFunc     {$$.tipo = LOGIC; $$.opnd.tipo = LOGICOPND; $$.opnd.atr.vallogic = TRUE;}
+            |   ChamadaFunc     {
+                    $$.tipo = $1->tvar; 
+                    $$.opnd.tipo = VAROPND; 
+                    $$.opnd.atr.simb = $1;
+                }
             ;
 Variavel    :   ID {
                     printf ("%s", $1);
@@ -1383,13 +1394,13 @@ void ImprimeQuadruplas () {
     for (p = codintermed->prox; p != NULL; p = p->prox) {
         printf ("\nQuadruplas do modulo %s:\n", p->modname->cadeia);
         for (q = p->listquad->prox; q != NULL; q = q->prox) {
-            printf ("\n\t%4d# %s", q->num, nomeoperquad[q->oper]);
+            printf ("\n\t%4d# %7s", q->num, nomeoperquad[q->oper]);
             printf (", (%s", nometipoopndquad[q->opnd1.tipo]);
-            ImprimeTipoOpnd(q->opnd1);
+                ImprimeTipoOpnd(q->opnd1);
             printf ("), (%s", nometipoopndquad[q->opnd2.tipo]);
-            ImprimeTipoOpnd(q->opnd2);
+                ImprimeTipoOpnd(q->opnd2);
             printf ("), (%s", nometipoopndquad[q->result.tipo]);
-            ImprimeTipoOpnd(q->result);
+                ImprimeTipoOpnd(q->result);
             printf (")");
         }
     }
@@ -1412,8 +1423,6 @@ void ImprimeTipoOpnd (operando op) {
 
 void RenumQuadruplas (quadrupla quad1, quadrupla quad2) {
     quadrupla q; int nquad;
-    for (q = quad1->prox, nquad = quad1->num; q != quad2; q = q->prox) {
-      nquad++;
-        q->num = nquad;
-    }
+    for (q = quad1->prox, nquad = quad1->num; q != quad2; q = q->prox)
+        q->num = ++nquad;
 }
