@@ -136,6 +136,7 @@
 #define     CADOPND         6
 #define     ROTOPND         7
 #define     MODOPND         8
+#define     FUNCOPND        9
 
 /****************************************************/
 /*                                                  */
@@ -176,8 +177,8 @@ char *nomeoperquad[27] = {"",
 
 /* Strings para tipos de operandos de quadruplas */
 
-char *nometipoopndquad[9] = {"IDLE",
-    "VAR", "INT", "REAL", "CARAC", "LOGIC", "CADEIA", "ROTULO", "MODULO"
+char *nometipoopndquad[10] = {"IDLE",
+    "VAR", "INT", "REAL", "CARAC", "LOGIC", "CADEIA", "ROTULO", "MODULO", "FUNC"
 };
 
 /****************************************************/
@@ -196,6 +197,16 @@ typedef elemlistsimb *listsimb;
 typedef struct infolistexpr infolistexpr;
 typedef struct exprtipo exprtipo;
 typedef exprtipo *pontexprtipo;
+
+/* Declaracoes para a estrutura do codigo intermediario */
+
+typedef union atribopnd atribopnd;
+typedef struct operando operando;
+typedef struct celquad celquad;
+typedef celquad *quadrupla;
+typedef struct celmodhead celmodhead;
+typedef celmodhead *modhead;
+
 struct elemlistsimb {
     simbolo simb;
     listsimb prox;
@@ -207,6 +218,7 @@ struct celsimb {
     bool inic, ref, array, param;
     listsimb listvardecl, listparam, listfunc; 
     simbolo escopo, prox;
+    modhead fhead;
 };
 struct infolistexpr {
     pontexprtipo listtipo;
@@ -272,19 +284,10 @@ char EhIncompativel (int, int);
 /*                                                  */
 /****************************************************/
 
-/* Declaracoes para a estrutura do codigo intermediario */
-
-typedef union atribopnd atribopnd;
-typedef struct operando operando;
-typedef struct celquad celquad;
-typedef celquad *quadrupla;
-typedef struct celmodhead celmodhead;
-typedef celmodhead *modhead;
-
 union atribopnd {
     simbolo simb; int valint; float valfloat;
     char valchar; bool vallogic; char *valcad;
-    quadrupla rotulo; modhead modulo;
+    quadrupla rotulo; modhead modulo, func;
 };
 
 struct operando {
@@ -360,13 +363,13 @@ struct infovariavel {
 
 /* Declaracao dos atributos dos tokens e dos nao-terminais */
 
-%type   <infovar>   Variavel
-%type   <infoexpr>  Expressao   ExprAux1    ExprAux2    Termo 
+%type   <infovar>   Variavel    ChamadaFunc 
+%type   <infoexpr>  Expressao   ExprAux1    ExprAux2    Termo
                     ElemEscr    ExprAux3    ExprAux4    Fator  
 %type   <nsubscr>   ListSubscr
 %type   <nargs>     ListLeit    ListEscr
 %type   <infolexpr> ListExpr    Argumentos
-%type   <simb>      ChamadaFunc ChamadaProc
+%type   <simb>      ChamadaProc
 
 %token  <cadeia>    ID
 %token  <carac>     CTCARAC
@@ -568,8 +571,10 @@ DeclLocs    :
             |   LOCAIS  DPONTS {tab = 1; printf("locais:\n");}
                 ListDecl
             ;
-Cmds        :   COMANDOS  DPONTS  {tab = 1; printf("comandos:\n");}
-                ListCmds
+Cmds        :   COMANDOS  DPONTS  {tab = 1; printf("comandos:\n");} ListCmds {
+                    if (quadcorrente->oper != OPRETURN)
+                        GeraQuadrupla (OPRETURN, opndidle, opndidle, opndidle);
+                }
             ;
 ListCmds    :   {tabular();} Comando
             |   ListCmds  {tabular();}  Comando
@@ -991,9 +996,9 @@ Fator       :   Variavel {
             |   ABPAR           {printf("(");}
                 Expressao  FPAR {printf (")"); $$.tipo = $3.tipo; $$.opnd = $3.opnd;}
             |   ChamadaFunc     {
-                    $$.tipo = $1->tvar; 
+                    $$.tipo = $1.simb->tvar; 
                     $$.opnd.tipo = VAROPND; 
-                    $$.opnd.atr.simb = $1;
+                    $$.opnd.atr.simb = $1.simb;
                 }
             ;
 Variavel    :   ID {
@@ -1043,12 +1048,21 @@ ChamadaFunc :   ID ABPAR {
                 }
                 Argumentos {printf(")");}
                 FPAR  {
-                    $$ = $<simb>3;
-                    if ($$ && $$->tid == IDFUNC) {
-                        if ($$->nparam != $4.nargs)
+                    $$.simb = $<simb>3;
+                    if ($$.simb && $$.simb->tid == IDFUNC) {
+                        if ($$.simb->nparam != $4.nargs)
                             Exception (errorIncomp, INCOMP_NARG);
-                        ChecArgumentos  ($4.listtipo, $$->listparam); 
+                        ChecArgumentos  ($4.listtipo, $$.simb->listparam); 
                     }
+                    opnd1.tipo = FUNCOPND;  opnd1.atr.func = $$.simb->fhead;
+                    opnd2.tipo = INTOPND;   opnd2.atr.valint = $4.nargs;
+                    if ($$.simb->tvar != NOTVAR) result = opndidle;
+                    else { 
+                        result.tipo = VAROPND;
+                        result.atr.simb = NovaTemp ($$.simb->tvar); 
+                    }   
+                    GeraQuadrupla (OPCALL, opnd1, opnd2, result);
+                    $$.opnd = result;
                 }  
             ;
 %%
@@ -1367,6 +1381,7 @@ void InicCodIntermMod (simbolo simb) {
     quadcorrente->prox = NULL;
     numquadcorrente = 0;
     quadcorrente->num = numquadcorrente;
+    simb->fhead = modcorrente;
 }
 
 quadrupla GeraQuadrupla (int oper, operando opnd1, operando opnd2,
@@ -1430,6 +1445,7 @@ void ImprimeTipoOpnd (operando op) {
         case CADOPND:   printf (", %s", op.atr.valcad);                  break;
         case ROTOPND:   printf (", %d", op.atr.rotulo->num);             break;
         case MODOPND:   printf (", %s", op.atr.modulo->modname->cadeia); break;
+        case FUNCOPND:  printf (", %s", op.atr.func->modname->cadeia);   break;
     } 
 }
 
