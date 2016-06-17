@@ -363,13 +363,12 @@ struct infovariavel {
 
 /* Declaracao dos atributos dos tokens e dos nao-terminais */
 
-%type   <infovar>   Variavel    ChamadaFunc 
+%type   <infovar>   Variavel    ChamadaFunc ChamadaProc
 %type   <infoexpr>  Expressao   ExprAux1    ExprAux2    Termo
                     ElemEscr    ExprAux3    ExprAux4    Fator  
 %type   <nsubscr>   ListSubscr
 %type   <nargs>     ListLeit    ListEscr
 %type   <infolexpr> ListExpr    Argumentos
-%type   <simb>      ChamadaProc
 
 %token  <cadeia>    ID
 %token  <carac>     CTCARAC
@@ -783,12 +782,15 @@ ChamadaProc :   CHAMAR ID ABPAR {
                 }
                 Argumentos FPAR PVIRG {
                     printf(");\n");
-                    $$ = $<simb>4;
-                    if ($$ && $$->tid == IDFUNC) {
-                        if ($$->nparam != $5.nargs)
+                    $$.simb = $<simb>4;
+                    if ($$.simb && $$.simb->tid == IDFUNC) {
+                        if ($$.simb->nparam != $5.nargs)
                             Exception (errorIncomp, INCOMP_NARG);
-                        ChecArgumentos  ($5.listtipo, $$->listparam); 
+                        ChecArgumentos  ($5.listtipo, $$.simb->listparam); 
                     }
+                    opnd1.tipo = FUNCOPND;  opnd1.atr.func = $$.simb->fhead;
+                    opnd2.tipo = INTOPND;   opnd2.atr.valint = $5.nargs;
+                    GeraQuadrupla (OPCALL, opnd1, opnd2, opndidle);
                 }
             ;
 Argumentos  :   { $$.nargs = 0;  $$.listtipo = NULL; }
