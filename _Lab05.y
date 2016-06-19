@@ -65,6 +65,11 @@
 #define errorTipoInadeq     "Tipo Inadequado"
 #define errorRecursiva      "Recursividade"
 
+/*  Definicao de mensagens de Esperado / NaoEsperado */
+#define ESP_FUNC_PARAM      "Funcao no parametro"
+#define ESP_SUBSCRITO       "Subscrito\(s)"
+#define ESP_VALOR_POSITIVO  "Valor inteiro positivo"
+
 /*  Definicao de mensagens de incompatibilidade */
 
 #define INCOMP_AND          "Operando improprio para AND"
@@ -497,7 +502,7 @@ ListDims    :
             ;
 Dimensao    :   ABCOL  CTINT FCOL {
                     printf("[%d]", $2);
-                     if ($2 <= 0) Exception (errorEsperado, "Valor inteiro positivo");
+                     if ($2 <= 0) Exception (errorEsperado, ESP_VALOR_POSITIVO);
                     simb->ndims++; simb->dims[simb->ndims] = $2;
                 }
             ;
@@ -563,7 +568,7 @@ Parametro   :   Tipo  ID {
                     if  (SimbDeclaradoEscopo($2, escopo->listparam, escopo) != NULL)
                         Exception (errorDeclRepetida, $2);
                     else if  (simb != NULL && simb->tid == IDFUNC)
-                        Exception (errorNaoEsperado, "Funcao no argumento");
+                        Exception (errorNaoEsperado, ESP_FUNC_PARAM);
                     else if (tipocorrente == VOID)
                         Exception (errorTipoInadeq, $2);
                     simb =  InsereSimb ($2, IDVAR, tipocorrente, escopo);
@@ -618,7 +623,7 @@ CmdSe       :   SE  ABPAR {printf("se (");} Expressao {
                 }
             ;
 CmdInside   :   CmdComposto
-            |   {tab++; printf(""); newLine(1);} Comando {tab--;}
+            |   {tab++; newLine(1);} Comando {tab--;}
             ;
 CmdSenao    :
             |   SENAO {
@@ -831,12 +836,12 @@ Argumentos  :   { $$.nargs = 0;  $$.listtipo = NULL; }
             |   ListExpr
             ;
 ListExpr    :   Expressao { 
-                    if ($1.tipo == FUNC) Exception(errorNaoEsperado, "Funcao no parametro");
+                    if ($1.tipo == FUNC) Exception(errorNaoEsperado, ESP_FUNC_PARAM);
                     $$.nargs = 1;   $$.listtipo = InicListTipo ($1.tipo); 
                     GeraQuadrupla (PARAM, $1.opnd, opndidle, opndidle);
                 }
             |   ListExpr VIRG   {printf(", ");} Expressao {
-                    if ($4.tipo == FUNC) Exception(errorNaoEsperado, "Funcao no parametro");
+                    if ($4.tipo == FUNC) Exception(errorNaoEsperado, ESP_FUNC_PARAM);
                     $$.nargs = $1.nargs + 1;
                     $$.listtipo = ConcatListTipo ($1.listtipo, InicListTipo ($4.tipo));
                     GeraQuadrupla (PARAM, $4.opnd, opndidle, opndidle);
@@ -1063,9 +1068,9 @@ Variavel    :   ID {
                     $$.simb = $<simb>2;
                     if ($$.simb != NULL) {
                         if ($$.simb->array == FALSE && $3 > 0)
-                            Exception (errorNaoEsperado, "Subscrito\(s)");
+                            Exception (errorNaoEsperado, ESP_SUBSCRITO);
                         else if ($$.simb->array == TRUE && $3 == 0)
-                            Exception (errorEsperado, "Subscrito\(s)");
+                            Exception (errorEsperado, ESP_SUBSCRITO);
                         else if ($$.simb->ndims != $3)
                             Exception (errorIncomp, INCOMP_NUMSUB);
                         $$.opnd.tipo = VAROPND;
@@ -1403,7 +1408,7 @@ void ChecArgumentos (pontexprtipo Ltiparg, listsimb Lparam) {
     listsimb q = Lparam->prox;
     for (; p != NULL && q != NULL;  p = p->prox, q = q->prox) {
         if (q->simb->tid == IDFUNC)
-            Exception(errorEsperado, "Esperado parâmetro");
+            Exception(errorEsperado, ESP_FUNC_PARAM);
 
         if (EhIncompativel(p->tipo, q->simb->tvar) == TRUE)
             ExceptionIncomp(errorIncomp, nometipvar[p->tipo], nometipesp[q->simb->tvar]);
