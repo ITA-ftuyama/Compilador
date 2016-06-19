@@ -24,6 +24,9 @@ comandos:
 	sup := ntab;
 	lista[0] := inf;
 	lista[10-i] := i + inf;
+	i := lista[i-3] + 5;
+	escrever (lista[5]);
+
 	enquanto (!achou && sup >= inf) {
 		med := (inf + sup) / 2;
 		compara := 0;

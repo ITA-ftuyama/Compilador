@@ -15,6 +15,7 @@ carac1		\\.|[^\\']
 carac2		\\.|[^\\\"]
 ctcarac 	'{carac1}'
 cadeia		\"{carac2}*\"
+
 %%
 
 {ws}		{ ;}
@@ -89,7 +90,9 @@ vazio|VAZIO       	{return VAZIO;}
 void comentario () {
 	char c;  int estado;
 	estado = 1;
-	printf("\n/*");
+	printf("\n"); 
+	tabular();
+	printf("/*");
 	while (estado != 3) {
 		switch (estado) {
 			case 1:
@@ -107,7 +110,9 @@ void comentario () {
 		}
 	}
 	printf("\n\n");
+	tabular();
 }
+
 
 /*
 	tratachar: retorna o codigo ASCII de uma constante do tipo char,
