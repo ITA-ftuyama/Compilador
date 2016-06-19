@@ -78,10 +78,22 @@ comandos:
 
 vazio Teste2() {
 locais:
-	int var;
+	int var, cont, num, div, resto;
+	logico achou;
 comandos:
 	/*Caso 5: Se*/
 	A[1][1] := 1;
+
+	se  (achou = false) {
+		escrever (num);
+		cont := cont + 1;
+	}
+
+	resto := num % div;
+	se  (resto = 0) achou := true;
+	senao div := div + 1;
+
+
 	se (A[1][1] = 1) {
 		
 		/*Operador mais*/
@@ -118,10 +130,15 @@ comandos:
 
 vazio Teste3() {
 locais:
-	int var;
+	int var, div, num;
+	logico achou;
 comandos:
 	/*Caso 6: Enquanto*/
 	A[1][1] := 1;
+	enquanto (achou = false && div * div <= num) {
+		;
+	}
+
 	enquanto (A[1][1] >= 1 || var <= 1) {
 		
 		/*Operador mais*/
@@ -142,6 +159,12 @@ comandos:
 	}
 
 	/*Caso 7: Repetir enquanto*/
+
+	repetir {
+		;
+	} enquanto (c = 's');
+
+
 	repetir {
 		/*Operador menos unario*/
 		var := ~1;
@@ -158,12 +181,21 @@ comandos:
 
 vazio Teste4() {
 locais:
-	int var;
+	int var, i, s, n, p;
 	carac c;
 	logico fimteste, compara;
 comandos:
 	/*Caso 8: Para*/
-	para (i := 0; !fimteste && compara = 0; i := i + 1) {
+	s := 0;
+	p := 1;
+	para (i := 1; i <= n; i := i + 1) 
+	{
+		s := s + i;
+		p := p * i;
+	}
+   	i := 0;
+
+	para (i := 1; !fimteste && compara = 0; i := i + 1) {
 		se (c < 'z') 
 			compara := ~1;
 		senao se (c > 'a') 
