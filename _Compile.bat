@@ -47,6 +47,7 @@ _Lab05  < Compilador/_Lab05Proga.dat > Compilador/_Lab05ProgOutput.dat
 :Teste
 
 echo Completo
+cd Compilador
 pause
 
 REM Loop compilation with delay

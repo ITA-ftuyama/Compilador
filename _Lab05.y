@@ -124,6 +124,9 @@
 #define     OPEXIT          24
 #define     OPCALL          25
 #define     OPRETURN        26
+#define     OPIND           27
+#define     OPINDEX         28
+#define     OPATRIBPONT     29
 
 /* Definicao de constantes para os tipos de operandos de quadruplas */
 
@@ -168,11 +171,11 @@ char *nometipesp[7] = {
 
 /* Strings para operadores de quadruplas */
 
-char *nomeoperquad[27] = {"",
+char *nomeoperquad[30] = {"",
     "OR", "AND", "LT", "LE", "GT", "GE", "EQ", "NE", "MAIS",
     "MENOS", "MULT", "DIV", "RESTO", "MENUN", "NOT", "ATRIB",
     "OPENMOD", "NOP", "JUMP", "JF", "PARAM", "READ", "WRITE",
-    "EXIT", "CALL", "RET"
+    "EXIT", "CALL", "RET", "IND", "INDEX", "ATRIBPONT"
 };
 
 /* Strings para tipos de operandos de quadruplas */
@@ -726,23 +729,46 @@ CmdPara     :   PARA  ABPAR {printf("para (");}
                 }
             ;
 CmdLer      :   LER  ABPAR  {printf("ler (");}
-                ListLeit    {
-                    opnd1.tipo = INTOPND;
-                    opnd1.atr.valint = $4;
-                    GeraQuadrupla (OPREAD, opnd1, opndidle, opndidle);
-                }    
-                FPAR  PVIRG {printf(");\n");}
+                ListLeit  FPAR  PVIRG {printf(");\n");}
             ;
 ListLeit    :   Variavel {
                     if ($1.simb != NULL) $1.simb->inic = $1.simb->ref = TRUE;
                     $$ = 1;
-                    GeraQuadrupla (PARAM, $1.opnd, opndidle, opndidle);
+                    if ($1.simb->array == TRUE) {
+                        opnd1.tipo = VAROPND;
+                        opnd1.atr.simb = NovaTemp ($1.simb->tvar); 
+                        GeraQuadrupla (PARAM, opnd1, opndidle, opndidle);
+                        opndaux.tipo = INTOPND;
+                        opndaux.atr.valint = 1;
+                        GeraQuadrupla (OPREAD, opndaux, opndidle, opndidle);
+                        GeraQuadrupla (OPATRIBPONT, opnd1, opndidle, quadaux2->result);
+                    }
+                    else {
+                        GeraQuadrupla (PARAM, $1.opnd, opndidle, opndidle);
+                        opndaux.tipo = INTOPND;
+                        opndaux.atr.valint = 1;
+                        GeraQuadrupla (OPREAD, opndaux, opndidle, opndidle);
+                    }
                 }
-            |   ListLeit 
-                VIRG   {printf(", ");} Variavel {
+            |   ListLeit VIRG   
+                {printf(", ");} Variavel {
                     if ($4.simb != NULL) $4.simb->inic = $4.simb->ref = TRUE;
                     $$ = $1 + 1;
-                    GeraQuadrupla (PARAM, $4.opnd, opndidle, opndidle);
+                    if ($4.simb->array == TRUE) {
+                        opnd1.tipo = VAROPND;
+                        opnd1.atr.simb = NovaTemp ($4.simb->tvar); 
+                        GeraQuadrupla (PARAM, opnd1, opndidle, opndidle);
+                        opndaux.tipo = INTOPND;
+                        opndaux.atr.valint = 1;
+                        GeraQuadrupla (OPREAD, opndaux, opndidle, opndidle);
+                        GeraQuadrupla (OPATRIBPONT, opnd1, opndidle, quadaux2->result);
+                    }
+                    else {
+                        GeraQuadrupla (PARAM, $4.opnd, opndidle, opndidle);
+                        opndaux.tipo = INTOPND;
+                        opndaux.atr.valint = 1;
+                        GeraQuadrupla (OPREAD, opndaux, opndidle, opndidle);
+                    }
                 }
             ;
 CmdEscrever :   ESCREVER  ABPAR  {printf("escrever (");} ListEscr {
@@ -1023,6 +1049,16 @@ Variavel    :   ID {
                         $$.opnd.tipo = VAROPND;
                         if ($3 == 0)
                             $$.opnd.atr.simb = $$.simb;
+                        else {
+                            $$.opnd.atr.simb = $$.simb;
+                            opnd2.tipo = INTOPND;   
+                            opnd2.atr.valint = $3;
+                            result.tipo = VAROPND;
+                            result.atr.simb = NovaTemp ($$.simb->tvar); 
+                            quadaux2 =
+                                GeraQuadrupla(OPINDEX, $$.opnd, opnd2, result);
+                        }
+
                     }
                 }
             ;
@@ -1035,6 +1071,8 @@ Subscrito   :   ABCOL   {printf("[");}
                     printf("]");
                     if ($3.tipo != INTEGER && $3.tipo != CHAR)
                         Exception (errorIncomp, INCOMP_TIPOSUB);
+
+                    GeraQuadrupla(OPIND, $3.opnd, opndidle, opndidle);
                 }
             ;
 ChamadaFunc :   ID ABPAR {
