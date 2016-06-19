@@ -5,7 +5,7 @@ char tratachar (char *);
 void tratacadeia (char *);
 %}
 
-comment 	"//"(.*[ \t]*.*)*[\n]+
+newLine		[ \n]
 delim		[ \t\n\r]
 ws			{delim}+
 digito	    [0-9]
@@ -20,9 +20,10 @@ cadeia		\"{carac2}*\"
 
 %%
 
+{newLine}			{tabbed = 0;}
+{ws}				{ ;}
 "//"				{comentarioLinha();}
 "/*"				{comentario ();}
-{ws}				{ ;}
 
 se|SE 				{return SE;}
 senao|SENAO 		{return SENAO;}
@@ -88,12 +89,12 @@ vazio|VAZIO       	{return VAZIO;}
 .			{yylval.carac = yytext[0]; return INVAL;}
 %%
 /*
-	comentario: le e descarta os comentarios do programa
+	comentario: le comentarios do tipo multilinha
 */
 void comentario () {
 	char c;  int estado;
 	estado = 1;
-	printf("\n"); tabular(); printf("/*");
+	newLine(1); printf("/*");
 	while (estado != 3) {
 		switch (estado) {
 			case 1:
@@ -110,17 +111,21 @@ void comentario () {
                 break;
 		}
 	}
-	printf("\n\n"); tabular();
+	newLine(2);
 }
 
+/*
+	comentarioLinha: le comentarios do tipo linha
+*/
 void comentarioLinha() {
 	char c;
-	printf ("\n"); tabular(); printf ("//");
-	do {
-		c = input ();
+	newLine(1); printf ("//");
+	c = input ();
+	while (c == EOF || c != '\n') {
 		printf("%c", c);
-	} while (c != '\n');
-	printf("\n"); tabular();
+		c = input ();
+	} 
+	newLine(1);
 }
 
 

@@ -181,9 +181,9 @@ comandos:
 
 vazio Teste4() {
 locais:
-	int var, i, s, n, p;
+	int var, i, s, n, p, compara;
 	carac c;
-	logico fimteste, compara;
+	logico fimteste;
 comandos:
 	/*Caso 8: Para*/
 	s := 0;

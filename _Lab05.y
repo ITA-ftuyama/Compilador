@@ -43,10 +43,10 @@
 
 /*   Definicao de outras constantes   */
 
-#define NCLASSHASH      23
-#define TRUE            1
-#define FALSE           0
-#define MAXDIMS         10
+#define     NCLASSHASH      23
+#define     TRUE            1
+#define     FALSE           0
+#define     MAXDIMS         10
 
 /****************************************************/
 /*                                                  */
@@ -240,7 +240,7 @@ struct exprtipo {
 
 simbolo tabsimb[NCLASSHASH], simb, escopo;
 listsimb pontvardecl, pontfunc, pontparam;
-int tipocorrente, tab = 0;
+int tipocorrente, tab = 0, tabbed = 0;
 bool declparam, declfunc;
 
 /*
@@ -251,6 +251,7 @@ bool declparam, declfunc;
 /*  Tabulacao para prettyPrinter  */
 
 void tabular();
+void newLine(int);
 
 /*  Manipulacao da Tabela de Simbolos  */
 
@@ -462,17 +463,15 @@ Programa    :   {
                 }
             ;
 DeclGlobs   :
-            |   GLOBAIS  DPONTS  {
-                    printf("globais:\n"); tab = 1; 
-                }
+            |   GLOBAIS  DPONTS  { tab = 1; printf("globais:");}
                 ListDecl
             ;
 ListDecl    :   Declaracao
             |   ListDecl  Declaracao
             ;
-Declaracao  :   {tabular();}
+Declaracao  :   {newLine(1);}
                 Tipo  ListElemDecl 
-                PVIRG   {printf(";\n");}
+                PVIRG   {printf(";");}
             ;
 Tipo        :   INTEIRO {printf("int ");    tipocorrente = INTEGER;}
             |   REAL    {printf("real ");   tipocorrente = FLOAT;  }  
@@ -502,16 +501,16 @@ Dimensao    :   ABCOL  CTINT FCOL {
                     simb->ndims++; simb->dims[simb->ndims] = $2;
                 }
             ;
-Funcoes     :   FUNCOES  DPONTS  {tab = 1; printf("\nfuncoes:\n");} 
+Funcoes     :   FUNCOES  DPONTS  {tab = 0; newLine(1); printf("funcoes:"); newLine(1);} 
                 ListFunc
             ;
 ListFunc    :   Funcao
             |   ListFunc  Funcao
             ;
 Funcao      :   Cabecalho ABCHAVE
-                {printf (" {\n"); tab++;}
+                {tab++; printf (" {"); }
                 DeclLocs Cmds FCHAVE {
-                    tab--; tabular (); printf ("}\n");
+                    tab--; newLine(1); printf ("}"); newLine(2);
                     escopo = escopo->escopo; 
                 }
             ;
@@ -571,16 +570,16 @@ Parametro   :   Tipo  ID {
                 }
             ;
 DeclLocs    :
-            |   LOCAIS  DPONTS {tab = 1; printf("locais:\n");}
+            |   LOCAIS  DPONTS {tab = 0; newLine(1); printf("locais:"); tab = 1;}
                 ListDecl
             ;
-Cmds        :   COMANDOS  DPONTS  {tab = 1; printf("comandos:\n");} ListCmds {
+Cmds        :   COMANDOS  DPONTS  {tab = 0; newLine(1); printf("comandos:"); tab = 1;} ListCmds {
                     if (quadcorrente->oper != OPRETURN)
                         GeraQuadrupla (OPRETURN, opndidle, opndidle, opndidle);
                 }
             ;
-ListCmds    :   {tabular();} Comando
-            |   ListCmds  {tabular();}  Comando
+ListCmds    :   {newLine(1);} Comando
+            |   ListCmds  {newLine(1);}  Comando
             ;
 Comando     :   CmdComposto
             |   CmdSe
@@ -592,10 +591,10 @@ Comando     :   CmdComposto
             |   CmdAtrib
             |   ChamadaProc
             |   CmdRetornar
-            |   PVIRG           {printf(";\n"); GeraQuadrupla (NOP, opndidle, opndidle, opndidle);}
+            |   PVIRG           {printf(";"); newLine(1); GeraQuadrupla (NOP, opndidle, opndidle, opndidle);}
             ;
-CmdComposto :   ABCHAVE {printf ("{\n"); tab++;}  ListCmds FCHAVE
-                {tab--; tabular (); printf ("}\n");}
+CmdComposto :   ABCHAVE {tab++; printf ("{"); }  ListCmds FCHAVE
+                {tab--; newLine(1); printf ("}");}
             ;
 CmdSe       :   SE  ABPAR {printf("se (");} Expressao {
                     if ($4.tipo != LOGIC)
@@ -619,13 +618,11 @@ CmdSe       :   SE  ABPAR {printf("se (");} Expressao {
                 }
             ;
 CmdInside   :   CmdComposto
-            |   {printf("\n"); tab++; tabular();}
-                Comando
-                {tab--;}
+            |   {tab++; printf(""); newLine(1);} Comando {tab--;}
             ;
 CmdSenao    :
             |   SENAO {
-                    tabular(); printf("senao ");
+                    newLine(1); printf("senao ");
                     opndaux.tipo = ROTOPND;
                     $<quad>$ = 
                         GeraQuadrupla (OPJUMP, opndidle, opndidle, opndaux);
@@ -657,12 +654,12 @@ CmdEnquanto :   ENQUANTO  ABPAR {
             ;
 CmdRepetir  :   REPETIR  {printf("repetir ");}
                 CmdInside ENQUANTO   ABPAR  {
-                    tabular(); printf("enquanto ("); 
+                    newLine(1); printf("enquanto ("); 
                     $<quad>$ =
                         GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
                 }
                 Expressao FPAR PVIRG  {
-                    printf(");\n"); 
+                    printf(");"); 
                     if ($7.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_REPETIR); 
                     opndaux.tipo = ROTOPND;
@@ -736,7 +733,7 @@ CmdPara     :   PARA  ABPAR {printf("para (");}
                 }
             ;
 CmdLer      :   LER  ABPAR  {printf("ler (");}
-                ListLeit  FPAR  PVIRG {printf(");\n");}
+                ListLeit  FPAR  PVIRG {printf(");");}
             ;
 ListLeit    :   Variavel {
                     if ($1.simb != NULL) {
@@ -787,7 +784,7 @@ CmdEscrever :   ESCREVER  ABPAR  {printf("escrever (");} ListEscr {
                     opnd1.atr.valint = $4;
                     GeraQuadrupla (OPWRITE, opnd1, opndidle, opndidle);
                 } 
-                FPAR  PVIRG  {printf(");\n");}
+                FPAR  PVIRG  {printf(");");}
             ;
 ListEscr    :   ElemEscr {
                     $$ = 1;
@@ -818,7 +815,7 @@ ChamadaProc :   CHAMAR ID ABPAR {
                     $<simb>$ = simb;
                 }
                 Argumentos FPAR PVIRG {
-                    printf(");\n");
+                    printf(");");
                     $$.simb = $<simb>4;
                     if ($$.simb && $$.simb->tid == IDFUNC) {
                         if ($$.simb->nparam != $5.nargs)
@@ -846,14 +843,14 @@ ListExpr    :   Expressao {
                 }
             ;
 CmdRetornar :   RETORNAR  PVIRG {
-                    printf("retornar;\n");
+                    printf("retornar;");
                     if (escopo != NULL && escopo->tvar != VOID)
                         ExceptionIncomp(errorIncomp, "vazio", nometipesp[escopo->tvar]);
                     GeraQuadrupla (OPRETURN, opndidle, opndidle, opndidle);
                 }
             |   RETORNAR        {printf("retornar ");}
                 Expressao PVIRG {
-                    printf (";\n");
+                    printf (";");
                     if (EhIncompativel($3.tipo, escopo->tvar) == TRUE)
                         ExceptionIncomp(errorIncomp, nometipvar[$3.tipo], nometipesp[escopo->tvar]);
                     GeraQuadrupla (OPRETURN, $3.opnd, opndidle, opndidle);
@@ -864,9 +861,9 @@ CmdAtrib    :   Variavel {
                 }
                 ATRIB    {printf (" := ");}
                 Expressao PVIRG {
-                    printf (";\n");
+                    printf (";");
                     if ($1.simb != NULL && EhIncompativel($5.tipo, $1.simb->tvar) == TRUE)
-                        ExceptionIncomp(errorIncomp, nometipvar[$5.tipo], nometipesp[$1.simb->tvar]);
+                        ExceptionIncomp(errorIncomp, nometipesp[$1.simb->tvar], nometipvar[$5.tipo]);
                     if ($1.simb->array == TRUE)
                         GeraQuadrupla (OPATRIBPONT, $5.opnd, opndidle, quadIndex->result);
                     else GeraQuadrupla (OPATRIB, $5.opnd, opndidle, $1.opnd);
@@ -1147,9 +1144,22 @@ ChamadaFunc :   ID ABPAR {
 /*  Tabular: Função que realiza tabulação do PrettyPrinter   */
 
 void tabular () {
-    int i;
-    for (i = 1; i <= tab; i++)
-    printf ("\t");
+    int i = 0;
+    if (tabbed == 0) {
+        tabbed = tab;
+        while (i++ < tab)
+            printf ("\t");
+    }
+}
+
+/*  newLine: Imprime nova linha e prepara tabular  */
+
+void newLine (int n) {
+    int i = 0;
+    while (i++ < n)
+        printf("\n");
+    tabbed = 0;
+    tabular();
 }
 
 /*  InicTabSimb: Inicializa a tabela de simbolos   */
@@ -1415,11 +1425,11 @@ bool EhIncompativel (int tipoP, int tipoQ) {
 /*  Mensagens de erros semanticos  */
 
 void ExceptionIncomp (char *type, char *got, char *expected) {
-    printf ("\n\n***** Exception<%s>: Obtido: %s. Esperado: %s *****\n", type, got, expected);
+    newLine(2); printf ("***** Exception<%s>: Obtido: %s. Esperado: %s *****", type, got, expected); newLine(1);
 }
 
 void Exception (char *type, char *error) {
-    printf ("\n\n***** Exception<%s>: %s *****\n", type, error);
+    newLine(2); printf ("***** Exception<%s>: %s *****", type, error); newLine(1);
 }
 
 /****************************************************/
