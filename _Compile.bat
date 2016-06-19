@@ -21,7 +21,7 @@ echo.
 echo Compilando programa
 
 _Lab05  < Compilador/_Lab05Proga.dat > Compilador/_Lab05ProgOutput.dat
-_Lab05  < Compilador/teste.dat > Compilador/testeOutput.dat
+_Lab05  < Compilador/_Lab05Teste.dat > Compilador/_Lab05TesteOutput.dat
 
  goto Teste
 	echo ### Testes - Declaracao de Variaveis

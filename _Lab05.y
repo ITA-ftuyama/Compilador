@@ -714,9 +714,12 @@ CmdPara     :   PARA  ABPAR {printf("para (");}
                     if (!($17.tipo == INTEGER || $17.tipo == CHAR)) 
                         Exception (errorIncomp, INCOMP_PARAEXP3);
                     printf (") ");
+                    if ($14.simb->array == TRUE)
+                        GeraQuadrupla (OPATRIBPONT, $17.opnd, opndidle, quadIndex->result);
+                    else GeraQuadrupla (OPATRIB, $17.opnd, opndidle, $14.opnd);
                     $<quad>$ = quadcorrente;
                 }{ 
-                        $<quad>$ = 
+                    $<quad>$ = 
                         GeraQuadrupla (NOP, opndidle, opndidle, opndidle); 
                 }
                 Comando {
