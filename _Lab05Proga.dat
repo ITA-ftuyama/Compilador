@@ -14,7 +14,7 @@ funcoes:
 
 /*  Funcao para procurar uma palavra na tabela de palavras  */
 
-int Procura () {
+int Procura (int var) {
 locais:
 	int i, inf, sup, med, posic, compara;
 	logico achou, fimteste;
@@ -22,6 +22,8 @@ comandos:
 	achou := false;
 	inf := 1;
 	sup := ntab;
+	lista[0] := inf;
+	lista[10-i] := i + inf;
 	enquanto (!achou && sup >= inf) {
 		med := (inf + sup) / 2;
 		compara := 0;
@@ -112,7 +114,7 @@ comandos:
 				c := '\0';
 			}
 		}
-		posic := Procura ();
+		posic := Procura (i);
 		se (posic > 0) 
 			i := i + 1;
 		senao chamar Inserir(~posic);
