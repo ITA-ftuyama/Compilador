@@ -122,7 +122,7 @@ comandos:
 	senao {
 		i := 3;
 
-		/*Operador resto*/
+		// Operador resto
 		j := 6%i;
 	}
 }
@@ -144,21 +144,21 @@ comandos:
 		// Operador mais
 		i := i + j;
 		
-		/*Operador menos*/
+		// Operador menos
 		i := i - k;
 	}
 
 	i := 1;
 	enquanto (i > 1) {
 
-		/*Operador multiplicacao*/
+		// Operador multiplicacao
 		i := i*2;
 
-		/*Operador divisao*/
+		// Operador divisao
 		i := j/4;
 	}
 
-	/*Caso 7: Repetir enquanto*/
+	// Caso 7: Repetir enquanto
 
 	repetir {
 		;
@@ -166,14 +166,14 @@ comandos:
 
 
 	repetir {
-		/*Operador menos unario*/
+		// Operador menos unario
 		var := ~1;
 	} enquanto (A[1][1] != 1 && var = 1);
 
 	repetir {
 		i := 3;
 
-		/*Operador resto*/
+		// Operador resto
 		j := 6%i;
 	} enquanto(j != 2);
 }
@@ -185,7 +185,7 @@ locais:
 	carac c;
 	logico fimteste;
 comandos:
-	/*Caso 8: Para*/
+	// Caso 8: Para
 	s := 0;
 	p := 1;
 	para (i := 1; i <= n; i := i + 1) 
@@ -222,11 +222,9 @@ comandos:
 	chamar Teste3();
 	chamar Teste4();
 
-
 	/*Caso 10: Chamada Funcao*/
 	A[1][4] := Procura(A[1][1]);
 	A[1][5] := Procura(i);
-
 
 	/*Caso 10: Chamada Procedimento*/
 	chamar Inserir(A[1][2]);

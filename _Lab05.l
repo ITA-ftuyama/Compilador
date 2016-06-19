@@ -5,7 +5,6 @@ char tratachar (char *);
 void tratacadeia (char *);
 %}
 
-newLine		[ \n]
 delim		[ \t\n\r]
 ws			{delim}+
 digito	    [0-9]
@@ -20,7 +19,6 @@ cadeia		\"{carac2}*\"
 
 %%
 
-{newLine}			{tabbed = 0;}
 {ws}				{ ;}
 "//"				{comentarioLinha();}
 "/*"				{comentario ();}
@@ -94,7 +92,7 @@ vazio|VAZIO       	{return VAZIO;}
 void comentario () {
 	char c;  int estado;
 	estado = 1;
-	newLine(1); printf("/*");
+	tabular(2); printf("/*");
 	while (estado != 3) {
 		switch (estado) {
 			case 1:
@@ -111,7 +109,7 @@ void comentario () {
                 break;
 		}
 	}
-	newLine(2);
+	tabular(1);
 }
 
 /*
@@ -119,13 +117,12 @@ void comentario () {
 */
 void comentarioLinha() {
 	char c;
-	newLine(1); printf ("//");
+	tabular(2); printf ("//");
 	c = input ();
 	while (c == EOF || c != '\n') {
 		printf("%c", c);
 		c = input ();
-	} 
-	newLine(1);
+	}
 }
 
 
