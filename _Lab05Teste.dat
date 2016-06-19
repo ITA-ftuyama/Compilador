@@ -51,25 +51,25 @@ locais:
 	int var;
 comandos:
 
-	/*Caso 1: Atribuicao*/
+	// Caso 1: Atribuicao
 	i := 5;
 	j := 1;
 	k := A[i-3][j+2] + 5;
 	A[10-i][9-j] := i + j*k;
 
 
-	/*Caso 2: Ler (varios atributos)*/
+	// Caso 2: Ler (varios atributos)
 	ler(i, j, A[2][3], k);
 	ler (c, lista[1], i);
 	ler (c, j, i);
 
 
-	/*Caso 3: Ler (um atributo)*/
+	// Caso 3: Ler (um atributo)
 	ler (A[1][2]);
 	ler (j);
 
 
-	/*Caso 4: Escrever*/
+	// Caso 4: Escrever
 	escrever (A[5][8]);
 	escrever (c);
 
@@ -81,7 +81,7 @@ locais:
 	int var, cont, num, div, resto;
 	logico achou;
 comandos:
-	/*Caso 5: Se*/
+	// Caso 5: Se
 	A[1][1] := 1;
 
 	se  (achou = false) {
@@ -96,10 +96,10 @@ comandos:
 
 	se (A[1][1] = 1) {
 		
-		/*Operador mais*/
+		// Operador mais
 		i := i + j;
 		
-		/*Operador menos*/
+		// Operador menos
 		i := i - k;
 	}
 
@@ -111,10 +111,10 @@ comandos:
 	i := 1;
 	se (i > 1) {
 
-		/*Operador multiplicacao*/
+		// Operador multiplicacao
 		i := i*2;
 
-		/*Operador divisao*/
+		// Operador divisao
 		i := j/4;
 	}
 
@@ -133,7 +133,7 @@ locais:
 	int var, div, num;
 	logico achou;
 comandos:
-	/*Caso 6: Enquanto*/
+	// Caso 6: Enquanto
 	A[1][1] := 1;
 	enquanto (achou = false && div * div <= num) {
 		;
@@ -141,7 +141,7 @@ comandos:
 
 	enquanto (A[1][1] >= 1 || var <= 1) {
 		
-		/*Operador mais*/
+		// Operador mais
 		i := i + j;
 		
 		/*Operador menos*/
