@@ -119,7 +119,7 @@ void comentarioLinha() {
 	char c;
 	tabular(2); printf ("//");
 	c = input ();
-	while (c == EOF || c != '\n') {
+	while (c != EOF && c != '\n') {
 		printf("%c", c);
 		c = input ();
 	}
