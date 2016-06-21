@@ -1688,7 +1688,6 @@ void ExecQuadWrite (quadrupla quad) {
 void ExecQuadMais (quadrupla quad) {
     int tipo1, tipo2, valint1, valint2;
     float valfloat1, valfloat2;
-    tipo1 = 
     switch (quad->opnd1.tipo) {
         case INTOPND:   tipo1 = INTOPND;    valint1 = quad->opnd1.atr.valint;       break;
         case REALOPND:  tipo1 = REALOPND;   valfloat1 = quad->opnd1.atr.valfloat;   break;
@@ -1778,16 +1777,16 @@ void ExecQuadLT (quadrupla quad) {
     float valfloat1, valfloat2;
 
     switch (quad->opnd1.tipo) {
-    case INTOPND:   tipo1 = INTOPND;    valint1 = quad->opnd1.atr.valint;  break;
-    case REALOPND:  tipo1 = REALOPND;   valfloat1=quad->opnd1.atr.valfloat;break;
-    case CHAROPND:  tipo1 = INTOPND;    valint1 = quad->opnd1.atr.valchar; break;
-    case VAROPND:
-        switch (quad->opnd1.atr.simb->tvar) {
-            case INTEGER:   tipo1 = INTOPND;    valint1 = *(quad->opnd1.atr.simb->valint);      break;
-            case FLOAT:     tipo1 = REALOPND;   valfloat1 = *(quad->opnd1.atr.simb->valfloat);  break;
-            case CHAR:      tipo1 = INTOPND;    valint1 = *(quad->opnd1.atr.simb->valchar);     break;
-        }
-        break;
+        case INTOPND:   tipo1 = INTOPND;    valint1 = quad->opnd1.atr.valint;  break;
+        case REALOPND:  tipo1 = REALOPND;   valfloat1=quad->opnd1.atr.valfloat;break;
+        case CHAROPND:  tipo1 = INTOPND;    valint1 = quad->opnd1.atr.valchar; break;
+        case VAROPND:
+            switch (quad->opnd1.atr.simb->tvar) {
+                case INTEGER:   tipo1 = INTOPND;    valint1 = *(quad->opnd1.atr.simb->valint);      break;
+                case FLOAT:     tipo1 = REALOPND;   valfloat1 = *(quad->opnd1.atr.simb->valfloat);  break;
+                case CHAR:      tipo1 = INTOPND;    valint1 = *(quad->opnd1.atr.simb->valchar);     break;
+            }
+            break;
     }
     switch (quad->opnd2.tipo) {
         case INTOPND:   tipo2 = INTOPND;    valint2 = quad->opnd2.atr.valint;       break;

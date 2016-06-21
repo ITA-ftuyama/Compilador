@@ -20,7 +20,7 @@ comandos:
 	senao {
 		i := 3;
 	}
-	escrever ("i = ", i, "j = ", j);
+	escrever ("i = ", i, " j = ", j);
 }
 
 
@@ -63,7 +63,7 @@ Quadruplas do modulo Principal:
 	   9#     NOP, (IDLE), (IDLE), (IDLE)
 	  10#   PARAM, (CADEIA, i = ), (IDLE), (IDLE)
 	  11#   PARAM, (VAR, i), (IDLE), (IDLE)
-	  12#   PARAM, (CADEIA, j = ), (IDLE), (IDLE)
+	  12#   PARAM, (CADEIA,  j = ), (IDLE), (IDLE)
 	  13#   PARAM, (VAR, j), (IDLE), (IDLE)
 	  14#   WRITE, (INT, 4), (IDLE), (IDLE)
 	  15#     RET, (IDLE), (IDLE), (IDLE)
@@ -95,7 +95,7 @@ Quadruplas do modulo Principal:
   14# WRITE
 		Escrevendo: 
 
-i = 3j = 17
+i = 3 j = 17
 
   15# RET
   16# EXIT
