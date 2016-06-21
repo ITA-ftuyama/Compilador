@@ -1,0 +1,110 @@
+
+/*  Programa baseado nos Slides de aula,
+		para teste do Gerador de Código Intermediário  */
+
+
+/*  Variaveis globais  */
+
+globais:
+	carac c;
+funcoes:
+
+/*  Funcao de teste igual a do Slide  */
+
+vazio testeSlide() {
+locais:
+	logico achou; 
+	int n, div, resto, cont, num;
+comandos:
+	ler (n);
+	se (n > 0) {
+		num := 1; cont := 0;
+		enquanto (cont < n) {
+			num := num + 1; div := 2; achou := falso;
+			enquanto (achou = falso && div * div <= num) {
+				resto := num % div;
+				se (resto = 0) achou := verdade;
+				senao div := div + 1;
+			}
+			se (achou = falso) {
+				 escrever (num); cont := cont + 1;
+			}
+		} 
+	}
+}
+
+vazio testeSlide2 () {
+locais:
+	int i, j, n, v, h;
+comandos:
+	se  (i < j) { i := i+3; n := v/h; }
+	senao { v := h; i := j; }
+	n := v;                      
+}
+
+vazio testeSlide3 () {
+locais:
+	int a, b, c;
+comandos:
+	ler (a, b, c);
+	escrever ("Valor de a+b:", a+b, "Valor de c:", c);
+}
+
+vazio testeSlide4 () {
+locais:
+	int i, j, k, A[10][10]; 
+comandos:
+	i := 7; j := 5;
+	k := A[i-3][j+2] + 5;
+	A[10-i][9-j] := i + j * k;
+	ler (i, j, A[2][3], k);
+	ler (A[1][2]);
+}
+
+int fat (int n) {
+locais:
+	int i;
+comandos:
+	retornar n;
+}
+
+vazio testeSlide5 () {
+locais:
+	carac  c; 
+	int  m, n, comb;
+comandos:
+	repetir {
+		escrever ("Combinacao de m elementos tomados n a n? (s/n): ");
+		repetir ler (c); enquanto (c!='s' && c!='n');
+		se (c = 's') {
+			escrever ("m: "); ler (m);
+			escrever ("n: "); ler (n);
+			se (m <= 0 || m > 7 || n <= 0 || m < n)
+				escrever ("Dados incompativeis");
+			senao {
+				comb := fat(m) / (fat(m-n) * fat(n));
+				escrever ("Num. de combinacoes: ", comb);
+			} 
+		}
+	} enquanto (c = 's');
+}
+
+vazio testeSlide6 () {
+locais:  
+	int i, n, s, p;
+comandos:
+	s := 0; p:= 1;
+	para (i := 1; i <= n; i := i + 1) 
+	{
+		s := s + i;
+		p := p * i;
+	}
+   	i := 0;
+}
+
+principal {
+locais:
+	carac c;
+comandos:
+	ler(c);
+}

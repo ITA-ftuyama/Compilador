@@ -1,0 +1,491 @@
+
+
+/*  Programa baseado nos Slides de aula,
+		para teste do Gerador de Código Intermediário  */
+
+
+/*  Variaveis globais  */
+
+globais:
+	carac c;
+funcoes:
+
+
+/*  Funcao de teste igual a do Slide  */
+
+vazio testeSlide () {
+locais:
+	logico achou;
+	int n, div, resto, cont, num;
+comandos:
+	ler (n);
+	se (n > 0) {
+		num := 1;
+		cont := 0;
+		enquanto (cont < n) {
+			num := num + 1;
+			div := 2;
+			achou := false;
+			enquanto (achou = false && div * div <= num) {
+				resto := num % div;
+				se (resto = 0) 
+					achou := true;
+				senao 
+					div := div + 1;
+			}
+			se (achou = false) {
+				escrever (num);
+				cont := cont + 1;
+			}
+		}
+	}
+}
+
+vazio testeSlide2 () {
+locais:
+	int i, j, n, v, h;
+comandos:
+	se (i < j) {
+		i := i + 3;
+		n := v / h;
+	}
+	senao {
+		v := h;
+		i := j;
+	}
+	n := v;
+}
+
+vazio testeSlide3 () {
+locais:
+	int a, b, c;
+comandos:
+	ler (a, b, c);
+	escrever ("Valor de a+b:", a + b, "Valor de c:", c);
+}
+
+vazio testeSlide4 () {
+locais:
+	int i, j, k, A[10][10];
+comandos:
+	i := 7;
+	j := 5;
+	k := A[i - 3][j + 2] + 5;
+	A[10 - i][9 - j] := i + j * k;
+	ler (i, j, A[2][3], k);
+	ler (A[1][2]);
+}
+
+int fat (int n) {
+locais:
+	int i;
+comandos:
+	retornar n;
+}
+
+vazio testeSlide5 () {
+locais:
+	carac c;
+	int m, n, comb;
+comandos:
+	repetir {
+		escrever ("Combinacao de m elementos tomados n a n? (s/n): ");
+		repetir 
+			ler (c);
+		enquanto (c != 's'  && c != 'n' );
+		se (c = 's' ) {
+			escrever ("m: ");
+			ler (m);
+			escrever ("n: ");
+			ler (n);
+			se (m <= 0 || m > 7 || n <= 0 || m < n) 
+				escrever ("Dados incompativeis");
+			senao {
+				comb := fat (m) / (fat (m - n) * fat (n));
+				escrever ("Num. de combinacoes: ", comb);
+			}
+		}
+	}
+	enquanto (c = 's' );
+}
+
+vazio testeSlide6 () {
+locais:
+	int i, n, s, p;
+comandos:
+	s := 0;
+	p := 1;
+	para (i := 1; i <= n; i := i + 1) {
+		s := s + i;
+		p := p * i;
+	}
+	i := 0;
+}
+
+principal {
+locais:
+	carac c;
+comandos:
+	ler (c);
+}
+
+c: Nao Inicializada
+c: Nao Referenciada
+h: Nao Inicializada
+i: Nao Inicializada
+i: Nao Referenciada
+j: Nao Inicializada
+n: Nao Inicializada
+
+
+	TABELA  DE  SIMBOLOS:
+
+Classe 0:
+  (s       , IDVAR, int   , 1, 1, escopo: testeSlide6);
+Classe 1:
+  (div     , IDVAR, int   , 1, 1, escopo: testeSlide);
+Classe 3:
+  (comb    , IDVAR, int   , 1, 1, escopo: testeSlide5);
+  (v       , IDVAR, int   , 1, 1, escopo: testeSlide2);
+Classe 4:
+  (##1     , IDVAR, logico, 1, 1, escopo: testeSlide);
+Classe 5:
+  (a       , IDVAR, int   , 1, 1, escopo: testeSlide3);
+  (##2     , IDVAR, logico, 1, 1, escopo: testeSlide);
+  (resto   , IDVAR, int   , 1, 1, escopo: testeSlide);
+Classe 6:
+  (b       , IDVAR, int   , 1, 1, escopo: testeSlide3);
+  (##10    , IDVAR, int   , 1, 1, escopo: testeSlide);
+  (##3     , IDVAR, int   , 1, 1, escopo: testeSlide);
+Classe 7:
+  (c       , IDVAR, carac , 1, 1, escopo: Principal);
+  (c       , IDVAR, carac , 1, 1, escopo: testeSlide5);
+  (##20    , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (c       , IDVAR, int   , 1, 1, escopo: testeSlide3);
+  (##11    , IDVAR, logico, 1, 1, escopo: testeSlide);
+  (##4     , IDVAR, logico, 1, 1, escopo: testeSlide);
+  (c       , IDVAR, carac , 0, 0, escopo: Global);
+Classe 8:
+  (##30    , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (##21    , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (##12    , IDVAR, int   , 1, 1, escopo: testeSlide);
+  (##5     , IDVAR, int   , 1, 1, escopo: testeSlide);
+Classe 9:
+  (##40    , IDVAR, logico, 1, 1, escopo: testeSlide5);
+  (##31    , IDVAR, logico, 1, 1, escopo: testeSlide5);
+  (##22    , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (##13    , IDVAR, logico, 1, 1, escopo: testeSlide2);
+  (##6     , IDVAR, logico, 1, 1, escopo: testeSlide);
+Classe 10:
+  (Principal, IDFUNC, vazio , escopo: Global
+	Variaveis: carac c
+	Parametros: NULL);
+  (##50    , IDVAR, int   , 1, 1, escopo: testeSlide6);
+  (##41    , IDVAR, logico, 1, 1, escopo: testeSlide5);
+  (##32    , IDVAR, logico, 1, 1, escopo: testeSlide5);
+  (##23    , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (##14    , IDVAR, int   , 1, 1, escopo: testeSlide2);
+  (##7     , IDVAR, logico, 1, 1, escopo: testeSlide);
+Classe 11:
+  (##51    , IDVAR, int   , 1, 1, escopo: testeSlide6);
+  (##42    , IDVAR, int   , 1, 1, escopo: testeSlide5);
+  (##33    , IDVAR, logico, 1, 1, escopo: testeSlide5);
+  (##24    , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (##15    , IDVAR, int   , 1, 1, escopo: testeSlide2);
+  (##8     , IDVAR, int   , 1, 1, escopo: testeSlide);
+  (testeSlide, IDFUNC, vazio , escopo: Global
+	Variaveis: logico achou, int n, int div, int resto, int cont, int num, logico ##1, logico ##2, int ##3, logico ##4, int ##5, logico ##6, logico ##7, int ##8, logico ##9, int ##10, logico ##11, int ##12
+	Parametros: NULL);
+Classe 12:
+  (##52    , IDVAR, int   , 1, 1, escopo: testeSlide6);
+  (##43    , IDVAR, int   , 1, 1, escopo: testeSlide5);
+  (##34    , IDVAR, logico, 1, 1, escopo: testeSlide5);
+  (##25    , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (##16    , IDVAR, int   , 1, 1, escopo: testeSlide3);
+  (h       , IDVAR, int   , 0, 1, escopo: testeSlide2);
+  (##9     , IDVAR, logico, 1, 1, escopo: testeSlide);
+Classe 13:
+  (i       , IDVAR, int   , 1, 1, escopo: testeSlide6);
+  (##44    , IDVAR, int   , 1, 1, escopo: testeSlide5);
+  (##35    , IDVAR, logico, 1, 1, escopo: testeSlide5);
+  (i       , IDVAR, int   , 0, 0, escopo: fat);
+  (##26    , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (##17    , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (i       , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (i       , IDVAR, int   , 1, 1, escopo: testeSlide2);
+Classe 14:
+  (##45    , IDVAR, int   , 1, 1, escopo: testeSlide5);
+  (##36    , IDVAR, logico, 1, 1, escopo: testeSlide5);
+  (##27    , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (##18    , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (j       , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (j       , IDVAR, int   , 0, 1, escopo: testeSlide2);
+  (num     , IDVAR, int   , 1, 1, escopo: testeSlide);
+Classe 15:
+  (##46    , IDVAR, int   , 1, 1, escopo: testeSlide5);
+  (##37    , IDVAR, logico, 1, 1, escopo: testeSlide5);
+  (##28    , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (##19    , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (k       , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (testeSlide2, IDFUNC, vazio , escopo: Global
+	Variaveis: int i, int j, int n, int v, int h, logico ##13, int ##14, int ##15
+	Parametros: NULL);
+Classe 16:
+  (##47    , IDVAR, int   , 1, 1, escopo: testeSlide5);
+  (##38    , IDVAR, logico, 1, 1, escopo: testeSlide5);
+  (fat     , IDFUNC, int   , escopo: Global
+	Variaveis: int i
+	Parametros: int n);
+  (##29    , IDVAR, int   , 1, 1, escopo: testeSlide4);
+  (testeSlide3, IDFUNC, vazio , escopo: Global
+	Variaveis: int a, int b, int c, int ##16
+	Parametros: NULL);
+Classe 17:
+  (##48    , IDVAR, logico, 1, 1, escopo: testeSlide5);
+  (##39    , IDVAR, logico, 1, 1, escopo: testeSlide5);
+  (m       , IDVAR, int   , 1, 1, escopo: testeSlide5);
+  (testeSlide4, IDFUNC, vazio , escopo: Global
+	Variaveis: int i, int j, int k, int A[10][10], int ##17, int ##18, int ##19, int ##20, int ##21, int ##22, int ##23, int ##24, int ##25, int ##26, int ##27, int ##28, int ##29, int ##30
+	Parametros: NULL);
+Classe 18:
+  (##49    , IDVAR, logico, 1, 1, escopo: testeSlide6);
+  (n       , IDVAR, int   , 0, 1, escopo: testeSlide6);
+  (n       , IDVAR, int   , 1, 1, escopo: testeSlide5);
+  (testeSlide5, IDFUNC, vazio , escopo: Global
+	Variaveis: carac c, int m, int n, int comb, logico ##31, logico ##32, logico ##33, logico ##34, logico ##35, logico ##36, logico ##37, logico ##38, logico ##39, logico ##40, logico ##41, int ##42, int ##43, int ##44, int ##45, int ##46, int ##47, logico ##48
+	Parametros: NULL);
+  (n       , IDVAR, int   , 1, 1, escopo: fat);
+  (n       , IDVAR, int   , 1, 1, escopo: testeSlide2);
+  (n       , IDVAR, int   , 1, 1, escopo: testeSlide);
+  (Global  , IDGLOB, null  , escopo: NULL
+	Variaveis: carac c
+	Funcoes: vazio testeSlide, vazio testeSlide2, vazio testeSlide3, vazio testeSlide4, int fat, vazio testeSlide5, vazio testeSlide6, vazio Principal);
+Classe 19:
+  (testeSlide6, IDFUNC, vazio , escopo: Global
+	Variaveis: int i, int n, int s, int p, logico ##49, int ##50, int ##51, int ##52
+	Parametros: NULL);
+  (A       , IDVAR, int   , 1, 1, EH ARRAY
+	ndims = 2, dimensoes:  10  10, escopo: testeSlide4);
+Classe 20:
+  (p       , IDVAR, int   , 1, 1, escopo: testeSlide6);
+Classe 22:
+  (cont    , IDVAR, int   , 1, 1, escopo: testeSlide);
+  (achou   , IDVAR, logico, 1, 1, escopo: testeSlide);
+
+
+	CODIGO INTEMEDIARIO:
+
+
+Quadruplas do modulo Global:
+
+	   1# OPENMOD, (MODULO, Global), (IDLE), (IDLE)
+
+Quadruplas do modulo testeSlide:
+
+	   1# OPENMOD, (MODULO, testeSlide), (IDLE), (IDLE)
+	   2#   PARAM, (VAR, n), (IDLE), (IDLE)
+	   3#    READ, (INT, 1), (IDLE), (IDLE)
+	   4#      GT, (VAR, n), (INT, 0), (VAR, ##1)
+	   5#      JF, (VAR, ##1), (IDLE), (ROTULO, 42)
+	   6#   ATRIB, (INT, 1), (IDLE), (VAR, num)
+	   7#   ATRIB, (INT, 0), (IDLE), (VAR, cont)
+	   8#     NOP, (IDLE), (IDLE), (IDLE)
+	   9#      LT, (VAR, cont), (VAR, n), (VAR, ##2)
+	  10#      JF, (VAR, ##2), (IDLE), (ROTULO, 41)
+	  11#    MAIS, (VAR, num), (INT, 1), (VAR, ##3)
+	  12#   ATRIB, (VAR, ##3), (IDLE), (VAR, num)
+	  13#   ATRIB, (INT, 2), (IDLE), (VAR, div)
+	  14#   ATRIB, (LOGIC, 0), (IDLE), (VAR, achou)
+	  15#     NOP, (IDLE), (IDLE), (IDLE)
+	  16#      EQ, (VAR, achou), (LOGIC, 0), (VAR, ##4)
+	  17#    MULT, (VAR, div), (VAR, div), (VAR, ##5)
+	  18#      LE, (VAR, ##5), (VAR, num), (VAR, ##6)
+	  19#     AND, (VAR, ##4), (VAR, ##6), (VAR, ##7)
+	  20#      JF, (VAR, ##7), (IDLE), (ROTULO, 32)
+	  21#   RESTO, (VAR, num), (VAR, div), (VAR, ##8)
+	  22#   ATRIB, (VAR, ##8), (IDLE), (VAR, resto)
+	  23#      EQ, (VAR, resto), (INT, 0), (VAR, ##9)
+	  24#      JF, (VAR, ##9), (IDLE), (ROTULO, 27)
+	  25#   ATRIB, (LOGIC, 1), (IDLE), (VAR, achou)
+	  26#    JUMP, (IDLE), (IDLE), (ROTULO, 30)
+	  27#     NOP, (IDLE), (IDLE), (IDLE)
+	  28#    MAIS, (VAR, div), (INT, 1), (VAR, ##10)
+	  29#   ATRIB, (VAR, ##10), (IDLE), (VAR, div)
+	  30#     NOP, (IDLE), (IDLE), (IDLE)
+	  31#    JUMP, (IDLE), (IDLE), (ROTULO, 15)
+	  32#     NOP, (IDLE), (IDLE), (IDLE)
+	  33#      EQ, (VAR, achou), (LOGIC, 0), (VAR, ##11)
+	  34#      JF, (VAR, ##11), (IDLE), (ROTULO, 39)
+	  35#   PARAM, (VAR, num), (IDLE), (IDLE)
+	  36#   WRITE, (INT, 1), (IDLE), (IDLE)
+	  37#    MAIS, (VAR, cont), (INT, 1), (VAR, ##12)
+	  38#   ATRIB, (VAR, ##12), (IDLE), (VAR, cont)
+	  39#     NOP, (IDLE), (IDLE), (IDLE)
+	  40#    JUMP, (IDLE), (IDLE), (ROTULO, 8)
+	  41#     NOP, (IDLE), (IDLE), (IDLE)
+	  42#     NOP, (IDLE), (IDLE), (IDLE)
+	  43#     RET, (IDLE), (IDLE), (IDLE)
+
+Quadruplas do modulo testeSlide2:
+
+	   1# OPENMOD, (MODULO, testeSlide2), (IDLE), (IDLE)
+	   2#      LT, (VAR, i), (VAR, j), (VAR, ##13)
+	   3#      JF, (VAR, ##13), (IDLE), (ROTULO, 9)
+	   4#    MAIS, (VAR, i), (INT, 3), (VAR, ##14)
+	   5#   ATRIB, (VAR, ##14), (IDLE), (VAR, i)
+	   6#     DIV, (VAR, v), (VAR, h), (VAR, ##15)
+	   7#   ATRIB, (VAR, ##15), (IDLE), (VAR, n)
+	   8#    JUMP, (IDLE), (IDLE), (ROTULO, 12)
+	   9#     NOP, (IDLE), (IDLE), (IDLE)
+	  10#   ATRIB, (VAR, h), (IDLE), (VAR, v)
+	  11#   ATRIB, (VAR, j), (IDLE), (VAR, i)
+	  12#     NOP, (IDLE), (IDLE), (IDLE)
+	  13#   ATRIB, (VAR, v), (IDLE), (VAR, n)
+	  14#     RET, (IDLE), (IDLE), (IDLE)
+
+Quadruplas do modulo testeSlide3:
+
+	   1# OPENMOD, (MODULO, testeSlide3), (IDLE), (IDLE)
+	   2#   PARAM, (VAR, a), (IDLE), (IDLE)
+	   3#    READ, (INT, 1), (IDLE), (IDLE)
+	   4#   PARAM, (VAR, b), (IDLE), (IDLE)
+	   5#    READ, (INT, 1), (IDLE), (IDLE)
+	   6#   PARAM, (VAR, c), (IDLE), (IDLE)
+	   7#    READ, (INT, 1), (IDLE), (IDLE)
+	   8#   PARAM, (CADEIA, Valor de a+b:), (IDLE), (IDLE)
+	   9#    MAIS, (VAR, a), (VAR, b), (VAR, ##16)
+	  10#   PARAM, (VAR, ##16), (IDLE), (IDLE)
+	  11#   PARAM, (CADEIA, Valor de c:), (IDLE), (IDLE)
+	  12#   PARAM, (VAR, c), (IDLE), (IDLE)
+	  13#   WRITE, (INT, 4), (IDLE), (IDLE)
+	  14#     RET, (IDLE), (IDLE), (IDLE)
+
+Quadruplas do modulo testeSlide4:
+
+	   1# OPENMOD, (MODULO, testeSlide4), (IDLE), (IDLE)
+	   2#   ATRIB, (INT, 7), (IDLE), (VAR, i)
+	   3#   ATRIB, (INT, 5), (IDLE), (VAR, j)
+	   4#   MENOS, (VAR, i), (INT, 3), (VAR, ##17)
+	   5#     IND, (VAR, ##17), (IDLE), (IDLE)
+	   6#    MAIS, (VAR, j), (INT, 2), (VAR, ##18)
+	   7#     IND, (VAR, ##18), (IDLE), (IDLE)
+	   8#   INDEX, (VAR, A), (INT, 2), (VAR, ##19)
+	   9# CONTAPONT, (VAR, ##19), (IDLE), (VAR, ##20)
+	  10#    MAIS, (VAR, ##20), (INT, 5), (VAR, ##21)
+	  11#   ATRIB, (VAR, ##21), (IDLE), (VAR, k)
+	  12#   MENOS, (INT, 10), (VAR, i), (VAR, ##22)
+	  13#     IND, (VAR, ##22), (IDLE), (IDLE)
+	  14#   MENOS, (INT, 9), (VAR, j), (VAR, ##23)
+	  15#     IND, (VAR, ##23), (IDLE), (IDLE)
+	  16#   INDEX, (VAR, A), (INT, 2), (VAR, ##24)
+	  17#    MULT, (VAR, j), (VAR, k), (VAR, ##25)
+	  18#    MAIS, (VAR, i), (VAR, ##25), (VAR, ##26)
+	  19# ATRIBPONT, (VAR, ##26), (IDLE), (VAR, ##24)
+	  20#   PARAM, (VAR, i), (IDLE), (IDLE)
+	  21#    READ, (INT, 1), (IDLE), (IDLE)
+	  22#   PARAM, (VAR, j), (IDLE), (IDLE)
+	  23#    READ, (INT, 1), (IDLE), (IDLE)
+	  24#     IND, (INT, 2), (IDLE), (IDLE)
+	  25#     IND, (INT, 3), (IDLE), (IDLE)
+	  26#   INDEX, (VAR, A), (INT, 2), (VAR, ##27)
+	  27#   PARAM, (VAR, ##28), (IDLE), (IDLE)
+	  28#    READ, (INT, 1), (IDLE), (IDLE)
+	  29# ATRIBPONT, (VAR, ##28), (IDLE), (VAR, ##27)
+	  30#   PARAM, (VAR, k), (IDLE), (IDLE)
+	  31#    READ, (INT, 1), (IDLE), (IDLE)
+	  32#     IND, (INT, 1), (IDLE), (IDLE)
+	  33#     IND, (INT, 2), (IDLE), (IDLE)
+	  34#   INDEX, (VAR, A), (INT, 2), (VAR, ##29)
+	  35#   PARAM, (VAR, ##30), (IDLE), (IDLE)
+	  36#    READ, (INT, 1), (IDLE), (IDLE)
+	  37# ATRIBPONT, (VAR, ##30), (IDLE), (VAR, ##29)
+	  38#     RET, (IDLE), (IDLE), (IDLE)
+
+Quadruplas do modulo fat:
+
+	   1# OPENMOD, (MODULO, fat), (IDLE), (IDLE)
+	   2#     RET, (VAR, n), (IDLE), (IDLE)
+
+Quadruplas do modulo testeSlide5:
+
+	   1# OPENMOD, (MODULO, testeSlide5), (IDLE), (IDLE)
+	   2#   PARAM, (CADEIA, Combinacao de m elementos tomados n a n? (s/n): ), (IDLE), (IDLE)
+	   3#   WRITE, (INT, 1), (IDLE), (IDLE)
+	   4#   PARAM, (VAR, c), (IDLE), (IDLE)
+	   5#    READ, (INT, 1), (IDLE), (IDLE)
+	   6#     NOP, (IDLE), (IDLE), (IDLE)
+	   7#      NE, (VAR, c), (CARAC, s), (VAR, ##31)
+	   8#      NE, (VAR, c), (CARAC, n), (VAR, ##32)
+	   9#     AND, (VAR, ##31), (VAR, ##32), (VAR, ##33)
+	  10#      JF, (VAR, ##33), (IDLE), (ROTULO, 6)
+	  11#      EQ, (VAR, c), (CARAC, s), (VAR, ##34)
+	  12#      JF, (VAR, ##34), (IDLE), (ROTULO, 47)
+	  13#   PARAM, (CADEIA, m: ), (IDLE), (IDLE)
+	  14#   WRITE, (INT, 1), (IDLE), (IDLE)
+	  15#   PARAM, (VAR, m), (IDLE), (IDLE)
+	  16#    READ, (INT, 1), (IDLE), (IDLE)
+	  17#   PARAM, (CADEIA, n: ), (IDLE), (IDLE)
+	  18#   WRITE, (INT, 1), (IDLE), (IDLE)
+	  19#   PARAM, (VAR, n), (IDLE), (IDLE)
+	  20#    READ, (INT, 1), (IDLE), (IDLE)
+	  21#      LE, (VAR, m), (INT, 0), (VAR, ##35)
+	  22#      GT, (VAR, m), (INT, 7), (VAR, ##36)
+	  23#      OR, (VAR, ##35), (VAR, ##36), (VAR, ##37)
+	  24#      LE, (VAR, n), (INT, 0), (VAR, ##38)
+	  25#      OR, (VAR, ##37), (VAR, ##38), (VAR, ##39)
+	  26#      LT, (VAR, m), (VAR, n), (VAR, ##40)
+	  27#      OR, (VAR, ##39), (VAR, ##40), (VAR, ##41)
+	  28#      JF, (VAR, ##41), (IDLE), (ROTULO, 32)
+	  29#   PARAM, (CADEIA, Dados incompativeis), (IDLE), (IDLE)
+	  30#   WRITE, (INT, 1), (IDLE), (IDLE)
+	  31#    JUMP, (IDLE), (IDLE), (ROTULO, 46)
+	  32#     NOP, (IDLE), (IDLE), (IDLE)
+	  33#   PARAM, (VAR, m), (IDLE), (IDLE)
+	  34#    CALL, (FUNC, fat), (INT, 1), (VAR, ##42)
+	  35#   MENOS, (VAR, m), (VAR, n), (VAR, ##43)
+	  36#   PARAM, (VAR, ##43), (IDLE), (IDLE)
+	  37#    CALL, (FUNC, fat), (INT, 1), (VAR, ##44)
+	  38#   PARAM, (VAR, n), (IDLE), (IDLE)
+	  39#    CALL, (FUNC, fat), (INT, 1), (VAR, ##45)
+	  40#    MULT, (VAR, ##44), (VAR, ##45), (VAR, ##46)
+	  41#     DIV, (VAR, ##42), (VAR, ##46), (VAR, ##47)
+	  42#   ATRIB, (VAR, ##47), (IDLE), (VAR, comb)
+	  43#   PARAM, (CADEIA, Num. de combinacoes: ), (IDLE), (IDLE)
+	  44#   PARAM, (VAR, comb), (IDLE), (IDLE)
+	  45#   WRITE, (INT, 2), (IDLE), (IDLE)
+	  46#     NOP, (IDLE), (IDLE), (IDLE)
+	  47#     NOP, (IDLE), (IDLE), (IDLE)
+	  48#     NOP, (IDLE), (IDLE), (IDLE)
+	  49#      EQ, (VAR, c), (CARAC, s), (VAR, ##48)
+	  50#      JF, (VAR, ##48), (IDLE), (ROTULO, 48)
+	  51#     RET, (IDLE), (IDLE), (IDLE)
+
+Quadruplas do modulo testeSlide6:
+
+	   1# OPENMOD, (MODULO, testeSlide6), (IDLE), (IDLE)
+	   2#   ATRIB, (INT, 0), (IDLE), (VAR, s)
+	   3#   ATRIB, (INT, 1), (IDLE), (VAR, p)
+	   4#   ATRIB, (INT, 1), (IDLE), (VAR, i)
+	   5#     NOP, (IDLE), (IDLE), (IDLE)
+	   6#      LE, (VAR, i), (VAR, n), (VAR, ##49)
+	   7#      JF, (VAR, ##49), (IDLE), (ROTULO, 17)
+	   8#     NOP, (IDLE), (IDLE), (IDLE)
+	   9#    MAIS, (VAR, s), (VAR, i), (VAR, ##51)
+	  10#   ATRIB, (VAR, ##51), (IDLE), (VAR, s)
+	  11#    MULT, (VAR, p), (VAR, i), (VAR, ##52)
+	  12#   ATRIB, (VAR, ##52), (IDLE), (VAR, p)
+	  13#     NOP, (IDLE), (IDLE), (IDLE)
+	  14#    MAIS, (VAR, i), (INT, 1), (VAR, ##50)
+	  15#   ATRIB, (VAR, ##50), (IDLE), (VAR, i)
+	  16#    JUMP, (IDLE), (IDLE), (ROTULO, 5)
+	  17#     NOP, (IDLE), (IDLE), (IDLE)
+	  18#   ATRIB, (INT, 0), (IDLE), (VAR, i)
+	  19#     RET, (IDLE), (IDLE), (IDLE)
+
+Quadruplas do modulo Principal:
+
+	   1# OPENMOD, (MODULO, Principal), (IDLE), (IDLE)
+	   2#   PARAM, (VAR, c), (IDLE), (IDLE)
+	   3#    READ, (INT, 1), (IDLE), (IDLE)
+	   4#     RET, (IDLE), (IDLE), (IDLE)
+	   5#    EXIT, (IDLE), (IDLE), (IDLE)

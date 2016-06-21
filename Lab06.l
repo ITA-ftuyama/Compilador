@@ -23,14 +23,14 @@ cadeia		\"{carac2}*\"
 "//"				{comentarioLinha();}
 "/*"				{comentario ();}
 
-se|SE 				{return SE;}
-senao|SENAO 		{return SENAO;}
-enquanto|ENQUANTO 	{return ENQUANTO;}
-para|PARA 			{return PARA;}
-retornar|RETORNAR 	{return RETORNAR;}
-repetir|REPETIR 	{return REPETIR;}
-true|TRUE 			{return VERDADE;}
-false|FALSE 		{return FALSO;}
+se|SE 						{return SE;}
+senao|SENAO 				{return SENAO;}
+enquanto|ENQUANTO 			{return ENQUANTO;}
+para|PARA 					{return PARA;}
+retornar|RETORNAR 			{return RETORNAR;}
+repetir|REPETIR 			{return REPETIR;}
+true|TRUE|verdade|VERDADE	{return VERDADE;}
+false|FALSE|falso|FALSO  	{return FALSO;}
 
 globais|GLOBAIS     {return GLOBAIS;}
 locais|LOCAIS     	{return LOCAIS;}
