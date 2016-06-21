@@ -371,6 +371,8 @@ void ExecQuadMais (quadrupla);
 void ExecQuadLT (quadrupla);
 void ExecQuadAtrib (quadrupla);
 void ExecQuadRead (quadrupla);
+void ExecQuadJump (quadrupla, quadrupla*);
+void ExecQuadJF (quadrupla , quadrupla *);
 
 /*  Declaracoes para pilhas de operandos  */
 
@@ -1596,14 +1598,13 @@ void RenumQuadruplas (quadrupla quad1, quadrupla quad2) {
 
 void InterpCodIntermed () {
     quadrupla quad, quadprox;
-    modhead mod;
-    bool encerra, condicao = FALSE;
+    modhead mod; bool encerra = FALSE;
     printf ("\n\n\tINTERPRETADOR:\n");
     InicPilhaOpnd (&pilhaopnd);
     finput = fopen ("Lab06_entrada.txt", "r");
     for (mod = codintermed->prox; (!encerra && mod != NULL); mod = mod->prox) {
         for (quad = mod->listquad->prox; (!encerra && quad != NULL); quad = quadprox) {
-            printf ("\n%4d) %s", quad->num, 
+            printf ("\n%4d# %s", quad->num, 
                 nomeoperquad[quad->oper]);
             quadprox = quad->prox;
             switch (quad->oper) {
@@ -1615,17 +1616,9 @@ void InterpCodIntermed () {
                 case OPATRIB:   ExecQuadAtrib (quad);                   break;
                 case OPLT:      ExecQuadLT (quad);                      break;
                 case OPREAD:    ExecQuadRead (quad);                    break;
-                case OPJUMP:    quadprox = quad->result.atr.rotulo;     break;
-                case OPJF:
-                    if (quad->opnd1.tipo == LOGICOPND)
-                        condicao = quad->opnd1.atr.vallogic;
-                    if (quad->opnd1.tipo == VAROPND)
-                        condicao = *(quad->opnd1.atr.simb->vallogic);
-                    if (! condicao)
-                        quadprox = quad->result.atr.rotulo;
-                    break;
+                case OPJUMP:    ExecQuadJump (quad, &quadprox);         break;
+                case OPJF:      ExecQuadJF (quad, &quadprox);           break;
             }
-
         }
     }
 }
@@ -1686,8 +1679,8 @@ void ExecQuadWrite (quadrupla quad) {
                     case CHAR:      printf ("%c", *(opndaux.atr.simb->valchar));            break;
                 }
         }
-        printf ("\n");
     }
+    printf ("\n");
 }
 
 /* Executa a quádrupla do operador Mais */
@@ -1695,6 +1688,7 @@ void ExecQuadWrite (quadrupla quad) {
 void ExecQuadMais (quadrupla quad) {
     int tipo1, tipo2, valint1, valint2;
     float valfloat1, valfloat2;
+    tipo1 = 
     switch (quad->opnd1.tipo) {
         case INTOPND:   tipo1 = INTOPND;    valint1 = quad->opnd1.atr.valint;       break;
         case REALOPND:  tipo1 = REALOPND;   valfloat1 = quad->opnd1.atr.valfloat;   break;
@@ -1742,7 +1736,6 @@ void ExecQuadAtrib (quadrupla quad) {
     int tipo1, valint1;
     float valfloat1;
     char valchar1, vallogic1;
-    return;
     switch (quad->opnd1.tipo) {
         case INTOPND:   tipo1 = INTOPND;    valint1 = quad->opnd1.atr.valint;       break;
         case REALOPND:  tipo1 = REALOPND;   valfloat1 = quad->opnd1.atr.valfloat;   break;
@@ -1759,12 +1752,12 @@ void ExecQuadAtrib (quadrupla quad) {
     }
     switch (quad->result.atr.simb->tvar) {
         case INTEGER:
-            if (tipo1 == INTOPND)  *(quad->result.atr.simb->valint) = valint1;
-            if (tipo1 == CHAROPND)*(quad->result.atr.simb->valint) = valchar1;
+            if (tipo1 == INTOPND)   *(quad->result.atr.simb->valint) = valint1;
+            if (tipo1 == CHAROPND)  *(quad->result.atr.simb->valint) = valchar1;
             break;
         case CHAR:
-            if (tipo1 == INTOPND) *(quad->result.atr.simb->valchar) = valint1;
-            if (tipo1==CHAROPND)*(quad->result.atr.simb->valchar) = valchar1;
+            if (tipo1 == INTOPND)   *(quad->result.atr.simb->valchar) = valint1;
+            if (tipo1==CHAROPND)    *(quad->result.atr.simb->valchar) = valchar1;
             break;
         case LOGIC:  *(quad->result.atr.simb->vallogic) = vallogic1; break;
         case FLOAT:
@@ -1841,6 +1834,23 @@ void ExecQuadRead (quadrupla quad) {
     }
 }
 
+/* Executa a quádrupla de Jump */
+
+void ExecQuadJump (quadrupla quad, quadrupla *quadprox) {
+    *quadprox = quad->result.atr.rotulo;
+}
+
+/* Executa a quádrupla de JF */
+
+void ExecQuadJF (quadrupla quad, quadrupla *quadprox) {
+    bool condicao = FALSE;
+    if (quad->opnd1.tipo == LOGICOPND)
+        condicao = quad->opnd1.atr.vallogic;
+    if (quad->opnd1.tipo == VAROPND)
+        condicao = *(quad->opnd1.atr.simb->vallogic);
+    if (!condicao)
+        *quadprox = quad->result.atr.rotulo;
+}
 
 /****************************************************/
 /*                                                  */

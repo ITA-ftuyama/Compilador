@@ -12,5 +12,11 @@ principal {
 locais:
 	int j;
 comandos:
-	j := 0;
+	j := 17;
+	se (j > 0) {
+		i := 2;
+	} senao {
+		i := 3;
+	}
+	escrever("i = ", i, " j = ", j);
 }
