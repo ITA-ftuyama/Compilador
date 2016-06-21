@@ -1,0 +1,16 @@
+
+/*  Programa de teste */
+
+globais:
+	int i;
+
+funcoes:
+
+/*  Funcao principal  */
+
+principal {
+locais:
+	int j;
+comandos:
+	j := 0;
+}

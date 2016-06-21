@@ -320,8 +320,8 @@ struct celquad {
 
 struct celmodhead {
     simbolo modname; modhead prox;
-   int modtip;
     quadrupla listquad;
+    int modtip;
 };
 
 /* Variaveis globais para o codigo intermediario */
@@ -509,7 +509,7 @@ Programa    :   {
                 {
                     GeraQuadrupla (OPEXIT, opndidle, opndidle, opndidle);
                     VerificaInicRef (); ImprimeTabSimb (); ImprimeQuadruplas ();
-                    //InterpCodIntermed ();
+                    InterpCodIntermed ();
                 }
             ;
 DeclGlobs   :
@@ -1477,11 +1477,15 @@ void Exception (char *type, char *error) {
 /*                                                  */
 /****************************************************/
 
+/* Inicializa o código intermediário */
+
 void InicCodIntermed () {
     modcorrente = codintermed = malloc (sizeof (celmodhead));
     modcorrente->listquad = NULL;
     modcorrente->prox = NULL;
 }
+
+/* Inicializa o código intermediário a partir do módulo global */
 
 void InicCodIntermMod (simbolo simb) {
     modcorrente->prox = malloc (sizeof (celmodhead));
@@ -1497,6 +1501,8 @@ void InicCodIntermMod (simbolo simb) {
     simb->fhead = modcorrente;
 }
 
+/* Cria uma nova quádrupla de operandos */
+
 quadrupla GeraQuadrupla (int oper, operando opnd1, operando opnd2,
     operando result) {
     quadcorrente->prox = malloc (sizeof (celquad));
@@ -1510,6 +1516,8 @@ quadrupla GeraQuadrupla (int oper, operando opnd1, operando opnd2,
     quadcorrente->num = numquadcorrente;
     return quadcorrente;
 }
+
+/* Cria nova variável temporária */
 
 simbolo NovaTemp (int tip) {
     simbolo simb; int temp, i, j;
@@ -1526,6 +1534,8 @@ simbolo NovaTemp (int tip) {
     simb->array = FALSE;
     return simb;
 }
+
+/* Imprime todas as quádruplas do código intermediário */
 
 void ImprimeQuadruplas () {
     modhead p;
@@ -1547,6 +1557,8 @@ void ImprimeQuadruplas () {
    printf ("\n");
 }
 
+/* Imprime o valor do operando em questão */
+
 void ImprimeTipoOpnd (operando op) {
     switch (op.tipo) {
         case IDLEOPND:                                                   break;
@@ -1563,6 +1575,8 @@ void ImprimeTipoOpnd (operando op) {
     } 
 }
 
+/* Renumera todas as quádruplas entre duas quádruplas */
+
 void RenumQuadruplas (quadrupla quad1, quadrupla quad2) {
     quadrupla q; int nquad;
     for (q = quad1->prox, nquad = quad1->num; q != quad2; q = q->prox)
@@ -1575,48 +1589,58 @@ void RenumQuadruplas (quadrupla quad1, quadrupla quad2) {
 /*                                                  */
 /****************************************************/
 
+/* 
+    Executa rodas as quádruplas do Código Intermediário
+    núcleo do interpretador da linguagem
+    */
+
 void InterpCodIntermed () {
-    quadrupla quad, quadprox;  char encerra;
-    printf ("\n\nINTERPRETADOR:\n");
+    quadrupla quad, quadprox;
+    modhead mod;
+    bool encerra, condicao = FALSE;
+    printf ("\n\n\tINTERPRETADOR:\n");
     InicPilhaOpnd (&pilhaopnd);
-    encerra = FALSE;
-    char condicao;
-    quad = codintermed->prox->listquad->prox;
     finput = fopen ("Lab06_entrada.txt", "r");
-    while (! encerra) {
-        printf ("\n%4d) %s", quad->num,
-            nomeoperquad[quad->oper]);
-        quadprox = quad->prox;
-        switch (quad->oper) {
-            case OPEXIT:    encerra = TRUE;                         break;
-            case OPENMOD:   AlocaVariaveis ();                      break;
-            case PARAM:     EmpilharOpnd (quad->opnd1, &pilhaopnd); break;
-            case OPWRITE:   ExecQuadWrite (quad);                   break;
-            case OPMAIS:    ExecQuadMais (quad);                    break;
-            case OPATRIB:   ExecQuadAtrib (quad);                   break;
-            case OPLT:      ExecQuadLT (quad);                      break;
-            case OPREAD:    ExecQuadRead (quad);                    break;
-            case OPJUMP:    quadprox = quad->result.atr.rotulo;     break;
-            case OPJF:
-                if (quad->opnd1.tipo == LOGICOPND)
-                    condicao = quad->opnd1.atr.vallogic;
-                if (quad->opnd1.tipo == VAROPND)
-                    condicao = *(quad->opnd1.atr.simb->vallogic);
-                if (! condicao)
-                    quadprox = quad->result.atr.rotulo;
-                break;
+    for (mod = codintermed->prox; (!encerra && mod != NULL); mod = mod->prox) {
+        for (quad = mod->listquad->prox; (!encerra && quad != NULL); quad = quadprox) {
+            printf ("\n%4d) %s", quad->num, 
+                nomeoperquad[quad->oper]);
+            quadprox = quad->prox;
+            switch (quad->oper) {
+                case OPEXIT:    encerra = TRUE;                         break;
+                case OPENMOD:   AlocaVariaveis ();                      break;
+                case PARAM:     EmpilharOpnd (quad->opnd1, &pilhaopnd); break;
+                case OPWRITE:   ExecQuadWrite (quad);                   break;
+                case OPMAIS:    ExecQuadMais (quad);                    break;
+                case OPATRIB:   ExecQuadAtrib (quad);                   break;
+                case OPLT:      ExecQuadLT (quad);                      break;
+                case OPREAD:    ExecQuadRead (quad);                    break;
+                case OPJUMP:    quadprox = quad->result.atr.rotulo;     break;
+                case OPJF:
+                    if (quad->opnd1.tipo == LOGICOPND)
+                        condicao = quad->opnd1.atr.vallogic;
+                    if (quad->opnd1.tipo == VAROPND)
+                        condicao = *(quad->opnd1.atr.simb->vallogic);
+                    if (! condicao)
+                        quadprox = quad->result.atr.rotulo;
+                    break;
+            }
+
         }
-        if (! encerra) quad = quadprox;
     }
-    printf ("\n");
 }
+
+/* 
+    Aloca em memória todas as variáveis presentes
+    na Tabela de Símbolo, inclusive as temporárias
+    */
 
 void AlocaVariaveis () {
     simbolo s; int nelemaloc, i, j;
     printf ("\n\t\tAlocando as variaveis:");
     for (i = 0; i < NCLASSHASH; i++)
         if (tabsimb[i]) {
-            for (s = tabsimb[i]; s != NULL; s = s->prox){
+            for (s = tabsimb[i]; s != NULL; s = s->prox) {
                 if (s->tid == IDVAR) {
                     nelemaloc = 1;
                     if (s->array) 
@@ -1633,6 +1657,8 @@ void AlocaVariaveis () {
         }
     }
 }
+
+/* Executa a quádrupla do CmdWrite */
 
 void ExecQuadWrite (quadrupla quad) {
     int i;  operando opndaux;  pilhaoperando pilhaopndaux;
@@ -1663,6 +1689,8 @@ void ExecQuadWrite (quadrupla quad) {
         printf ("\n");
     }
 }
+
+/* Executa a quádrupla do operador Mais */
 
 void ExecQuadMais (quadrupla quad) {
     int tipo1, tipo2, valint1, valint2;
@@ -1708,10 +1736,13 @@ void ExecQuadMais (quadrupla quad) {
     }
 }
 
+/* Executa a quádrupla do CmdAtrib */
+
 void ExecQuadAtrib (quadrupla quad) {
     int tipo1, valint1;
     float valfloat1;
     char valchar1, vallogic1;
+    return;
     switch (quad->opnd1.tipo) {
         case INTOPND:   tipo1 = INTOPND;    valint1 = quad->opnd1.atr.valint;       break;
         case REALOPND:  tipo1 = REALOPND;   valfloat1 = quad->opnd1.atr.valfloat;   break;
@@ -1746,6 +1777,8 @@ void ExecQuadAtrib (quadrupla quad) {
             break;
     }
 }
+
+/* Executa a quádrupla do operador LT */
 
 void ExecQuadLT (quadrupla quad) {
     int tipo1, tipo2, valint1, valint2;
@@ -1784,6 +1817,8 @@ void ExecQuadLT (quadrupla quad) {
     if (tipo1 == REALOPND && tipo2 == REALOPND)
         *(quad->result.atr.simb->vallogic) = valfloat1 < valfloat2;
 }
+
+/* Executa a quádrupla do CmdRead */
 
 void ExecQuadRead (quadrupla quad) {
     int i;  operando opndaux;  pilhaoperando pilhaopndaux;

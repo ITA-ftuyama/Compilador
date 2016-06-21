@@ -1,0 +1,66 @@
+
+
+/*  Programa de teste */
+
+globais:
+	int i;
+funcoes:
+
+
+/*  Funcao principal  */
+
+principal {
+locais:
+	int j;
+comandos:
+	j := 0;
+}
+
+i: Nao Inicializada
+i: Nao Referenciada
+
+
+	TABELA  DE  SIMBOLOS:
+
+Classe 10:
+  (Principal, IDFUNC, vazio , escopo: Global
+	Variaveis: int j
+	Parametros: NULL);
+Classe 13:
+  (i       , IDVAR, int   , 0, 0, escopo: Global);
+Classe 14:
+  (j       , IDVAR, int   , 1, 1, escopo: Principal);
+Classe 18:
+  (Global  , IDGLOB, null  , escopo: NULL
+	Variaveis: int i
+	Funcoes: vazio Principal);
+
+
+	CODIGO INTEMEDIARIO:
+
+
+Quadruplas do modulo Global:
+
+	   1# OPENMOD, (MODULO, Global), (IDLE), (IDLE)
+
+Quadruplas do modulo Principal:
+
+	   1# OPENMOD, (MODULO, Principal), (IDLE), (IDLE)
+	   2#   ATRIB, (INT, 0), (IDLE), (VAR, j)
+	   3#     RET, (IDLE), (IDLE), (IDLE)
+	   4#    EXIT, (IDLE), (IDLE), (IDLE)
+
+
+	INTERPRETADOR:
+
+   1) OPENMOD
+		Alocando as variaveis:
+			     i:  1 elemento(s) alocado(s) 
+			     j:  1 elemento(s) alocado(s) 
+   1) OPENMOD
+		Alocando as variaveis:
+			     i:  1 elemento(s) alocado(s) 
+			     j:  1 elemento(s) alocado(s) 
+   2) ATRIB
+   3) RET
+   4) EXIT
