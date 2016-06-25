@@ -11,16 +11,18 @@ funcoes:
 
 principal {
 locais:
-	int j;
+	int j, f;
 comandos:
 	j := 17;
-	se (j > 0) {
+	se (!(j > 0)) {
 		i := 2;
 	}
 	senao {
 		i := 3;
 	}
-	escrever ("i = ", i, " j = ", j);
+	para (f := 0; f < 3; f := f + 1) {
+		escrever ("i = ", i, " j = ", j, " f = ", f);
+	}
 }
 
 
@@ -29,9 +31,16 @@ comandos:
 
 Classe 4:
   (##1     , IDVAR, logico, 1, 1, escopo: Principal);
+Classe 5:
+  (##2     , IDVAR, logico, 1, 1, escopo: Principal);
+Classe 6:
+  (##3     , IDVAR, logico, 1, 1, escopo: Principal);
+Classe 7:
+  (##4     , IDVAR, int   , 1, 1, escopo: Principal);
 Classe 10:
+  (f       , IDVAR, int   , 1, 1, escopo: Principal);
   (Principal, IDFUNC, vazio , escopo: Global
-	Variaveis: int j, logico ##1
+	Variaveis: int j, int f, logico ##1, logico ##2, logico ##3, int ##4
 	Parametros: NULL);
 Classe 13:
   (i       , IDVAR, int   , 1, 1, escopo: Global);
@@ -55,19 +64,32 @@ Quadruplas do modulo Principal:
 	   1# OPENMOD, (MODULO, Principal), (IDLE), (IDLE)
 	   2#   ATRIB, (INT, 17), (IDLE), (VAR, j)
 	   3#      GT, (VAR, j), (INT, 0), (VAR, ##1)
-	   4#      JF, (VAR, ##1), (IDLE), (ROTULO, 7)
-	   5#   ATRIB, (INT, 2), (IDLE), (VAR, i)
-	   6#    JUMP, (IDLE), (IDLE), (ROTULO, 9)
-	   7#     NOP, (IDLE), (IDLE), (IDLE)
-	   8#   ATRIB, (INT, 3), (IDLE), (VAR, i)
-	   9#     NOP, (IDLE), (IDLE), (IDLE)
-	  10#   PARAM, (CADEIA, i = ), (IDLE), (IDLE)
-	  11#   PARAM, (VAR, i), (IDLE), (IDLE)
-	  12#   PARAM, (CADEIA,  j = ), (IDLE), (IDLE)
-	  13#   PARAM, (VAR, j), (IDLE), (IDLE)
-	  14#   WRITE, (INT, 4), (IDLE), (IDLE)
-	  15#     RET, (IDLE), (IDLE), (IDLE)
-	  16#    EXIT, (IDLE), (IDLE), (IDLE)
+	   4#     NOT, (VAR, ##1), (IDLE), (VAR, ##2)
+	   5#      JF, (VAR, ##2), (IDLE), (ROTULO, 8)
+	   6#   ATRIB, (INT, 2), (IDLE), (VAR, i)
+	   7#    JUMP, (IDLE), (IDLE), (ROTULO, 10)
+	   8#     NOP, (IDLE), (IDLE), (IDLE)
+	   9#   ATRIB, (INT, 3), (IDLE), (VAR, i)
+	  10#     NOP, (IDLE), (IDLE), (IDLE)
+	  11#   ATRIB, (INT, 0), (IDLE), (VAR, f)
+	  12#     NOP, (IDLE), (IDLE), (IDLE)
+	  13#      LT, (VAR, f), (INT, 3), (VAR, ##3)
+	  14#      JF, (VAR, ##3), (IDLE), (ROTULO, 27)
+	  15#     NOP, (IDLE), (IDLE), (IDLE)
+	  16#   PARAM, (CADEIA, i = ), (IDLE), (IDLE)
+	  17#   PARAM, (VAR, i), (IDLE), (IDLE)
+	  18#   PARAM, (CADEIA,  j = ), (IDLE), (IDLE)
+	  19#   PARAM, (VAR, j), (IDLE), (IDLE)
+	  20#   PARAM, (CADEIA,  f = ), (IDLE), (IDLE)
+	  21#   PARAM, (VAR, f), (IDLE), (IDLE)
+	  22#   WRITE, (INT, 6), (IDLE), (IDLE)
+	  23#     NOP, (IDLE), (IDLE), (IDLE)
+	  24#    MAIS, (VAR, f), (INT, 1), (VAR, ##4)
+	  25#   ATRIB, (VAR, ##4), (IDLE), (VAR, f)
+	  26#    JUMP, (IDLE), (IDLE), (ROTULO, 12)
+	  27#     NOP, (IDLE), (IDLE), (IDLE)
+	  28#     RET, (IDLE), (IDLE), (IDLE)
+	  29#    EXIT, (IDLE), (IDLE), (IDLE)
 
 
 	INTERPRETADOR:
@@ -75,27 +97,89 @@ Quadruplas do modulo Principal:
    1# OPENMOD
 		Alocando as variaveis:
 			   ##1:  1 elemento(s) alocado(s) 
+			   ##2:  1 elemento(s) alocado(s) 
+			   ##3:  1 elemento(s) alocado(s) 
+			   ##4:  1 elemento(s) alocado(s) 
+			     f:  1 elemento(s) alocado(s) 
 			     i:  1 elemento(s) alocado(s) 
 			     j:  1 elemento(s) alocado(s) 
    1# OPENMOD
 		Alocando as variaveis:
 			   ##1:  1 elemento(s) alocado(s) 
+			   ##2:  1 elemento(s) alocado(s) 
+			   ##3:  1 elemento(s) alocado(s) 
+			   ##4:  1 elemento(s) alocado(s) 
+			     f:  1 elemento(s) alocado(s) 
 			     i:  1 elemento(s) alocado(s) 
 			     j:  1 elemento(s) alocado(s) 
    2# ATRIB
    3# GT
-   4# JF
-   5# ATRIB
-   6# JUMP
-   9# NOP
-  10# PARAM
-  11# PARAM
-  12# PARAM
-  13# PARAM
-  14# WRITE
+   4# NOT
+   5# JF
+   8# NOP
+   9# ATRIB
+  10# NOP
+  11# ATRIB
+  12# NOP
+  13# LT
+  14# JF
+  15# NOP
+  16# PARAM
+  17# PARAM
+  18# PARAM
+  19# PARAM
+  20# PARAM
+  21# PARAM
+  22# WRITE
 		Escrevendo: 
 
-i = 2 j = 17
+i = 3 j = 17 f = 0
 
-  15# RET
-  16# EXIT
+  23# NOP
+  24# MAIS
+  25# ATRIB
+  26# JUMP
+  12# NOP
+  13# LT
+  14# JF
+  15# NOP
+  16# PARAM
+  17# PARAM
+  18# PARAM
+  19# PARAM
+  20# PARAM
+  21# PARAM
+  22# WRITE
+		Escrevendo: 
+
+i = 3 j = 17 f = 1
+
+  23# NOP
+  24# MAIS
+  25# ATRIB
+  26# JUMP
+  12# NOP
+  13# LT
+  14# JF
+  15# NOP
+  16# PARAM
+  17# PARAM
+  18# PARAM
+  19# PARAM
+  20# PARAM
+  21# PARAM
+  22# WRITE
+		Escrevendo: 
+
+i = 3 j = 17 f = 2
+
+  23# NOP
+  24# MAIS
+  25# ATRIB
+  26# JUMP
+  12# NOP
+  13# LT
+  14# JF
+  27# NOP
+  28# RET
+  29# EXIT

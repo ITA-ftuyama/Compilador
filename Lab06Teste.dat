@@ -10,13 +10,15 @@ funcoes:
 
 principal {
 locais:
-	int j;
+	int j, f;
 comandos:
 	j := 17;
-	se (j > 0) {
+	se (!(j > 0)) {
 		i := 2;
 	} senao {
 		i := 3;
 	}
-	escrever("i = ", i, " j = ", j);
+	para (f := 0; f < 3; f := f + 1) {
+		escrever("i = ", i, " j = ", j, " f = ", f);
+	}
 }
