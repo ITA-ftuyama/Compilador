@@ -113,7 +113,7 @@
 #define     OPNE            8
 #define     OPMAIS          9
 #define     OPMENOS         10
-#define     OPMULTIP        11
+#define     OPMULT          11
 #define     OPDIV           12
 #define     OPRESTO         13
 #define     OPMENUN         14
@@ -436,9 +436,9 @@ FILE *finput;
 %token  <valreal>   CTREAL
 %token  <cadeia>    CADEIA
 
-%token  <atr>       OPAD
+%token  <atr>       OPADD
 %token  <atr>       OPREL
-%token  <atr>       OPMULT
+%token  <atr>       OPMULTIP
 %token  <atr>       OPNEG
 
 %token  OR
@@ -992,7 +992,7 @@ ExprAux3    :   ExprAux4
                 }
             ;
 ExprAux4    :   Termo
-            |   ExprAux4 OPAD {
+            |   ExprAux4 OPADD {
                 switch ($2) {
                     case MAIS  : printf (" + "); break;
                     case MENOS : printf (" - "); break;
@@ -1011,7 +1011,7 @@ ExprAux4    :   Termo
             }
             ;
 Termo       :   Fator
-            |   Termo  OPMULT
+            |   Termo  OPMULTIP
             {
                 switch ($2) {
                     case MULT :  printf (" * "); break;
@@ -1029,7 +1029,7 @@ Termo       :   Fator
                         $$.opnd.tipo = VAROPND;
                         $$.opnd.atr.simb = NovaTemp ($$.tipo);
                         if ($2 == MULT)
-                             GeraQuadrupla (OPMULTIP, $1.opnd, $4.opnd, $$.opnd);
+                             GeraQuadrupla (OPMULT, $1.opnd, $4.opnd, $$.opnd);
                         else GeraQuadrupla (OPDIV, $1.opnd, $4.opnd, $$.opnd);
                     break;
                     case RESTO:
