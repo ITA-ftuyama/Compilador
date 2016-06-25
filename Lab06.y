@@ -368,6 +368,7 @@ void InterpCodIntermed (void);
 void AlocaVariaveis (void);
 void ExecQuadWrite (quadrupla);
 void ExecQuadMaisMenosMult (quadrupla, int);
+void ExecQuadAndOr (quadrupla, int);
 void ExecQuadREL (quadrupla, int);
 void ExecQuadAtrib (quadrupla);
 void ExecQuadRead (quadrupla);
@@ -1604,24 +1605,27 @@ void InterpCodIntermed () {
     finput = fopen ("Lab06_entrada.txt", "r");
     for (mod = codintermed->prox; (!encerra && mod != NULL); mod = mod->prox) {
         for (quad = mod->listquad->prox; (!encerra && quad != NULL); quad = quadprox) {
-            printf ("\n%4d# %s", quad->num, 
-                nomeoperquad[quad->oper]);
+            printf ("\n%4d# %s", quad->num, nomeoperquad[quad->oper]);
             quadprox = quad->prox;
             switch (quad->oper) {
-                case OPEXIT:    encerra = TRUE;                             break;
+                case OPEXIT :   encerra = TRUE;                             break;
                 case OPENMOD:   AlocaVariaveis ();                          break;
-                case PARAM:     EmpilharOpnd (quad->opnd1, &pilhaopnd);     break;
+                case PARAM  :   EmpilharOpnd (quad->opnd1, &pilhaopnd);     break;
                 case OPWRITE:   ExecQuadWrite (quad);                       break;
-                case OPMAIS:    case OPMENOS:   
-                case OPMULT:    ExecQuadMaisMenosMult (quad, quad->oper);   break;
+                case OPMAIS :   case OPMENOS:   
+                case OPMULT :   ExecQuadMaisMenosMult (quad, quad->oper);   break;
+                case OPAND  :   case OPOR:
+                                ExecQuadAndOr (quad, quad->oper);           break;
                 case OPATRIB:   ExecQuadAtrib (quad);                       break;
-                case OPLT:      case OPLE:      
-                case OPGT:      case OPGE:      
-                case OPEQ:      case OPNE:  
+                case OPLT   :   case OPLE:      
+                case OPGT   :   case OPGE:      
+                case OPEQ   :   case OPNE:  
                                 ExecQuadREL (quad, quad->oper);             break;
-                case OPREAD:    ExecQuadRead (quad);                        break;
-                case OPJUMP:    ExecQuadJump (quad, &quadprox);             break;
-                case OPJF:      ExecQuadJF (quad, &quadprox);               break;
+                case OPREAD :   ExecQuadRead (quad);                        break;
+                case OPJUMP :   ExecQuadJump (quad, &quadprox);             break;
+                case OPJF   :   ExecQuadJF (quad, &quadprox);               break;
+                case NOP    :                                               break;
+                default     :                                               break;
             }
         }
     }
@@ -1687,7 +1691,7 @@ void ExecQuadWrite (quadrupla quad) {
     printf ("\n");
 }
 
-/* Executa a quádrupla do operador Mais */
+/* Executa a quádrupla dos operadores Mais, Menos, Mult */
 
 void ExecQuadMaisMenosMult (quadrupla quad, int oper) {
     int tipo1, tipo2, valint1, valint2;
@@ -1753,7 +1757,32 @@ void ExecQuadMaisMenosMult (quadrupla quad, int oper) {
     }
 }
 
-/* Executa a quádrupla do CmdAtrib */
+/* Executa a quádrupla dos operadores And e Or */
+
+void ExecQuadAndOr (quadrupla quad, int oper) {
+    bool vallogic1, vallogic2;
+
+    switch (quad->opnd1.tipo) {
+        case LOGICOPND: vallogic1 = quad->opnd1.atr.vallogic;  break;
+        case VAROPND:
+            if (quad->opnd1.atr.simb->tvar == LOGICOPND)
+                vallogic1 = *(quad->opnd1.atr.simb->vallogic);
+            break;
+    }
+    switch (quad->opnd2.tipo) {
+        case LOGICOPND: vallogic2 = quad->opnd2.atr.vallogic;   break;
+        case VAROPND:   
+            if (quad->opnd2.atr.simb->tvar == LOGICOPND)
+                vallogic2 = *(quad->opnd2.atr.simb->vallogic);
+            break;
+    }
+    switch (oper) {
+        case OPAND: *(quad->result.atr.simb->vallogic) = vallogic1 && vallogic2;    break;      
+        case OPOR : *(quad->result.atr.simb->vallogic) = vallogic1 || vallogic2;    break;  
+    }
+}
+
+/* Executa a quádrupla do operador de atribuição */
 
 void ExecQuadAtrib (quadrupla quad) {
     int tipo1, valint1;
@@ -1794,7 +1823,7 @@ void ExecQuadAtrib (quadrupla quad) {
     }
 }
 
-/* Executa a quádrupla do operador LT */
+/* Executa a quádrupla de operadores relacionais */
 
 void ExecQuadREL (quadrupla quad, int oper) {
     int tipo1, tipo2, valint1, valint2;
@@ -1862,7 +1891,7 @@ void ExecQuadREL (quadrupla quad, int oper) {
         }
 }
 
-/* Executa a quádrupla do CmdRead */
+/* Executa a quádrupla do operador de leitura */
 
 void ExecQuadRead (quadrupla quad) {
     int i;  operando opndaux;  pilhaoperando pilhaopndaux;
@@ -1885,13 +1914,13 @@ void ExecQuadRead (quadrupla quad) {
     }
 }
 
-/* Executa a quádrupla de Jump */
+/* Executa a quádrupla do operador jump */
 
 void ExecQuadJump (quadrupla quad, quadrupla *quadprox) {
     *quadprox = quad->result.atr.rotulo;
 }
 
-/* Executa a quádrupla de JF */
+/* Executa a quádrupla do operador jump condicional */
 
 void ExecQuadJF (quadrupla quad, quadrupla *quadprox) {
     bool condicao = FALSE;
