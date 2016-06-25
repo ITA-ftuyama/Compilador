@@ -367,7 +367,7 @@ struct infovariavel {
 void InterpCodIntermed (void);
 void AlocaVariaveis (void);
 void ExecQuadWrite (quadrupla);
-void ExecQuadMais (quadrupla);
+void ExecQuadMaisMenosMult (quadrupla, int);
 void ExecQuadLT (quadrupla);
 void ExecQuadAtrib (quadrupla);
 void ExecQuadRead (quadrupla);
@@ -1608,16 +1608,18 @@ void InterpCodIntermed () {
                 nomeoperquad[quad->oper]);
             quadprox = quad->prox;
             switch (quad->oper) {
-                case OPEXIT:    encerra = TRUE;                         break;
-                case OPENMOD:   AlocaVariaveis ();                      break;
-                case PARAM:     EmpilharOpnd (quad->opnd1, &pilhaopnd); break;
-                case OPWRITE:   ExecQuadWrite (quad);                   break;
-                case OPMAIS:    ExecQuadMais (quad);                    break;
-                case OPATRIB:   ExecQuadAtrib (quad);                   break;
-                case OPLT:      ExecQuadLT (quad);                      break;
-                case OPREAD:    ExecQuadRead (quad);                    break;
-                case OPJUMP:    ExecQuadJump (quad, &quadprox);         break;
-                case OPJF:      ExecQuadJF (quad, &quadprox);           break;
+                case OPEXIT:    encerra = TRUE;                             break;
+                case OPENMOD:   AlocaVariaveis ();                          break;
+                case PARAM:     EmpilharOpnd (quad->opnd1, &pilhaopnd);     break;
+                case OPWRITE:   ExecQuadWrite (quad);                       break;
+                case OPMAIS:    
+                case OPMENOS:    
+                case OPMULT:    ExecQuadMaisMenosMult (quad, quad->oper);   break;
+                case OPATRIB:   ExecQuadAtrib (quad);                       break;
+                case OPLT:      ExecQuadLT (quad);                          break;
+                case OPREAD:    ExecQuadRead (quad);                        break;
+                case OPJUMP:    ExecQuadJump (quad, &quadprox);             break;
+                case OPJF:      ExecQuadJF (quad, &quadprox);               break;
             }
         }
     }
@@ -1685,7 +1687,7 @@ void ExecQuadWrite (quadrupla quad) {
 
 /* Executa a quádrupla do operador Mais */
 
-void ExecQuadMais (quadrupla quad) {
+void ExecQuadMaisMenosMult (quadrupla quad, int oper) {
     int tipo1, tipo2, valint1, valint2;
     float valfloat1, valfloat2;
     switch (quad->opnd1.tipo) {
@@ -1714,17 +1716,37 @@ void ExecQuadMais (quadrupla quad) {
     }
     switch (quad->result.atr.simb->tvar) {
         case INTEGER:
-            *(quad->result.atr.simb->valint) = valint1 + valint2;
+            switch (oper) {
+                case OPMAIS:    *(quad->result.atr.simb->valint) = valint1 + valint2;   break;
+                case OPMENOS:   *(quad->result.atr.simb->valint) = valint1 - valint2;   break;
+                case OPMULT:    *(quad->result.atr.simb->valint) = valint1 * valint2;   break;
+            }
             break;
         case FLOAT:
             if (tipo1 == INTOPND && tipo2 == INTOPND)
-                *(quad->result.atr.simb->valfloat) = valint1 + valint2;
+                switch (oper) {
+                    case OPMAIS:    *(quad->result.atr.simb->valfloat) = valint1 + valint2; break;
+                    case OPMENOS:   *(quad->result.atr.simb->valfloat) = valint1 - valint2; break;
+                    case OPMULT:    *(quad->result.atr.simb->valfloat) = valint1 * valint2; break;
+                }
             if (tipo1 == INTOPND && tipo2 == REALOPND)
-                *(quad->result.atr.simb->valfloat) = valint1 + valfloat2;
+                switch (oper) {
+                    case OPMAIS:    *(quad->result.atr.simb->valfloat) = valint1 + valfloat2;   break;
+                    case OPMENOS:   *(quad->result.atr.simb->valfloat) = valint1 - valfloat2;   break;
+                    case OPMULT:    *(quad->result.atr.simb->valfloat) = valint1 * valfloat2;   break;
+                }
             if (tipo1 == REALOPND && tipo2 == INTOPND)
-                *(quad->result.atr.simb->valfloat) = valfloat1 + valint2;
+                switch (oper) {
+                    case OPMAIS:    *(quad->result.atr.simb->valfloat) = valfloat1 + valint2;   break;
+                    case OPMENOS:   *(quad->result.atr.simb->valfloat) = valfloat1 - valint2;   break;
+                    case OPMULT:    *(quad->result.atr.simb->valfloat) = valfloat1 * valint2;   break;
+                }
             if (tipo1 == REALOPND && tipo2 == REALOPND)
-                *(quad->result.atr.simb->valfloat) = valfloat1 + valfloat2;
+                switch (oper) {
+                    case OPMAIS:    *(quad->result.atr.simb->valfloat) = valfloat1 + valfloat2; break;
+                    case OPMENOS:   *(quad->result.atr.simb->valfloat) = valfloat1 - valfloat2; break;
+                    case OPMULT:    *(quad->result.atr.simb->valfloat) = valfloat1 * valfloat2; break;
+                }
             break;
     }
 }
