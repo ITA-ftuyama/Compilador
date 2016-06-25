@@ -368,7 +368,7 @@ void InterpCodIntermed (void);
 void AlocaVariaveis (void);
 void ExecQuadWrite (quadrupla);
 void ExecQuadMaisMenosMult (quadrupla, int);
-void ExecQuadLT (quadrupla);
+void ExecQuadREL (quadrupla, int);
 void ExecQuadAtrib (quadrupla);
 void ExecQuadRead (quadrupla);
 void ExecQuadJump (quadrupla, quadrupla*);
@@ -1612,11 +1612,13 @@ void InterpCodIntermed () {
                 case OPENMOD:   AlocaVariaveis ();                          break;
                 case PARAM:     EmpilharOpnd (quad->opnd1, &pilhaopnd);     break;
                 case OPWRITE:   ExecQuadWrite (quad);                       break;
-                case OPMAIS:    
-                case OPMENOS:    
+                case OPMAIS:    case OPMENOS:   
                 case OPMULT:    ExecQuadMaisMenosMult (quad, quad->oper);   break;
                 case OPATRIB:   ExecQuadAtrib (quad);                       break;
-                case OPLT:      ExecQuadLT (quad);                          break;
+                case OPLT:      case OPLE:      
+                case OPGT:      case OPGE:      
+                case OPEQ:      case OPNE:  
+                                ExecQuadREL (quad, quad->oper);             break;
                 case OPREAD:    ExecQuadRead (quad);                        break;
                 case OPJUMP:    ExecQuadJump (quad, &quadprox);             break;
                 case OPJF:      ExecQuadJF (quad, &quadprox);               break;
@@ -1794,7 +1796,7 @@ void ExecQuadAtrib (quadrupla quad) {
 
 /* Executa a quádrupla do operador LT */
 
-void ExecQuadLT (quadrupla quad) {
+void ExecQuadREL (quadrupla quad, int oper) {
     int tipo1, tipo2, valint1, valint2;
     float valfloat1, valfloat2;
 
@@ -1823,13 +1825,41 @@ void ExecQuadLT (quadrupla quad) {
             break;
     }
     if (tipo1 == INTOPND && tipo2 == INTOPND)
-        *(quad->result.atr.simb->vallogic) = valint1 < valint2;
+        switch (oper) {
+            case OPLE:  *(quad->result.atr.simb->vallogic) = valint1 <= valint2;    break;      
+            case OPGT:  *(quad->result.atr.simb->vallogic) = valint1 >  valint2;    break;     
+            case OPGE:  *(quad->result.atr.simb->vallogic) = valint1 >= valint2;    break;     
+            case OPEQ:  *(quad->result.atr.simb->vallogic) = valint1 == valint2;    break;      
+            case OPNE:  *(quad->result.atr.simb->vallogic) = valint1 != valint2;    break; 
+            case OPLT:  *(quad->result.atr.simb->vallogic) = valint1 <  valint2;    break;
+        }
     if (tipo1 == INTOPND && tipo2 == REALOPND)
-        *(quad->result.atr.simb->vallogic) = valint1 < valfloat2;
+        switch (oper) {
+            case OPLE:  *(quad->result.atr.simb->vallogic) = valint1 <= valfloat2;   break;      
+            case OPGT:  *(quad->result.atr.simb->vallogic) = valint1 >  valfloat2;   break;       
+            case OPGE:  *(quad->result.atr.simb->vallogic) = valint1 >= valfloat2;   break;    
+            case OPEQ:  *(quad->result.atr.simb->vallogic) = valint1 == valfloat2;   break;      
+            case OPNE:  *(quad->result.atr.simb->vallogic) = valint1 != valfloat2;   break; 
+            case OPLT:  *(quad->result.atr.simb->vallogic) = valint1 <  valfloat2;   break;
+        }
     if (tipo1 == REALOPND && tipo2 == INTOPND)
-        *(quad->result.atr.simb->vallogic) = valfloat1 < valint2;
+        switch (oper) {
+            case OPLE:  *(quad->result.atr.simb->vallogic) = valfloat1 <= valint2;   break;      
+            case OPGT:  *(quad->result.atr.simb->vallogic) = valfloat1 >  valint2;   break;      
+            case OPGE:  *(quad->result.atr.simb->vallogic) = valfloat1 >= valint2;   break;     
+            case OPEQ:  *(quad->result.atr.simb->vallogic) = valfloat1 == valint2;   break;      
+            case OPNE:  *(quad->result.atr.simb->vallogic) = valfloat1 != valint2;   break; 
+            case OPLT:  *(quad->result.atr.simb->vallogic) = valfloat1 <  valint2;   break;
+        }
     if (tipo1 == REALOPND && tipo2 == REALOPND)
-        *(quad->result.atr.simb->vallogic) = valfloat1 < valfloat2;
+        switch (oper) {
+            case OPLE:  *(quad->result.atr.simb->vallogic) = valfloat1 <= valfloat2; break;      
+            case OPGT:  *(quad->result.atr.simb->vallogic) = valfloat1 >  valfloat2; break;     
+            case OPGE:  *(quad->result.atr.simb->vallogic) = valfloat1 >= valfloat2; break;     
+            case OPEQ:  *(quad->result.atr.simb->vallogic) = valfloat1 == valfloat2; break;     
+            case OPNE:  *(quad->result.atr.simb->vallogic) = valfloat1 != valfloat2; break; 
+            case OPLT:  *(quad->result.atr.simb->vallogic) = valfloat1 <  valfloat2; break;
+        }
 }
 
 /* Executa a quádrupla do CmdRead */

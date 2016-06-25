@@ -85,8 +85,8 @@ Quadruplas do modulo Principal:
    2# ATRIB
    3# GT
    4# JF
-   7# NOP
-   8# ATRIB
+   5# ATRIB
+   6# JUMP
    9# NOP
   10# PARAM
   11# PARAM
@@ -95,7 +95,7 @@ Quadruplas do modulo Principal:
   14# WRITE
 		Escrevendo: 
 
-i = 3 j = 17
+i = 2 j = 17
 
   15# RET
   16# EXIT
