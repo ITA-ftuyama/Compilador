@@ -62,8 +62,8 @@ vazio|VAZIO       	{return VAZIO;}
 "!="		{yylval.atr = NE;   return OPREL;}
 "="		    {yylval.atr = EQ;	return OPREL;}
 
-"+"         {yylval.atr = MAIS; return OPAD;}
-"-"         {yylval.atr = MENOS;return OPAD;}
+"+"         {yylval.atr = MAIS; return OPADD;}
+"-"         {yylval.atr = MENOS;return OPADD;}
 "*"         {yylval.atr = MULT; return OPMULT;}
 "/"         {yylval.atr = DIV;  return OPMULT;}
 "%"         {yylval.atr = RESTO;return OPMULT;}
