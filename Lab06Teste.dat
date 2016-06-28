@@ -10,7 +10,7 @@ funcoes:
 
 principal {
 locais:
-	int j, f;
+	int j, f, array[3];
 comandos:
 	j := 17;
 	se (!(j > 0)) {
@@ -18,7 +18,11 @@ comandos:
 	} senao {
 		i := 3;
 	}
+	array[0] := 17;
+	array[1] := 21;
+	array[2] := 11;
 	para (f := 0; f < 3; f := f + 1) {
 		escrever("i = ", i, " j = ", j, " f = ", f);
+		escrever("array[", f, "] = ", array[f]);
 	}
 }

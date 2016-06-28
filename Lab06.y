@@ -235,9 +235,8 @@ struct celsimb {
     simbolo escopo, prox;
     modhead fhead;
     /*  Interpretador */
-    int *valint;
-    float *valfloat;
-    char *valchar, *vallogic;
+    int *valint;    float *valfloat;
+    char *valchar;  bool *vallogic;
 };
 struct infolistexpr {
     pontexprtipo listtipo;
@@ -366,6 +365,9 @@ struct infovariavel {
 
 void InterpCodIntermed (void);
 void AlocaVariaveis (void);
+void ExecQuadCall (quadrupla);
+void ExecQuadReturn (quadrupla);
+void ExecQuadIndex (quadrupla);
 void ExecQuadWrite (quadrupla);
 void ExecQuadAritmetica (quadrupla, int);
 void ExecQuadResto (quadrupla);
@@ -375,8 +377,6 @@ void ExecQuadAndOr (quadrupla, int);
 void ExecQuadRel (quadrupla, int);
 void ExecQuadAtrib (quadrupla, int);
 void ExecQuadRead (quadrupla);
-void ExecQuadCall (quadrupla);
-void ExecQuadReturn (quadrupla);
 void ExecQuadJump (quadrupla, quadrupla*);
 void ExecQuadJF (quadrupla , quadrupla *);
 
@@ -1620,7 +1620,7 @@ void InterpCodIntermed () {
                 case OPRETURN   :   ExecQuadReturn (quad);                  break;
                 case PARAM      :   EmpilharOpnd (quad->opnd1, &pilhaopnd); break;
                 case OPIND      :   EmpilharOpnd (quad->opnd1, &pilhaindex);break;
-                case OPINDEX    :   break;ExecQuadIndex (quad);             break;
+                case OPINDEX    :   ExecQuadIndex (quad);                   break;
                 case OPWRITE    :   ExecQuadWrite (quad);                   break;
                 case OPMAIS     :   case OPMENOS:   
                 case OPMULT     :   case OPDIV  :
@@ -1735,26 +1735,26 @@ void ExecQuadAritmetica (quadrupla quad, int oper) {
     int tipo1, tipo2, valint1, valint2;
     float valfloat1, valfloat2;
     switch (quad->opnd1.tipo) {
-        case INTOPND:   tipo1 = INTOPND;    valint1 = quad->opnd1.atr.valint;       break;
-        case REALOPND:  tipo1 = REALOPND;   valfloat1 = quad->opnd1.atr.valfloat;   break;
-        case CHAROPND:  tipo1 = INTOPND;    valint1 = quad->opnd1.atr.valchar;      break;
+        case INTOPND:   tipo1 = INTOPND;    valint1   = quad->opnd1.atr.valint;       break;
+        case REALOPND:  tipo1 = REALOPND;   valfloat1 = quad->opnd1.atr.valfloat;     break;
+        case CHAROPND:  tipo1 = INTOPND;    valint1   = quad->opnd1.atr.valchar;      break;
         case VAROPND:
             switch (quad->opnd1.atr.simb->tvar) {
-                case INTEGER:   tipo1 = INTOPND;    valint1 = *(quad->opnd1.atr.simb->valint);      break;
-                case FLOAT:     tipo1 = REALOPND;   valfloat1 = *(quad->opnd1.atr.simb->valfloat);  break;
-                case CHAR:      tipo1 = INTOPND;    valint1 = *(quad->opnd1.atr.simb->valchar);     break;
+                case INTEGER:   tipo1 = INTOPND;    valint1   = *(quad->opnd1.atr.simb->valint);      break;
+                case FLOAT:     tipo1 = REALOPND;   valfloat1 = *(quad->opnd1.atr.simb->valfloat);    break;
+                case CHAR:      tipo1 = INTOPND;    valint1   = *(quad->opnd1.atr.simb->valchar);     break;
             }
             break;
     }
     switch (quad->opnd2.tipo) {
-        case INTOPND:   tipo2 = INTOPND;    valint2 = quad->opnd2.atr.valint;       break;
-        case REALOPND:  tipo2 = REALOPND;   valfloat2 = quad->opnd2.atr.valfloat;   break;
-        case CHAROPND:  tipo2 = INTOPND;    valint2 = quad->opnd2.atr.valchar;      break;
+        case INTOPND:   tipo2 = INTOPND;    valint2   = quad->opnd2.atr.valint;       break;
+        case REALOPND:  tipo2 = REALOPND;   valfloat2 = quad->opnd2.atr.valfloat;     break;
+        case CHAROPND:  tipo2 = INTOPND;    valint2   = quad->opnd2.atr.valchar;      break;
         case VAROPND:
             switch (quad->opnd2.atr.simb->tvar) {
-                case INTEGER:   tipo2 = INTOPND;    valint2 = *(quad->opnd2.atr.simb->valint);      break;
-                case FLOAT:     tipo2 = REALOPND;   valfloat2 = *(quad->opnd2.atr.simb->valfloat);  break;
-                case CHAR:      tipo2 = INTOPND;    valint2 = *(quad->opnd2.atr.simb->valchar);     break;
+                case INTEGER:   tipo2 = INTOPND;    valint2   = *(quad->opnd2.atr.simb->valint);      break;
+                case FLOAT:     tipo2 = REALOPND;   valfloat2 = *(quad->opnd2.atr.simb->valfloat);    break;
+                case CHAR:      tipo2 = INTOPND;    valint2   = *(quad->opnd2.atr.simb->valchar);     break;
             }
             break;
     }
@@ -1916,19 +1916,18 @@ void ExecQuadIndex (quadrupla quad) {
         if (i < quad->opnd1.atr.simb->ndims)
             proxDim = quad->opnd1.atr.simb->dims[i];
         else proxDim = 1;
-        indexaux = TopoOpnd(pilhaindex);
+        indexaux = TopoOpnd(pilhaindexaux);
         index = indexaux.atr.valint;
         offset = proxDim*(offset + index);
-        DesempilharOpnd (&pilhaindex);
+        DesempilharOpnd (&pilhaindexaux);
     }
 
     // O resultado recebe o endereço da posição da matriz
-     #warning A variável temporária tem de ser um ponteiro. Como fazer????
     switch (quad->opnd1.atr.simb->tvar) {
-        case INTEGER: *(quad->result.atr.simb->valint) = quad->opnd1.atr.simb->valint + offset;     break;
-        case FLOAT  : *(quad->result.atr.simb->valfloat) = quad->opnd1.atr.simb->valfloat + offset; break;
-        case CHAR   : *(quad->result.atr.simb->valchar) = quad->opnd1.atr.simb->valchar + offset;   break;
-        case LOGIC  : *(quad->result.atr.simb->vallogic) = quad->opnd1.atr.simb->vallogic + offset; break;
+        case INTEGER: quad->result.atr.simb->valint   = quad->opnd1.atr.simb->valint   + offset;  break;
+        case FLOAT  : quad->result.atr.simb->valfloat = quad->opnd1.atr.simb->valfloat + offset;  break;
+        case CHAR   : quad->result.atr.simb->valchar  = quad->opnd1.atr.simb->valchar  + offset;  break;
+        case LOGIC  : quad->result.atr.simb->vallogic = quad->opnd1.atr.simb->vallogic + offset;  break;
     }
 }
 
@@ -1941,32 +1940,28 @@ void ExecQuadAtrib (quadrupla quad, int oper) {
     switch (oper) {
         case OPATRIB: case OPATRIBPONT:
             switch (quad->opnd1.tipo) {
-                case INTOPND:   tipo1 = INTOPND;    valint1 = quad->opnd1.atr.valint;       break;
+                case INTOPND:   tipo1 = INTOPND;    valint1   = quad->opnd1.atr.valint;     break;
                 case REALOPND:  tipo1 = REALOPND;   valfloat1 = quad->opnd1.atr.valfloat;   break;
-                case CHAROPND:  tipo1 = CHAROPND;   valchar1 = quad->opnd1.atr.valchar;     break;
+                case CHAROPND:  tipo1 = CHAROPND;   valchar1  = quad->opnd1.atr.valchar;    break;
                 case LOGICOPND: tipo1 = LOGICOPND;  vallogic1 = quad->opnd1.atr.vallogic;   break;
                 case VAROPND:
                     switch (quad->opnd1.atr.simb->tvar) {
-                        case INTEGER:   tipo1 = INTOPND;    valint1 = *(quad->opnd1.atr.simb->valint);      break;
+                        case INTEGER:   tipo1 = INTOPND;    valint1   = *(quad->opnd1.atr.simb->valint);    break;
                         case FLOAT:     tipo1 = REALOPND;   valfloat1 = *(quad->opnd1.atr.simb->valfloat);  break;
-                        case CHAR:      tipo1 = CHAROPND;   valchar1 = *(quad->opnd1.atr.simb->valchar);    break;
+                        case CHAR:      tipo1 = CHAROPND;   valchar1  = *(quad->opnd1.atr.simb->valchar);   break;
                         case LOGIC:     tipo1 = LOGICOPND;  vallogic1 = *(quad->opnd1.atr.simb->vallogic);  break;
                     }
                     break;
             }
         break;
         case OPCONTAPONT:
-            #warning De algum jeito, pegar o conteúdo apontado por ond1
+            #warning De algum jeito, pegar o conteúdo apontado por opnd1 (endereço)
             switch (quad->opnd1.tipo) {
-                case INTOPND:   tipo1 = INTOPND;    valint1 = quad->opnd1.atr.valint;       break;
-                case REALOPND:  tipo1 = REALOPND;   valfloat1 = quad->opnd1.atr.valfloat;   break;
-                case CHAROPND:  tipo1 = CHAROPND;   valchar1 = quad->opnd1.atr.valchar;     break;
-                case LOGICOPND: tipo1 = LOGICOPND;  vallogic1 = quad->opnd1.atr.vallogic;   break;
                 case VAROPND:
                     switch (quad->opnd1.atr.simb->tvar) {
-                        case INTEGER:   tipo1 = INTOPND;    valint1 = *(quad->opnd1.atr.simb->valint);      break;
+                        case INTEGER:   tipo1 = INTOPND;    valint1   = *(quad->opnd1.atr.simb->valint);    break;
                         case FLOAT:     tipo1 = REALOPND;   valfloat1 = *(quad->opnd1.atr.simb->valfloat);  break;
-                        case CHAR:      tipo1 = CHAROPND;   valchar1 = *(quad->opnd1.atr.simb->valchar);    break;
+                        case CHAR:      tipo1 = CHAROPND;   valchar1  = *(quad->opnd1.atr.simb->valchar);   break;
                         case LOGIC:     tipo1 = LOGICOPND;  vallogic1 = *(quad->opnd1.atr.simb->vallogic);  break;
                     }
                     break;
@@ -2024,26 +2019,26 @@ void ExecQuadRel (quadrupla quad, int oper) {
     float valfloat1, valfloat2;
 
     switch (quad->opnd1.tipo) {
-        case INTOPND:   tipo1 = INTOPND;    valint1 = quad->opnd1.atr.valint;  break;
-        case REALOPND:  tipo1 = REALOPND;   valfloat1=quad->opnd1.atr.valfloat;break;
-        case CHAROPND:  tipo1 = INTOPND;    valint1 = quad->opnd1.atr.valchar; break;
+        case INTOPND:   tipo1 = INTOPND;    valint1   = quad->opnd1.atr.valint;     break;
+        case REALOPND:  tipo1 = REALOPND;   valfloat1 = quad->opnd1.atr.valfloat;   break;
+        case CHAROPND:  tipo1 = INTOPND;    valint1   = quad->opnd1.atr.valchar;    break;
         case VAROPND:
             switch (quad->opnd1.atr.simb->tvar) {
-                case INTEGER:   tipo1 = INTOPND;    valint1 = *(quad->opnd1.atr.simb->valint);      break;
-                case FLOAT:     tipo1 = REALOPND;   valfloat1 = *(quad->opnd1.atr.simb->valfloat);  break;
-                case CHAR:      tipo1 = INTOPND;    valint1 = *(quad->opnd1.atr.simb->valchar);     break;
+                case INTEGER:   tipo1 = INTOPND;    valint1   = *(quad->opnd1.atr.simb->valint);      break;
+                case FLOAT:     tipo1 = REALOPND;   valfloat1 = *(quad->opnd1.atr.simb->valfloat);    break;
+                case CHAR:      tipo1 = INTOPND;    valint1   = *(quad->opnd1.atr.simb->valchar);     break;
             }
             break;
     }
     switch (quad->opnd2.tipo) {
-        case INTOPND:   tipo2 = INTOPND;    valint2 = quad->opnd2.atr.valint;       break;
-        case REALOPND:  tipo2 = REALOPND;   valfloat2 = quad->opnd2.atr.valfloat;   break;
-        case CHAROPND:  tipo2 = INTOPND;    valint2 = quad->opnd2.atr.valchar;      break;
+        case INTOPND:   tipo2 = INTOPND;    valint2   = quad->opnd2.atr.valint;       break;
+        case REALOPND:  tipo2 = REALOPND;   valfloat2 = quad->opnd2.atr.valfloat;     break;
+        case CHAROPND:  tipo2 = INTOPND;    valint2   = quad->opnd2.atr.valchar;      break;
         case VAROPND:
             switch (quad->opnd2.atr.simb->tvar) {
-                case INTEGER:   tipo2 = INTOPND;    valint2 = *(quad->opnd2.atr.simb->valint);      break;
-                case FLOAT:     tipo2 = REALOPND;   valfloat2 = *(quad->opnd2.atr.simb->valfloat);  break;
-                case CHAR:      tipo2 = INTOPND;    valint2 = *(quad->opnd2.atr.simb->valchar);     break;
+                case INTEGER:   tipo2 = INTOPND;    valint2   = *(quad->opnd2.atr.simb->valint);      break;
+                case FLOAT:     tipo2 = REALOPND;   valfloat2 = *(quad->opnd2.atr.simb->valfloat);    break;
+                case CHAR:      tipo2 = INTOPND;    valint2   = *(quad->opnd2.atr.simb->valchar);     break;
                 }
             break;
     }
