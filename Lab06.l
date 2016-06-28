@@ -64,9 +64,9 @@ vazio|VAZIO       	{return VAZIO;}
 
 "+"         {yylval.atr = MAIS; return OPADD;}
 "-"         {yylval.atr = MENOS;return OPADD;}
-"*"         {yylval.atr = MULT; return OPMULT;}
-"/"         {yylval.atr = DIV;  return OPMULT;}
-"%"         {yylval.atr = RESTO;return OPMULT;}
+"*"         {yylval.atr = MULT; return OPMULTIP;}
+"/"         {yylval.atr = DIV;  return OPMULTIP;}
+"%"         {yylval.atr = RESTO;return OPMULTIP;}
 "&&"        {return AND;}
 "||"        {return OR;}
 "!"         {return NOT;}

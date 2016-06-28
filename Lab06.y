@@ -1620,6 +1620,7 @@ void InterpCodIntermed () {
                 case OPRETURN   :   ExecQuadReturn (quad);                  break;
                 case PARAM      :   EmpilharOpnd (quad->opnd1, &pilhaopnd); break;
                 case OPIND      :   EmpilharOpnd (quad->opnd1, &pilhaindex);break;
+                case OPINDEX    :   break;ExecQuadIndex (quad);             break;
                 case OPWRITE    :   ExecQuadWrite (quad);                   break;
                 case OPMAIS     :   case OPMENOS:   
                 case OPMULT     :   case OPDIV  :
@@ -1630,8 +1631,8 @@ void InterpCodIntermed () {
                 case OPAND      :   case OPOR:
                                     ExecQuadAndOr (quad, quad->oper);       break;
                 case OPATRIB    :   ExecQuadAtrib (quad, quad->oper);       break;
-                case OPATRIBPONT:   ExecQuadAtrib (quad, quad->oper);       break;
-                case OPCONTAPONT:   ExecQuadAtrib (quad, quad->oper);       break;
+                case OPATRIBPONT:   break;ExecQuadAtrib (quad, quad->oper);       break;
+                case OPCONTAPONT:   break;ExecQuadAtrib (quad, quad->oper);       break;
                 case OPLT       :   case OPLE:      
                 case OPGT       :   case OPGE:      
                 case OPEQ       :   case OPNE:  
