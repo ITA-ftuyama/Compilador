@@ -544,11 +544,19 @@ Programa    :   {
                     pontvardecl = simb->listvardecl;
                     pontfunc = simb->listfunc;
                     declparam = FALSE; declfunc = TRUE;
-                    #warning Chamar função principal aqui
+
+                    // Chamada da função Principal
+                    opnd1.tipo = PROCOPND;  opnd1.atr.func = NULL;
+                    opnd2.tipo = INTOPND;   opnd2.atr.valint = 0;
+                    $<quad>$ = 
+                        GeraQuadrupla (OPCALL, opnd1, opnd2, opndidle);
+                    GeraQuadrupla (OPEXIT, opndidle, opndidle, opndidle);
                 }
                 DeclGlobs   Funcoes 
                 {
-                    GeraQuadrupla (OPEXIT, opndidle, opndidle, opndidle);
+                    simb = SimbDeclarado ("Principal");
+                    $<quad>1->opnd1.atr.func = simb->fhead;
+                    if (!simb) Exception (errorNaoDecl, "Principal");
                     VerificaInicRef (); ImprimeTabSimb (); ImprimeQuadruplas ();
                     InterpCodIntermed ();
                 }
@@ -1638,15 +1646,17 @@ void RenumQuadruplas (quadrupla quad1, quadrupla quad2) {
 
 void InterpCodIntermed () {
     quadrupla quad, quadprox;
-    modhead mod; bool encerra = FALSE;
-    printf ("\n\n\tINTERPRETADOR:\n");
+    
+    // Inicialização de Pilhas e Entradas
     InicPilhaOpnd (&pilhaopnd);
     InicPilhaOpnd (&pilhaindex);
     InicPilhaQuad (&pilhaquads);
     finput = fopen ("Lab06_entrada.txt", "r");
 
-    // Procura o módulo da função Principal (sempre é a última)
-    for (mod = codintermed->prox; mod->prox != NULL; mod = mod->prox); 
+    // A execução começa no módulo global
+    bool encerra = FALSE;
+    modhead mod = codintermed->prox;
+    printf ("\n\n\tINTERPRETADOR:\n");
 
     // Executa as quádruplas do módulo Principal
     for (quad = mod->listquad->prox; (!encerra && quad != NULL); quad = quadprox) {

@@ -89,6 +89,8 @@ Classe 19:
 Quadruplas do modulo Global:
 
 	   1# OPENMOD, (MODULO, Global), (IDLE), (IDLE)
+	   2#    CALL, (PROC, Principal), (INT, 0), (IDLE)
+	   3#    EXIT, (IDLE), (IDLE), (IDLE)
 
 Quadruplas do modulo Inserir:
 
@@ -149,11 +151,29 @@ Quadruplas do modulo Principal:
 	  45#    JUMP, (IDLE), (IDLE), (ROTULO, 23)
 	  46#     NOP, (IDLE), (IDLE), (IDLE)
 	  47#     RET, (IDLE), (IDLE), (IDLE)
-	  48#    EXIT, (IDLE), (IDLE), (IDLE)
 
 
 	INTERPRETADOR:
 
+   1# OPENMOD
+		Alocando as variaveis:
+			   ##1:  1 elemento(s) alocado(s) 
+			   ##2:  1 elemento(s) alocado(s) 
+			  ##10:  1 elemento(s) alocado(s) 
+			   ##3:  1 elemento(s) alocado(s) 
+			   ##4:  1 elemento(s) alocado(s) 
+			   ##5:  1 elemento(s) alocado(s) 
+			   ##6:  1 elemento(s) alocado(s) 
+			   ##7:  1 elemento(s) alocado(s) 
+			     f:  1 elemento(s) alocado(s) 
+			   ##8:  1 elemento(s) alocado(s) 
+			   ##9:  1 elemento(s) alocado(s) 
+			     i:  1 elemento(s) alocado(s) 
+			 posic:  1 elemento(s) alocado(s) 
+			     i:  1 elemento(s) alocado(s) 
+			 array:  3 elemento(s) alocado(s) 
+			     j:  1 elemento(s) alocado(s) 
+   2# CALL
    1# OPENMOD
 		Alocando as variaveis:
 			   ##1:  1 elemento(s) alocado(s) 
@@ -317,6 +337,4 @@ array[2] = 11
   25# JF
   46# NOP
   47# RET
-	Topo de pilha vazia
-
-	Delecao em pilha vazia
+   3# EXIT
