@@ -314,6 +314,7 @@ struct operando {
 
 struct celquad {
     int num, oper; operando opnd1, opnd2, result;
+    modhead modulo;
     quadrupla prox;
 };
 
@@ -365,8 +366,9 @@ struct infovariavel {
 
 void InterpCodIntermed (void);
 void AlocaVariaveis (void);
-void ExecQuadCall (quadrupla);
-void ExecQuadReturn (quadrupla);
+void DesalocaVariaveis (void);
+void ExecQuadCall (quadrupla, quadrupla*, modhead *);
+void ExecQuadReturn (quadrupla, quadrupla*, modhead *);
 void ExecQuadIndex (quadrupla);
 void ExecQuadWrite (quadrupla);
 void ExecQuadAritmetica (quadrupla, int);
@@ -379,6 +381,12 @@ void ExecQuadAtrib (quadrupla, int);
 void ExecQuadRead (quadrupla);
 void ExecQuadJump (quadrupla, quadrupla*);
 void ExecQuadJF (quadrupla , quadrupla *);
+
+/****************************************************/
+/*                                                  */
+/*       Implementação de Pilha de Operandos        */
+/*                                                  */
+/****************************************************/
 
 /*  Declaracoes para pilhas de operandos  */
 
@@ -397,6 +405,30 @@ void DesempilharOpnd (pilhaoperando *);
 operando TopoOpnd (pilhaoperando);
 void InicPilhaOpnd (pilhaoperando *);
 char VaziaOpnd (pilhaoperando);
+
+/****************************************************/
+/*                                                  */
+/*       Implementação de Pilha de Quádruplas       */
+/*                                                  */
+/****************************************************/
+
+/*  Declaracoes para pilhas de quádruplas  */
+
+typedef struct nohquad nohquad;
+struct nohquad {
+    quadrupla quad;
+    nohquad *prox;
+};
+typedef nohquad *pilhaquadruplas;
+pilhaquadruplas pilhaquads;
+
+/*  Prototipos das funcoes para pilhas de quádruplas  */
+
+void EmpilharQuad (quadrupla, pilhaquadruplas *);
+void DesempilharQuad (pilhaquadruplas *);
+quadrupla TopoQuad (pilhaquadruplas);
+void InicPilhaQuad (pilhaquadruplas *);
+char VaziaQuad (pilhaquadruplas);
 
 FILE *finput;
 
@@ -512,6 +544,7 @@ Programa    :   {
                     pontvardecl = simb->listvardecl;
                     pontfunc = simb->listfunc;
                     declparam = FALSE; declfunc = TRUE;
+                    #warning Chamar função principal aqui
                 }
                 DeclGlobs   Funcoes 
                 {
@@ -1522,6 +1555,7 @@ quadrupla GeraQuadrupla (int oper, operando opnd1, operando opnd2,
     quadcorrente->prox = NULL;
     numquadcorrente ++;
     quadcorrente->num = numquadcorrente;
+    quadcorrente->modulo = modcorrente;
     return quadcorrente;
 }
 
@@ -1608,41 +1642,45 @@ void InterpCodIntermed () {
     printf ("\n\n\tINTERPRETADOR:\n");
     InicPilhaOpnd (&pilhaopnd);
     InicPilhaOpnd (&pilhaindex);
+    InicPilhaQuad (&pilhaquads);
     finput = fopen ("Lab06_entrada.txt", "r");
-    for (mod = codintermed->prox; (!encerra && mod != NULL); mod = mod->prox) {
-        for (quad = mod->listquad->prox; (!encerra && quad != NULL); quad = quadprox) {
-            printf ("\n%4d# %s", quad->num, nomeoperquad[quad->oper]);
-            quadprox = quad->prox;
-            switch (quad->oper) {
-                case OPEXIT :       encerra = TRUE;                         break;
-                case OPENMOD    :   AlocaVariaveis ();                      break;
-                case OPCALL     :   ExecQuadCall (quad);                    break;
-                case OPRETURN   :   ExecQuadReturn (quad);                  break;
-                case PARAM      :   EmpilharOpnd (quad->opnd1, &pilhaopnd); break;
-                case OPIND      :   EmpilharOpnd (quad->opnd1, &pilhaindex);break;
-                case OPINDEX    :   ExecQuadIndex (quad);                   break;
-                case OPWRITE    :   ExecQuadWrite (quad);                   break;
-                case OPMAIS     :   case OPMENOS:   
-                case OPMULT     :   case OPDIV  :
-                                    ExecQuadAritmetica (quad, quad->oper);  break;
-                case OPRESTO:       ExecQuadResto (quad);                   break;
-                case OPMENUN    :   ExecQuadMenun (quad);                   break;   
-                case OPNOT      :   ExecQuadNot (quad);                     break;                   
-                case OPAND      :   case OPOR:
-                                    ExecQuadAndOr (quad, quad->oper);       break;
-                case OPATRIB    :   ExecQuadAtrib (quad, quad->oper);       break;
-                case OPATRIBPONT:   ExecQuadAtrib (quad, quad->oper);       break;
-                case OPCONTAPONT:   ExecQuadAtrib (quad, quad->oper);       break;
-                case OPLT       :   case OPLE:      
-                case OPGT       :   case OPGE:      
-                case OPEQ       :   case OPNE:  
-                                    ExecQuadRel (quad, quad->oper);         break;
-                case OPREAD     :   ExecQuadRead (quad);                    break;
-                case OPJUMP     :   ExecQuadJump (quad, &quadprox);         break;
-                case OPJF       :   ExecQuadJF (quad, &quadprox);           break;
-                case NOP        :                                           break;
-                default         :                                           break;
-            }
+
+    // Procura o módulo da função Principal (sempre é a última)
+    for (mod = codintermed->prox; mod->prox != NULL; mod = mod->prox); 
+
+    // Executa as quádruplas do módulo Principal
+    for (quad = mod->listquad->prox; (!encerra && quad != NULL); quad = quadprox) {
+        printf ("\n%4d# %s", quad->num, nomeoperquad[quad->oper]);
+        quadprox = quad->prox;
+        switch (quad->oper) {
+            case OPEXIT :       encerra = TRUE;                         break;
+            case OPENMOD    :   AlocaVariaveis ();                      break;
+            case OPCALL     :   ExecQuadCall (quad, &quadprox, &mod);   break;
+            case OPRETURN   :   ExecQuadReturn (quad, &quadprox, &mod); break;
+            case PARAM      :   EmpilharOpnd (quad->opnd1, &pilhaopnd); break;
+            case OPIND      :   EmpilharOpnd (quad->opnd1, &pilhaindex);break;
+            case OPINDEX    :   ExecQuadIndex (quad);                   break;
+            case OPWRITE    :   ExecQuadWrite (quad);                   break;
+            case OPMAIS     :   case OPMENOS:   
+            case OPMULT     :   case OPDIV  :
+                                ExecQuadAritmetica (quad, quad->oper);  break;
+            case OPRESTO:       ExecQuadResto (quad);                   break;
+            case OPMENUN    :   ExecQuadMenun (quad);                   break;   
+            case OPNOT      :   ExecQuadNot (quad);                     break;                   
+            case OPAND      :   case OPOR:
+                                ExecQuadAndOr (quad, quad->oper);       break;
+            case OPATRIB    :   ExecQuadAtrib (quad, quad->oper);       break;
+            case OPATRIBPONT:   ExecQuadAtrib (quad, quad->oper);       break;
+            case OPCONTAPONT:   ExecQuadAtrib (quad, quad->oper);       break;
+            case OPLT       :   case OPLE:      
+            case OPGT       :   case OPGE:      
+            case OPEQ       :   case OPNE:  
+                                ExecQuadRel (quad, quad->oper);         break;
+            case OPREAD     :   ExecQuadRead (quad);                    break;
+            case OPJUMP     :   ExecQuadJump (quad, &quadprox);         break;
+            case OPJF       :   ExecQuadJF (quad, &quadprox);           break;
+            case NOP        :                                           break;
+            default         :                                           break;
         }
     }
 }
@@ -1653,6 +1691,7 @@ void InterpCodIntermed () {
     */
 
 void AlocaVariaveis () {
+    #warning Mudar alocação para apenas um módulo
     simbolo s; int nelemaloc, i, j;
     printf ("\n\t\tAlocando as variaveis:");
     for (i = 0; i < NCLASSHASH; i++)
@@ -1676,14 +1715,28 @@ void AlocaVariaveis () {
 }
 
 /* 
+    Desaloca em memória todas as variáveis presentes
+    no dado módulo, inclusive as temporárias
+    */
+
+void DesalocaVariaveis () {
+    // Desalocar variáveis do módulo
+}
+
+/* 
     Chamada de procedimento/função
     - Deposita os argumentos nos parâmetros
     - Guarda o valor do PC
     - Faz as ligações de controle
     */
 
-void ExecQuadCall (quadrupla quad) {
+void ExecQuadCall (quadrupla quad, quadrupla *quadprox, modhead *mod) {
+    // Guarda valor do PC
+    EmpilharQuad (quad, &pilhaquads);
 
+    // Faz as ligações de controle
+    *mod = quad->opnd1.atr.func;
+    *quadprox = (*mod)->listquad->prox;
 }
 
 /* 
@@ -1693,7 +1746,17 @@ void ExecQuadCall (quadrupla quad) {
     - Desempilha registro de ativação
     */
 
-void ExecQuadReturn (quadrupla quad) {
+void ExecQuadReturn (quadrupla quad, quadrupla *quadprox, modhead *mod) {
+    // Restaura o valor do PC
+    *quadprox = TopoQuad(pilhaquads);
+    DesempilharQuad (&pilhaquads);
+
+    // Desaloca as variáveis do módulo
+    DesalocaVariaveis ();
+
+    // Faz as ligações de controle
+    *mod = (*quadprox)->modulo;
+    *quadprox = (*quadprox)->prox;
 
 }
 
@@ -2085,9 +2148,22 @@ void ExecQuadJF (quadrupla quad, quadrupla *quadprox) {
 
 /****************************************************/
 /*                                                  */
-/*              Implementação de Pilha              */
+/*       Implementação de Pilha de Operandos        */
 /*                                                  */
 /****************************************************/
+
+/* Inicializa uma nova pilha de operandos */
+
+void InicPilhaOpnd (pilhaoperando *P) { 
+    *P = NULL;
+}
+
+/* Verifica se a pilha de operandos está vazia */
+
+char VaziaOpnd (pilhaoperando P) {
+    if  (P == NULL)  return 1;  
+    else return 0; 
+}
 
 /* Empilha operando na pilha de operandos */
 
@@ -2115,15 +2191,47 @@ operando TopoOpnd (pilhaoperando P) {
     else  printf ("\n\tTopo de pilha vazia\n");
 }
 
-/* Inicializa uma nova pilha de operandos */
+/****************************************************/
+/*                                                  */
+/*       Implementação de Pilha de Quádruplas       */
+/*                                                  */
+/****************************************************/
 
-void InicPilhaOpnd (pilhaoperando *P) { 
+/* Inicializa uma nova pilha de quádruplas */
+
+void InicPilhaQuad (pilhaquadruplas *P) { 
     *P = NULL;
 }
 
-/* Verifica se a pilha de operandos está vazia */
+/* Verifica se a pilha de quádruplas está vazia */
 
-char VaziaOpnd (pilhaoperando P) {
+char VaziaQuad (pilhaquadruplas P) {
     if  (P == NULL)  return 1;  
     else return 0; 
+}
+
+/* Empilha operando na pilha de quádruplas */
+
+void EmpilharQuad (quadrupla x, pilhaquadruplas *P) {
+    nohquad *temp;
+    temp = *P;   
+    *P = (nohquad *) malloc (sizeof (nohquad));
+    (*P)->quad = x; (*P)->prox = temp;
+}
+
+/* Desempilha operando na pilha de quádruplas */
+
+void DesempilharQuad (pilhaquadruplas *P) {
+    nohquad *temp;
+    if (! VaziaQuad (*P)) {
+        temp = *P;  *P = (*P)->prox; free (temp);
+    }
+    else  printf ("\n\tDelecao em pilha vazia\n");
+}
+
+/* Retorna operando no topo da pilha de quádruplas */
+
+quadrupla TopoQuad (pilhaquadruplas P) {
+    if (! VaziaQuad (P))  return P->quad;
+    else  printf ("\n\tTopo de pilha vazia\n");
 }
