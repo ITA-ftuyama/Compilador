@@ -14,9 +14,9 @@ locais:
 comandos:
 	j := 17;
 	se (!(j > 0)) {
-		i := 2;
+		i := 1;
 	} senao {
-		i := 3;
+		i := 2;
 	}
 	array[0] := 17;
 	array[1] := 21;

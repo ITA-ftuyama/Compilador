@@ -15,10 +15,10 @@ locais:
 comandos:
 	j := 17;
 	se (!(j > 0)) {
-		i := 2;
+		i := 1;
 	}
 	senao {
-		i := 3;
+		i := 2;
 	}
 	array[0] := 17;
 	array[1] := 21;
@@ -81,10 +81,10 @@ Quadruplas do modulo Principal:
 	   3#      GT, (VAR, j), (INT, 0), (VAR, ##1)
 	   4#     NOT, (VAR, ##1), (IDLE), (VAR, ##2)
 	   5#      JF, (VAR, ##2), (IDLE), (ROTULO, 8)
-	   6#   ATRIB, (INT, 2), (IDLE), (VAR, i)
+	   6#   ATRIB, (INT, 1), (IDLE), (VAR, i)
 	   7#    JUMP, (IDLE), (IDLE), (ROTULO, 10)
 	   8#     NOP, (IDLE), (IDLE), (IDLE)
-	   9#   ATRIB, (INT, 3), (IDLE), (VAR, i)
+	   9#   ATRIB, (INT, 2), (IDLE), (VAR, i)
 	  10#     NOP, (IDLE), (IDLE), (IDLE)
 	  11#     IND, (INT, 0), (IDLE), (IDLE)
 	  12#   INDEX, (VAR, array), (INT, 1), (VAR, ##3)
@@ -186,7 +186,7 @@ Quadruplas do modulo Principal:
   31# WRITE
 		Escrevendo: 
 
-i = 3 j = 17 f = 0
+i = 2 j = 17 f = 0
 
   32# PARAM
   33# PARAM
@@ -198,7 +198,7 @@ i = 3 j = 17 f = 0
   39# WRITE
 		Escrevendo: 
 
-array[0] = 0
+array[0] = 17
 
   40# NOP
   41# MAIS
@@ -217,7 +217,7 @@ array[0] = 0
   31# WRITE
 		Escrevendo: 
 
-i = 3 j = 17 f = 1
+i = 2 j = 17 f = 1
 
   32# PARAM
   33# PARAM
@@ -229,7 +229,7 @@ i = 3 j = 17 f = 1
   39# WRITE
 		Escrevendo: 
 
-array[1] = 0
+array[1] = 21
 
   40# NOP
   41# MAIS
@@ -248,7 +248,7 @@ array[1] = 0
   31# WRITE
 		Escrevendo: 
 
-i = 3 j = 17 f = 2
+i = 2 j = 17 f = 2
 
   32# PARAM
   33# PARAM
@@ -260,7 +260,7 @@ i = 3 j = 17 f = 2
   39# WRITE
 		Escrevendo: 
 
-array[2] = 0
+array[2] = 11
 
   40# NOP
   41# MAIS
