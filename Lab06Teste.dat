@@ -11,7 +11,14 @@ locais:
 	int i;
 comandos:
 	i := posic + 2;
-	escrever ("posic + 1 = ", i);
+	escrever ("posic + 2 = ", i);
+}
+
+int Quadrado (int var) {
+locais:
+	int i;
+comandos:
+	retornar var*var;
 }
 
 /*  Funcao principal  */
@@ -20,13 +27,14 @@ principal {
 locais:
 	int j, f, array[3];
 comandos:
-	j := 17;
+	j := Quadrado(4);
+	// escrever ("4 * 4 = ", j);
 	se (!(j > 0)) {
 		i := 1;
 	} senao {
 		i := 2;
 	}
-	chamar Inserir(j);
+	chamar Inserir(i);
 	array[0] := 17;
 	array[1] := 21;
 	array[2] := 11;

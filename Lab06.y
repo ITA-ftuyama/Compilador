@@ -377,7 +377,7 @@ void ExecQuadMenun (quadrupla);
 void ExecQuadNot (quadrupla);
 void ExecQuadAndOr (quadrupla, int);
 void ExecQuadRel (quadrupla, int);
-void ExecQuadAtrib (quadrupla, int);
+void ExecQuadAtrib (quadrupla);
 void ExecQuadRead (quadrupla);
 void ExecQuadJump (quadrupla, quadrupla*);
 void ExecQuadJF (quadrupla , quadrupla *);
@@ -431,6 +431,8 @@ void InicPilhaQuad (pilhaquadruplas *);
 char VaziaQuad (pilhaquadruplas);
 
 FILE *finput;
+
+bool inicio = FALSE;
 
 %}
 
@@ -1679,9 +1681,9 @@ void InterpCodIntermed () {
             case OPNOT      :   ExecQuadNot (quad);                     break;                   
             case OPAND      :   case OPOR:
                                 ExecQuadAndOr (quad, quad->oper);       break;
-            case OPATRIB    :   ExecQuadAtrib (quad, quad->oper);       break;
-            case OPATRIBPONT:   ExecQuadAtrib (quad, quad->oper);       break;
-            case OPCONTAPONT:   ExecQuadAtrib (quad, quad->oper);       break;
+            case OPATRIB    :   ExecQuadAtrib (quad);                   break;
+            case OPATRIBPONT:   ExecQuadAtrib (quad);                   break;
+            case OPCONTAPONT:   ExecQuadAtrib (quad);                   break;
             case OPLT       :   case OPLE:      
             case OPGT       :   case OPGE:      
             case OPEQ       :   case OPNE:  
@@ -1701,6 +1703,8 @@ void InterpCodIntermed () {
     */
 
 void AlocaVariaveis () {
+    if (inicio == TRUE) return;
+    inicio = TRUE;
     #warning Mudar alocação para apenas um módulo
     simbolo s; int nelemaloc, i, j;
     printf ("\n\t\tAlocando as variaveis:");
@@ -1747,6 +1751,42 @@ void ExecQuadCall (quadrupla quad, quadrupla *quadprox, modhead *mod) {
     // Faz as ligações de controle
     *mod = quad->opnd1.atr.func;
     *quadprox = (*mod)->listquad->prox;
+
+    // Deposita os argumentos nos parâmetros
+    int i; simbolo simb; operando opndaux;  pilhaoperando pilhaopndaux;
+
+    InicPilhaOpnd (&pilhaopndaux);
+    for (i = 1; i <= quad->opnd2.atr.valint; i++) {
+        EmpilharOpnd (TopoOpnd (pilhaopnd), &pilhaopndaux);
+        DesempilharOpnd (&pilhaopnd);
+    }
+
+    return;
+    simb = (*mod)->modname->listparam->simb;
+    for (; simb != NULL; simb = simb->prox) {
+        printf("I");
+    }
+    return;
+
+    for (i = 1; i <= quad->opnd2.atr.valint && simb != NULL; i++, simb = simb->prox) {
+        printf("(%s)", simb->cadeia);
+        opndaux = TopoOpnd (pilhaopndaux);
+        DesempilharOpnd (&pilhaopndaux);
+        return;
+        switch (opndaux.tipo) {
+            case INTOPND:   *(simb->valint)   = opndaux.atr.valint;     break;
+            case REALOPND:  *(simb->valfloat) = opndaux.atr.valfloat;   break;
+            case CHAROPND:  *(simb->valchar)  = opndaux.atr.valchar;    break;
+            case LOGICOPND: *(simb->vallogic) = opndaux.atr.vallogic;   break;
+            case VAROPND:
+                switch (opndaux.atr.simb->tvar) {
+                    case INTEGER:   *(simb->valint)   = *(opndaux.atr.simb->valint);    break;
+                    case FLOAT:     *(simb->valfloat) = *(opndaux.atr.simb->valfloat);  break;
+                    case LOGIC:     *(simb->vallogic) = *(opndaux.atr.simb->vallogic);  break;
+                    case CHAR:      *(simb->valchar)  = *(opndaux.atr.simb->valchar);   break;
+                }
+        }
+    }
 }
 
 /* 
@@ -1757,17 +1797,61 @@ void ExecQuadCall (quadrupla quad, quadrupla *quadprox, modhead *mod) {
     */
 
 void ExecQuadReturn (quadrupla quad, quadrupla *quadprox, modhead *mod) {
+    int tipo1, valint1;
+    float valfloat1;
+    char valchar1, vallogic1;
+    quadrupla quadCall, quadNext;
+
     // Restaura o valor do PC
-    *quadprox = TopoQuad(pilhaquads);
+    quadCall = TopoQuad(pilhaquads);
     DesempilharQuad (&pilhaquads);
 
     // Desaloca as variáveis do módulo
     DesalocaVariaveis ();
 
     // Faz as ligações de controle
-    *mod = (*quadprox)->modulo;
-    *quadprox = (*quadprox)->prox;
+    *mod = quadCall->modulo;
+    *quadprox = quadCall->prox;
+ 
+    // Retorno vazio ou chamada de procedimento:
+    if (quad->opnd1.tipo == IDLEOPND || quadCall->result.tipo == IDLEOPND)
+        return;
 
+    // Coloca o valor a ser retornado em posição
+    switch (quad->opnd1.tipo) {
+        case INTOPND:   tipo1 = INTOPND;    valint1   = quad->opnd1.atr.valint;     break;
+        case REALOPND:  tipo1 = REALOPND;   valfloat1 = quad->opnd1.atr.valfloat;   break;
+        case CHAROPND:  tipo1 = CHAROPND;   valchar1  = quad->opnd1.atr.valchar;    break;
+        case LOGICOPND: tipo1 = LOGICOPND;  vallogic1 = quad->opnd1.atr.vallogic;   break;
+        case VAROPND:
+            switch (quad->opnd1.atr.simb->tvar) {
+                case INTEGER:   tipo1 = INTOPND;    valint1   = *(quad->opnd1.atr.simb->valint);    break;
+                case FLOAT:     tipo1 = REALOPND;   valfloat1 = *(quad->opnd1.atr.simb->valfloat);  break;
+                case CHAR:      tipo1 = CHAROPND;   valchar1  = *(quad->opnd1.atr.simb->valchar);   break;
+                case LOGIC:     tipo1 = LOGICOPND;  vallogic1 = *(quad->opnd1.atr.simb->vallogic);  break;
+            }
+            break;
+    }
+
+    if (quadCall->result.tipo == VAROPND) {
+        switch (quadCall->result.atr.simb->tvar) {
+            case INTEGER:
+                if (tipo1 == INTOPND)   *(quadCall->result.atr.simb->valint) = valint1;
+                if (tipo1 == CHAROPND)  *(quadCall->result.atr.simb->valint) = valchar1;
+                break;
+            case CHAR:
+                if (tipo1 == INTOPND)   *(quadCall->result.atr.simb->valchar) = valint1;
+                if (tipo1 == CHAROPND)  *(quadCall->result.atr.simb->valchar) = valchar1;
+                break;
+            case LOGIC:                 *(quadCall->result.atr.simb->vallogic) = vallogic1; 
+                break;
+            case FLOAT:
+                if (tipo1 == INTOPND)   *(quadCall->result.atr.simb->valfloat) = valint1;
+                if (tipo1 == REALOPND)  *(quadCall->result.atr.simb->valfloat) = valfloat1;
+                if (tipo1 == CHAROPND)  *(quadCall->result.atr.simb->valfloat) = valchar1;
+                break;
+        }
+    }
 }
 
 /* Executa a quádrupla do CmdWrite */
@@ -2008,7 +2092,7 @@ void ExecQuadIndex (quadrupla quad) {
 
 /* Executa a quádrupla do operador de atribuição */
 
-void ExecQuadAtrib (quadrupla quad, int oper) {
+void ExecQuadAtrib (quadrupla quad) {
     int tipo1, valint1; 
     float valfloat1;
     char valchar1, vallogic1;
@@ -2037,7 +2121,7 @@ void ExecQuadAtrib (quadrupla quad, int oper) {
             if (tipo1 == INTOPND)   *(quad->result.atr.simb->valchar) = valint1;
             if (tipo1 == CHAROPND)  *(quad->result.atr.simb->valchar) = valchar1;
             break;
-        case LOGIC:  *(quad->result.atr.simb->vallogic) = vallogic1; 
+        case LOGIC:                 *(quad->result.atr.simb->vallogic) = vallogic1; 
             break;
         case FLOAT:
             if (tipo1 == INTOPND)   *(quad->result.atr.simb->valfloat) = valint1;
