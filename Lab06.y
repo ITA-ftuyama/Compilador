@@ -365,8 +365,8 @@ struct infovariavel {
 /* Prototipos das funcoes para o interpretador */
 
 void InterpCodIntermed (void);
-void AlocaVariaveis (void);
-void DesalocaVariaveis (void);
+void AlocaVariaveis (listsimb);
+void DesalocaVariaveis (modhead *);
 void ExecQuadCall (quadrupla, quadrupla*, modhead *);
 void ExecQuadReturn (quadrupla, quadrupla*, modhead *);
 void ExecQuadIndex (quadrupla);
@@ -431,8 +431,7 @@ void InicPilhaQuad (pilhaquadruplas *);
 char VaziaQuad (pilhaquadruplas);
 
 FILE *finput;
-
-bool inicio = FALSE;
+int inicio = 0;
 
 %}
 
@@ -1664,34 +1663,34 @@ void InterpCodIntermed () {
         printf ("\n%4d# %s", quad->num, nomeoperquad[quad->oper]);
         quadprox = quad->prox;
         switch (quad->oper) {
-            case OPEXIT :       encerra = TRUE;                         break;
-            case OPENMOD    :   AlocaVariaveis ();                      break;
-            case OPCALL     :   ExecQuadCall (quad, &quadprox, &mod);   break;
-            case OPRETURN   :   ExecQuadReturn (quad, &quadprox, &mod); break;
-            case PARAM      :   EmpilharOpnd (quad->opnd1, &pilhaopnd); break;
-            case OPIND      :   EmpilharOpnd (quad->opnd1, &pilhaindex);break;
-            case OPINDEX    :   ExecQuadIndex (quad);                   break;
-            case OPWRITE    :   ExecQuadWrite (quad);                   break;
+            case OPEXIT :       encerra = TRUE;                             break;
+            case OPENMOD    :   AlocaVariaveis (mod->modname->listvardecl); break;
+            case OPCALL     :   ExecQuadCall (quad, &quadprox, &mod);       break;
+            case OPRETURN   :   ExecQuadReturn (quad, &quadprox, &mod);     break;
+            case PARAM      :   EmpilharOpnd (quad->opnd1, &pilhaopnd);     break;
+            case OPIND      :   EmpilharOpnd (quad->opnd1, &pilhaindex);    break;
+            case OPINDEX    :   ExecQuadIndex (quad);                       break;
+            case OPWRITE    :   ExecQuadWrite (quad);                       break;
             case OPMAIS     :   case OPMENOS:   
             case OPMULT     :   case OPDIV  :
-                                ExecQuadAritmetica (quad, quad->oper);  break;
-            case OPRESTO:       ExecQuadResto (quad);                   break;
-            case OPMENUN    :   ExecQuadMenun (quad);                   break;   
-            case OPNOT      :   ExecQuadNot (quad);                     break;                   
+                                ExecQuadAritmetica (quad, quad->oper);      break;
+            case OPRESTO:       ExecQuadResto (quad);                       break;
+            case OPMENUN    :   ExecQuadMenun (quad);                       break;   
+            case OPNOT      :   ExecQuadNot (quad);                         break;                   
             case OPAND      :   case OPOR:
-                                ExecQuadAndOr (quad, quad->oper);       break;
-            case OPATRIB    :   ExecQuadAtrib (quad);                   break;
-            case OPATRIBPONT:   ExecQuadAtrib (quad);                   break;
-            case OPCONTAPONT:   ExecQuadAtrib (quad);                   break;
+                                ExecQuadAndOr (quad, quad->oper);           break;
+            case OPATRIB    :   ExecQuadAtrib (quad);                       break;
+            case OPATRIBPONT:   ExecQuadAtrib (quad);                       break;
+            case OPCONTAPONT:   ExecQuadAtrib (quad);                       break;
             case OPLT       :   case OPLE:      
             case OPGT       :   case OPGE:      
             case OPEQ       :   case OPNE:  
-                                ExecQuadRel (quad, quad->oper);         break;
-            case OPREAD     :   ExecQuadRead (quad);                    break;
-            case OPJUMP     :   ExecQuadJump (quad, &quadprox);         break;
-            case OPJF       :   ExecQuadJF (quad, &quadprox);           break;
-            case NOP        :                                           break;
-            default         :                                           break;
+                                ExecQuadRel (quad, quad->oper);             break;
+            case OPREAD     :   ExecQuadRead (quad);                        break;
+            case OPJUMP     :   ExecQuadJump (quad, &quadprox);             break;
+            case OPJF       :   ExecQuadJF (quad, &quadprox);               break;
+            case NOP        :                                               break;
+            default         :                                               break;
         }
     }
 }
@@ -1701,29 +1700,31 @@ void InterpCodIntermed () {
     na Tabela de Símbolo, inclusive as temporárias
     */
 
-void AlocaVariaveis () {
-    if (inicio == TRUE) return;
-    inicio = TRUE;
-    #warning Mudar alocação para apenas um módulo
-    simbolo s; int nelemaloc, i, j;
+void AlocaVariaveis (listsimb varlist) {
     printf ("\n\t\tAlocando as variaveis:");
-    for (i = 0; i < NCLASSHASH; i++)
-        if (tabsimb[i]) {
-            for (s = tabsimb[i]; s != NULL; s = s->prox) {
-                if (s->tid == IDVAR) {
-                    nelemaloc = 1;
-                    if (s->array) 
-                        for (j = 1; j <= s->ndims; j++)  
-                            nelemaloc *= s->dims[j];
-                    switch (s->tvar) {
-                       case INTEGER:    s->valint   = malloc (nelemaloc * sizeof (int));    break;
-                       case FLOAT:      s->valfloat = malloc (nelemaloc * sizeof (float));  break;
-                       case CHAR:       s->valchar  = malloc (nelemaloc * sizeof (char));   break;
-                       case LOGIC:      s->vallogic = malloc (nelemaloc * sizeof (char));   break;
-                   }
-                   printf ("\n\t\t\t%6s: %2d elemento(s) alocado(s) ", s->cadeia, nelemaloc);
-            }
-        }
+
+    // Percorrendo as variáveis declaradas no módulo
+    int j, nelemaloc; simbolo simb; listsimb var = NULL;
+
+    if (varlist == NULL)
+        return;
+
+    for (var = varlist->prox; var != NULL; var = var->prox) {
+
+        simb = var->simb;
+        if (simb->tid == IDVAR) {
+            nelemaloc = 1;
+            if (simb->array) 
+                for (j = 1; j <= simb->ndims; j++)  
+                    nelemaloc *= simb->dims[j];
+            switch (simb->tvar) {
+               case INTEGER:    simb->valint   = malloc (nelemaloc * sizeof (int));    break;
+               case FLOAT:      simb->valfloat = malloc (nelemaloc * sizeof (float));  break;
+               case CHAR:       simb->valchar  = malloc (nelemaloc * sizeof (char));   break;
+               case LOGIC:      simb->vallogic = malloc (nelemaloc * sizeof (char));   break;
+           }
+           printf ("\n\t\t\t%6s: %2d elemento(s) alocado(s) ", simb->cadeia, nelemaloc);
+        }  
     }
 }
 
@@ -1732,8 +1733,35 @@ void AlocaVariaveis () {
     no dado módulo, inclusive as temporárias
     */
 
-void DesalocaVariaveis () {
-    // Desalocar variáveis do módulo
+void DesalocaVariaveis (modhead *mod) {
+    printf ("\n\t\tDesalocando as variaveis:");
+
+    // Percorrendo as variáveis declaradas no módulo
+    int i, j, nelemaloc; simbolo simb; listsimb var = NULL;
+
+    for (i = 0; i < 2; i++) {
+        if (i == 0 && (*mod)->modname->listvardecl != NULL)
+            var = (*mod)->modname->listvardecl->prox; 
+        if (i == 1 && (*mod)->modname->listparam != NULL)
+            var = (*mod)->modname->listparam->prox;
+        for (; var != NULL; var = var->prox) {
+
+            simb = var->simb;
+            if (simb->tid == IDVAR) {
+                nelemaloc = 1;
+                if (simb->array) 
+                    for (j = 1; j <= simb->ndims; j++)  
+                        nelemaloc *= simb->dims[j];
+                switch (simb->tvar) {
+                   case INTEGER:    free(simb->valint);     break;
+                   case FLOAT:      free(simb->valfloat);   break;
+                   case CHAR:       free(simb->valchar);    break;
+                   case LOGIC:      free(simb->vallogic);   break;
+               }
+               printf ("\n\t\t\t%6s: %2d elemento(s) alocado(s) ", simb->cadeia, nelemaloc);
+            }  
+        }
+    }
 }
 
 /* 
@@ -1746,6 +1774,7 @@ void DesalocaVariaveis () {
 void ExecQuadCall (quadrupla quad, quadrupla *quadprox, modhead *mod) {
     // Guarda valor do PC
     EmpilharQuad (quad, &pilhaquads);
+    #warning salvar pilhas, variáveis, etc...
 
     // Faz as ligações de controle
     *mod = quad->opnd1.atr.func;
@@ -1753,6 +1782,10 @@ void ExecQuadCall (quadrupla quad, quadrupla *quadprox, modhead *mod) {
 
     // Deposita os argumentos nos parâmetros
     int i; simbolo simb; listsimb param; operando opndaux;
+
+    if ((*mod)->modname->listparam == NULL)
+        return;
+    AlocaVariaveis((*mod)->modname->listparam);
 
     for (i = 1, param = (*mod)->modname->listparam->prox; 
         i <= quad->opnd2.atr.valint && param != NULL; 
@@ -1795,7 +1828,7 @@ void ExecQuadReturn (quadrupla quad, quadrupla *quadprox, modhead *mod) {
     DesempilharQuad (&pilhaquads);
 
     // Desaloca as variáveis do módulo
-    DesalocaVariaveis ();
+    DesalocaVariaveis (mod);
 
     // Faz as ligações de controle
     *mod = quadCall->modulo;

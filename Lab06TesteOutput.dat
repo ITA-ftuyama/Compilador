@@ -205,34 +205,35 @@ Quadruplas do modulo Principal:
 
    1# OPENMOD
 		Alocando as variaveis:
-			   ##1:  1 elemento(s) alocado(s) 
-			   ##2:  1 elemento(s) alocado(s) 
-			  ##10:  1 elemento(s) alocado(s) 
-			   ##3:  1 elemento(s) alocado(s) 
-			  ##11:  1 elemento(s) alocado(s) 
-			   ##4:  1 elemento(s) alocado(s) 
-			  ##12:  1 elemento(s) alocado(s) 
-			   ##5:  1 elemento(s) alocado(s) 
-			  ##13:  1 elemento(s) alocado(s) 
-			   ##6:  1 elemento(s) alocado(s) 
-			   ##7:  1 elemento(s) alocado(s) 
-			     f:  1 elemento(s) alocado(s) 
-			  var1:  1 elemento(s) alocado(s) 
-			   ##8:  1 elemento(s) alocado(s) 
-			  var2:  1 elemento(s) alocado(s) 
-			   ##9:  1 elemento(s) alocado(s) 
 			     i:  1 elemento(s) alocado(s) 
-			     i:  1 elemento(s) alocado(s) 
-			 posic:  1 elemento(s) alocado(s) 
-			     i:  1 elemento(s) alocado(s) 
-			 array:  3 elemento(s) alocado(s) 
-			     j:  1 elemento(s) alocado(s) 
    2# CALL
+		Alocando as variaveis:
    1# OPENMOD
+		Alocando as variaveis:
+			  ##13:  1 elemento(s) alocado(s) 
+			  ##12:  1 elemento(s) alocado(s) 
+			  ##11:  1 elemento(s) alocado(s) 
+			  ##10:  1 elemento(s) alocado(s) 
+			   ##9:  1 elemento(s) alocado(s) 
+			   ##8:  1 elemento(s) alocado(s) 
+			   ##7:  1 elemento(s) alocado(s) 
+			   ##6:  1 elemento(s) alocado(s) 
+			   ##5:  1 elemento(s) alocado(s) 
+			   ##4:  1 elemento(s) alocado(s) 
+			 array:  3 elemento(s) alocado(s) 
+			     f:  1 elemento(s) alocado(s) 
+			     j:  1 elemento(s) alocado(s) 
    2# PARAM
    3# PARAM
    4# CALL
+		Alocando as variaveis:
+			  var2:  1 elemento(s) alocado(s) 
+			  var1:  1 elemento(s) alocado(s) 
    1# OPENMOD
+		Alocando as variaveis:
+			   ##3:  1 elemento(s) alocado(s) 
+			   ##2:  1 elemento(s) alocado(s) 
+			     i:  1 elemento(s) alocado(s) 
    2# PARAM
    3# PARAM
    4# WRITE
@@ -257,6 +258,12 @@ var1/var2 = 2
 
   12# MENOS
   13# RET
+		Desalocando as variaveis:
+			   ##3:  1 elemento(s) alocado(s) 
+			   ##2:  1 elemento(s) alocado(s) 
+			     i:  1 elemento(s) alocado(s) 
+			  var2:  1 elemento(s) alocado(s) 
+			  var1:  1 elemento(s) alocado(s) 
    5# ATRIB
    6# PARAM
    7# PARAM
@@ -273,7 +280,12 @@ var1/var2 = 2
   16# NOP
   17# PARAM
   18# CALL
+		Alocando as variaveis:
+			 posic:  1 elemento(s) alocado(s) 
    1# OPENMOD
+		Alocando as variaveis:
+			   ##1:  1 elemento(s) alocado(s) 
+			     i:  1 elemento(s) alocado(s) 
    2# MULT
    3# ATRIB
    4# PARAM
@@ -291,6 +303,10 @@ posic = 2
 posic * 6 = 12
 
   10# RET
+		Desalocando as variaveis:
+			   ##1:  1 elemento(s) alocado(s) 
+			     i:  1 elemento(s) alocado(s) 
+			 posic:  1 elemento(s) alocado(s) 
   19# IND
   20# INDEX
   21# ATRIBPONT
@@ -399,4 +415,18 @@ array[2] = 11
   31# JF
   52# NOP
   53# RET
+		Desalocando as variaveis:
+			  ##13:  1 elemento(s) alocado(s) 
+			  ##12:  1 elemento(s) alocado(s) 
+			  ##11:  1 elemento(s) alocado(s) 
+			  ##10:  1 elemento(s) alocado(s) 
+			   ##9:  1 elemento(s) alocado(s) 
+			   ##8:  1 elemento(s) alocado(s) 
+			   ##7:  1 elemento(s) alocado(s) 
+			   ##6:  1 elemento(s) alocado(s) 
+			   ##5:  1 elemento(s) alocado(s) 
+			   ##4:  1 elemento(s) alocado(s) 
+			 array:  3 elemento(s) alocado(s) 
+			     f:  1 elemento(s) alocado(s) 
+			     j:  1 elemento(s) alocado(s) 
    3# EXIT
