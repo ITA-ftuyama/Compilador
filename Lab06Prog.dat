@@ -78,7 +78,7 @@ locais:
 	int i, j;
 	logico fim;
 comandos:
-	escrever ("  ", "Palavra     ", "   Num. de ocorr.");
+	escrever ("\n  ", "Palavra     ", "   Num. de ocorr.\n");
 	para (i := 1; i <= 50; i := i + 1) escrever ("-");
 	para (i := 1; i <= ntab; i := i + 1) {
 		escrever ("\n  ");
@@ -104,15 +104,19 @@ comandos:
 	escrever ("Nova palavra? (s/n): ");
 	ler (c);
 	enquanto (c = 's' || c = 'S') {
+		ler(c);
 		escrever ("\nDigite a palavra: ");
 		fim := false;
+		escrever("palavra:(");
 		para (i := 0; !fim; i := i + 1) {
 			ler (palavra[i]);
 			se (palavra[i] = '\n') {
 				fim := true;
 				palavra[i] := '\0';
 			}
+			escrever(palavra[i]);
 		}
+		escrever(")");
 		posic := Procura ();
 		se (posic > 0) 
 			nocorr[posic] := nocorr[posic] + 1;

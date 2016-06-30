@@ -97,6 +97,7 @@
 
 /*  Definicao de RUN TIME Exception */
 #define EXCEPTION_RECURSIVE "A linguagem nao admite recursividade."
+#define EXCEPTION_INPUTFILE "Arquivo de entrada nao encontrado."
 
 /****************************************************/
 /*                                                  */
@@ -435,6 +436,7 @@ void InicPilhaQuad (pilhaquadruplas *);
 char VaziaQuad (pilhaquadruplas);
 
 FILE *finput;
+bool DEBUG = FALSE;
 
 %}
 
@@ -1385,6 +1387,7 @@ int hash (char *cadeia) {
 
 void ImprimeTabSimb () {
     int i, j; simbolo s;
+    if (!DEBUG) return; 
     printf ("\n\n\tTABELA  DE  SIMBOLOS:\n\n");
     for (i = 0; i < NCLASSHASH; i++)
         if (tabsimb[i]) {
@@ -1595,6 +1598,7 @@ simbolo NovaTemp (int tip) {
 void ImprimeQuadruplas () {
     modhead p;
     quadrupla q;
+    if (!DEBUG) return; 
     printf ("\n\n\tCODIGO INTEMEDIARIO:\n");
     for (p = codintermed->prox; p != NULL; p = p->prox) {
         printf ("\n\nQuadruplas do modulo %s:\n", p->modname->cadeia);
@@ -1656,7 +1660,7 @@ void InterpCodIntermed () {
     InicPilhaOpnd (&pilhaopnd);
     InicPilhaOpnd (&pilhaindex);
     InicPilhaQuad (&pilhaquads);
-    finput = fopen ("Lab06_entrada.txt", "r");
+    finput = fopen ("Compilador/Lab06_entrada", "r");
 
     // A execução começa no módulo global
     bool encerra = FALSE;
@@ -1665,7 +1669,7 @@ void InterpCodIntermed () {
 
     // Executa as quádruplas do módulo Principal
     for (quad = mod->listquad->prox; (!encerra && quad != NULL); quad = quadprox) {
-        printf ("\n%4d# %s", quad->num, nomeoperquad[quad->oper]);
+        if (DEBUG) printf ("\n%4d# %s", quad->num, nomeoperquad[quad->oper]);
         quadprox = quad->prox;
         switch (quad->oper) {
             case OPEXIT :       encerra = TRUE;                             break;
@@ -1698,6 +1702,7 @@ void InterpCodIntermed () {
             default         :                                               break;
         }
     }
+    fclose(finput);
 }
 
 /* 
@@ -1706,7 +1711,7 @@ void InterpCodIntermed () {
     */
 
 void AlocaVariaveis (listsimb varlist) {
-    printf ("\n\t\tAlocando as variaveis:");
+    if (DEBUG) printf ("\n\t\tAlocando as variaveis:");
 
     // Percorrendo as variáveis declaradas no módulo
     int j, nelemaloc; simbolo simb; listsimb var = NULL;
@@ -1728,7 +1733,7 @@ void AlocaVariaveis (listsimb varlist) {
                case CHAR:       simb->valchar  = malloc (nelemaloc * sizeof (char));   break;
                case LOGIC:      simb->vallogic = malloc (nelemaloc * sizeof (char));   break;
            }
-           printf ("\n\t\t\t%6s: %2d elemento(s) alocado(s) ", simb->cadeia, nelemaloc);
+           if (DEBUG) printf ("\n\t\t\t%6s: %2d elemento(s) alocado(s) ", simb->cadeia, nelemaloc);
         }  
     }
 }
@@ -1739,7 +1744,7 @@ void AlocaVariaveis (listsimb varlist) {
     */
 
 void DesalocaVariaveis (modhead *mod) {
-    printf ("\n\t\tDesalocando as variaveis:");
+    if (DEBUG) printf ("\n\t\tDesalocando as variaveis:");
 
     // Percorrendo as variáveis declaradas no módulo
     int i, j, nelemaloc; simbolo simb; listsimb var = NULL;
@@ -1763,7 +1768,7 @@ void DesalocaVariaveis (modhead *mod) {
                    case CHAR:       free(simb->valchar);    break;
                    case LOGIC:      free(simb->vallogic);   break;
                }
-               printf ("\n\t\t\t%6s: %2d elemento(s) alocado(s) ", simb->cadeia, nelemaloc);
+               if (DEBUG) printf ("\n\t\t\t%6s: %2d elemento(s) alocado(s) ", simb->cadeia, nelemaloc);
             }  
         }
     }
@@ -1893,7 +1898,7 @@ void ExecQuadReturn (quadrupla quad, quadrupla *quadprox, modhead *mod) {
 void ExecQuadWrite (quadrupla quad) {
     int i;  operando opndaux;  pilhaoperando pilhaopndaux;
 
-    printf ("\n\t\tEscrevendo: \n\n");
+    if (DEBUG) printf ("\n\t\tEscrevendo: \n\n");
     InicPilhaOpnd (&pilhaopndaux);
     for (i = 1; i <= quad->opnd1.atr.valint; i++) {
         EmpilharOpnd (TopoOpnd (pilhaopnd), &pilhaopndaux);
@@ -1917,7 +1922,6 @@ void ExecQuadWrite (quadrupla quad) {
                 }
         }
     }
-    printf ("\n");
 }
 
 /* Executa a quádrupla dos operadores aritméticos */
@@ -2049,16 +2053,17 @@ void ExecQuadMenun (quadrupla quad) {
 
 void ExecQuadNot (quadrupla quad) {
     bool vallogic;
-
     switch (quad->opnd1.tipo) {
-        case LOGICOPND: vallogic = quad->opnd1.atr.vallogic;  break;
+        case LOGICOPND: vallogic = quad->opnd1.atr.vallogic; break;
         case VAROPND:
-            if (quad->opnd1.atr.simb->tvar == LOGICOPND)
+            if (quad->opnd1.atr.simb->tvar == LOGIC)
                 vallogic = *(quad->opnd1.atr.simb->vallogic);
             break;
     }
-    switch (quad->result.atr.simb->tvar) {
-        case LOGIC: *(quad->result.atr.simb->vallogic) = !vallogic; break;
+    if (quad->result.tipo == VAROPND) {
+        switch (quad->result.atr.simb->tvar) {
+            case LOGIC: *(quad->result.atr.simb->vallogic) = !vallogic; break;
+        }
     }
 }
 
@@ -2071,14 +2076,14 @@ void ExecQuadAndOr (quadrupla quad, int oper) {
     switch (quad->opnd1.tipo) {
         case LOGICOPND: vallogic1 = quad->opnd1.atr.vallogic;  break;
         case VAROPND:
-            if (quad->opnd1.atr.simb->tvar == LOGICOPND)
+            if (quad->opnd1.atr.simb->tvar == LOGIC)
                 vallogic1 = *(quad->opnd1.atr.simb->vallogic);
             break;
     }
     switch (quad->opnd2.tipo) {
         case LOGICOPND: vallogic2 = quad->opnd2.atr.vallogic;   break;
         case VAROPND:   
-            if (quad->opnd2.atr.simb->tvar == LOGICOPND)
+            if (quad->opnd2.atr.simb->tvar == LOGIC)
                 vallogic2 = *(quad->opnd2.atr.simb->vallogic);
             break;
     }
@@ -2241,7 +2246,10 @@ void ExecQuadRel (quadrupla quad, int oper) {
 void ExecQuadRead (quadrupla quad) {
     int i;  operando opndaux;  pilhaoperando pilhaopndaux, pilhaindex;
 
-    printf ("\n\t\tLendo: \n");
+    if (finput == NULL)
+        RunTimeException(EXCEPTION_INPUTFILE);
+
+    if (DEBUG) printf ("\n\t\tLendo: \n");
     InicPilhaOpnd (&pilhaopndaux);
     for (i = 1; i <= quad->opnd1.atr.valint; i++) {
         EmpilharOpnd (TopoOpnd (pilhaopnd), &pilhaopndaux);

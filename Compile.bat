@@ -20,9 +20,8 @@ gcc y.tab.c main.c yyerror.c -o Lab06 -lfl
 echo.
 echo Compilando programa
 
-REM Lab06  < Compilador/Lab06Prog.dat > Compilador/Lab06ProgOutput.dat
+Lab06  < Compilador/Lab06Prog.dat > Compilador/Lab06ProgOutput.dat
 Lab06  < Compilador/Lab06Teste.dat > Compilador/Lab06TesteOutput.dat
-Lab06  < Compilador/Lab06Recursive.dat > Compilador/Lab06RecursiveOutput.dat
 
  goto TestesSemanticos
 	Lab06 < Compilador/Testes04/Declaracao.dat > Compilador/Testes04/oDeclaracao.dat
