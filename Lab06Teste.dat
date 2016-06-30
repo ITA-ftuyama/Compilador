@@ -33,6 +33,7 @@ locais:
 comandos:
 	j := Subtracao(4, 2);
 	escrever ("4 - 2 = ", j);
+	escrever ("3 - 7 = ", Subtracao(3, 7));
 	se (!(j > 0)) {
 		i := 1;
 	} senao {

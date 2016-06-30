@@ -1,0 +1,16 @@
+
+
+/*  Programa de teste */
+
+globais:
+	int i;
+funcoes:
+
+int Recursive2 (int var) {
+locais:
+	int i;
+comandos:
+	retornar Recursive (
+
+	***** Exception<Nao Declarado>: Recursive *****
+	

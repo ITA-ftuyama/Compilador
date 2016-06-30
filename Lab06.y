@@ -95,6 +95,9 @@
 #define INCOMP_NARG         "Numero de argumentos diferente do numero de parametros"
 #define INCOMP_PARAM        "Incompatibilidade de parametros"
 
+/*  Definicao de RUN TIME Exception */
+#define EXCEPTION_RECURSIVE "A linguagem nao admite recursividade."
+
 /****************************************************/
 /*                                                  */
 /*          Código Intermediário - Operandos        */
@@ -230,7 +233,7 @@ struct celsimb {
     char *cadeia;
     int tid, tvar, tparam;
     int  nparam, ndims, dims[MAXDIMS+1];
-    bool inic, ref, array, param;
+    bool inic, ref, array, param, active;
     listsimb listvardecl, listparam, listfunc; 
     simbolo escopo, prox;
     modhead fhead;
@@ -290,6 +293,7 @@ pontexprtipo ConcatListTipo (pontexprtipo, pontexprtipo);
 
 void ExceptionIncomp (char *, char *, char *);
 void Exception (char *, char *);
+void RunTimeException (char *);
 
 /* Verifica se os tipos sao incompativeis na atribuicao */
 
@@ -431,7 +435,6 @@ void InicPilhaQuad (pilhaquadruplas *);
 char VaziaQuad (pilhaquadruplas);
 
 FILE *finput;
-int inicio = 0;
 
 %}
 
@@ -1513,11 +1516,13 @@ bool EhIncompativel (int tipoP, int tipoQ) {
 /*  Mensagens de erros semanticos  */
 
 void ExceptionIncomp (char *type, char *got, char *expected) {
-    tabular(2); printf ("***** Exception<%s>: Obtido: %s. Esperado: %s *****", type, got, expected); tabular(1);
+    tabular(2); printf ("***** Exception<%s>: Obtido: %s. Esperado: %s *****", type, got, expected); 
+    tabular(1); exit(0);
 }
 
 void Exception (char *type, char *error) {
-    tabular(2); printf ("***** Exception<%s>: %s *****", type, error); tabular(1);
+    tabular(2); printf ("***** Exception<%s>: %s *****", type, error); 
+    tabular(1); exit(0);
 }
 
 /****************************************************/
@@ -1772,13 +1777,18 @@ void DesalocaVariaveis (modhead *mod) {
     */
 
 void ExecQuadCall (quadrupla quad, quadrupla *quadprox, modhead *mod) {
+
     // Guarda valor do PC
     EmpilharQuad (quad, &pilhaquads);
-    #warning salvar pilhas, variáveis, etc...
 
     // Faz as ligações de controle
     *mod = quad->opnd1.atr.func;
     *quadprox = (*mod)->listquad->prox;
+
+    // A linguagem não suporta recursividade
+    if ((*mod)->modname->active == TRUE) {
+        RunTimeException(EXCEPTION_RECURSIVE);
+    } (*mod)->modname->active = TRUE;
 
     // Deposita os argumentos nos parâmetros
     int i; simbolo simb; listsimb param; operando opndaux;
@@ -1829,6 +1839,9 @@ void ExecQuadReturn (quadrupla quad, quadrupla *quadprox, modhead *mod) {
 
     // Desaloca as variáveis do módulo
     DesalocaVariaveis (mod);
+
+    // A linguagem não suporta recursividade
+    (*mod)->modname->active = FALSE;
 
     // Faz as ligações de controle
     *mod = quadCall->modulo;
@@ -2352,4 +2365,11 @@ void DesempilharQuad (pilhaquadruplas *P) {
 quadrupla TopoQuad (pilhaquadruplas P) {
     if (! VaziaQuad (P))  return P->quad;
     else  printf ("\n\tTopo de pilha vazia\n");
+}
+
+/*  Mensagens de Run Time Exception */
+
+void RunTimeException (char *error) {
+    printf ("\n\n***** RunTimeException<>: %s *****\n", error);
+    exit(0);
 }
