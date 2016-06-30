@@ -1903,44 +1903,47 @@ void ExecQuadAritmetica (quadrupla quad, int oper) {
             }
             break;
     }
-    switch (quad->result.atr.simb->tvar) {
-        case INTEGER:
-            switch (oper) {
-                case OPMAIS:    *(quad->result.atr.simb->valint) = valint1 + valint2;   break;
-                case OPMENOS:   *(quad->result.atr.simb->valint) = valint1 - valint2;   break;
-                case OPMULT:    *(quad->result.atr.simb->valint) = valint1 * valint2;   break;
-            }
-            break;
-        case FLOAT:
-            if (tipo1 == INTOPND && tipo2 == INTOPND)
+    if (quad->result.tipo == VAROPND) {
+        switch (quad->result.atr.simb->tvar) {
+            case INTEGER:
                 switch (oper) {
-                    case OPMAIS :   *(quad->result.atr.simb->valfloat) = valint1 + valint2; break;
-                    case OPMENOS:   *(quad->result.atr.simb->valfloat) = valint1 - valint2; break;
-                    case OPMULT :   *(quad->result.atr.simb->valfloat) = valint1 * valint2; break;
-                    case OPDIV  :   *(quad->result.atr.simb->valfloat) = valint1 / valint2; break;
+                    case OPMAIS :   *(quad->result.atr.simb->valint) = valint1 + valint2;   break;
+                    case OPMENOS:   *(quad->result.atr.simb->valint) = valint1 - valint2;   break;
+                    case OPMULT :   *(quad->result.atr.simb->valint) = valint1 * valint2;   break;
+                    case OPDIV  :   *(quad->result.atr.simb->valint) = valint1 / valint2;   break;
                 }
-            if (tipo1 == INTOPND && tipo2 == REALOPND)
-                switch (oper) {
-                    case OPMAIS :   *(quad->result.atr.simb->valfloat) = valint1 + valfloat2;   break;
-                    case OPMENOS:   *(quad->result.atr.simb->valfloat) = valint1 - valfloat2;   break;
-                    case OPMULT :   *(quad->result.atr.simb->valfloat) = valint1 * valfloat2;   break;
-                    case OPDIV  :   *(quad->result.atr.simb->valfloat) = valint1 / valfloat2;   break;
-                }
-            if (tipo1 == REALOPND && tipo2 == INTOPND)
-                switch (oper) {
-                    case OPMAIS :   *(quad->result.atr.simb->valfloat) = valfloat1 + valint2;   break;
-                    case OPMENOS:   *(quad->result.atr.simb->valfloat) = valfloat1 - valint2;   break;
-                    case OPMULT :   *(quad->result.atr.simb->valfloat) = valfloat1 * valint2;   break;
-                    case OPDIV  :   *(quad->result.atr.simb->valfloat) = valfloat1 / valint2;   break;
-                }
-            if (tipo1 == REALOPND && tipo2 == REALOPND)
-                switch (oper) {
-                    case OPMAIS :   *(quad->result.atr.simb->valfloat) = valfloat1 + valfloat2; break;
-                    case OPMENOS:   *(quad->result.atr.simb->valfloat) = valfloat1 - valfloat2; break;
-                    case OPMULT :   *(quad->result.atr.simb->valfloat) = valfloat1 * valfloat2; break;
-                    case OPDIV  :   *(quad->result.atr.simb->valfloat) = valfloat1 / valfloat2; break;
-                }
-            break;
+                break;
+            case FLOAT:
+                if (tipo1 == INTOPND && tipo2 == INTOPND)
+                    switch (oper) {
+                        case OPMAIS :   *(quad->result.atr.simb->valfloat) = valint1 + valint2; break;
+                        case OPMENOS:   *(quad->result.atr.simb->valfloat) = valint1 - valint2; break;
+                        case OPMULT :   *(quad->result.atr.simb->valfloat) = valint1 * valint2; break;
+                        case OPDIV  :   *(quad->result.atr.simb->valfloat) = valint1 / valint2; break;
+                    }
+                if (tipo1 == INTOPND && tipo2 == REALOPND)
+                    switch (oper) {
+                        case OPMAIS :   *(quad->result.atr.simb->valfloat) = valint1 + valfloat2;   break;
+                        case OPMENOS:   *(quad->result.atr.simb->valfloat) = valint1 - valfloat2;   break;
+                        case OPMULT :   *(quad->result.atr.simb->valfloat) = valint1 * valfloat2;   break;
+                        case OPDIV  :   *(quad->result.atr.simb->valfloat) = valint1 / valfloat2;   break;
+                    }
+                if (tipo1 == REALOPND && tipo2 == INTOPND)
+                    switch (oper) {
+                        case OPMAIS :   *(quad->result.atr.simb->valfloat) = valfloat1 + valint2;   break;
+                        case OPMENOS:   *(quad->result.atr.simb->valfloat) = valfloat1 - valint2;   break;
+                        case OPMULT :   *(quad->result.atr.simb->valfloat) = valfloat1 * valint2;   break;
+                        case OPDIV  :   *(quad->result.atr.simb->valfloat) = valfloat1 / valint2;   break;
+                    }
+                if (tipo1 == REALOPND && tipo2 == REALOPND)
+                    switch (oper) {
+                        case OPMAIS :   *(quad->result.atr.simb->valfloat) = valfloat1 + valfloat2; break;
+                        case OPMENOS:   *(quad->result.atr.simb->valfloat) = valfloat1 - valfloat2; break;
+                        case OPMULT :   *(quad->result.atr.simb->valfloat) = valfloat1 * valfloat2; break;
+                        case OPDIV  :   *(quad->result.atr.simb->valfloat) = valfloat1 / valfloat2; break;
+                    }
+                break;
+        }
     }
 }
 

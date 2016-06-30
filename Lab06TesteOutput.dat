@@ -10,9 +10,9 @@ vazio Inserir (int posic) {
 locais:
 	int i;
 comandos:
-	i := posic + 2;
+	i := posic * 6;
 	escrever ("posic = ", posic);
-	escrever ("posic + 2 = ", i);
+	escrever ("posic * 6 = ", i);
 }
 
 int Subtracao (int var1, int var2) {
@@ -33,7 +33,7 @@ locais:
 	int j, f, array[3];
 comandos:
 	j := Subtracao (4, 2);
-	escrever ("4 / 2 = ", j);
+	escrever ("4 - 2 = ", j);
 	se (!(j > 0)) {
 		i := 1;
 	}
@@ -118,12 +118,12 @@ Quadruplas do modulo Global:
 Quadruplas do modulo Inserir:
 
 	   1# OPENMOD, (MODULO, Inserir), (IDLE), (IDLE)
-	   2#    MAIS, (VAR, posic), (INT, 2), (VAR, ##1)
+	   2#    MULT, (VAR, posic), (INT, 6), (VAR, ##1)
 	   3#   ATRIB, (VAR, ##1), (IDLE), (VAR, i)
 	   4#   PARAM, (CADEIA, posic = ), (IDLE), (IDLE)
 	   5#   PARAM, (VAR, posic), (IDLE), (IDLE)
 	   6#   WRITE, (INT, 2), (IDLE), (IDLE)
-	   7#   PARAM, (CADEIA, posic + 2 = ), (IDLE), (IDLE)
+	   7#   PARAM, (CADEIA, posic * 6 = ), (IDLE), (IDLE)
 	   8#   PARAM, (VAR, i), (IDLE), (IDLE)
 	   9#   WRITE, (INT, 2), (IDLE), (IDLE)
 	  10#     RET, (IDLE), (IDLE), (IDLE)
@@ -151,7 +151,7 @@ Quadruplas do modulo Principal:
 	   3#   PARAM, (INT, 2), (IDLE), (IDLE)
 	   4#    CALL, (FUNC, Subtracao), (INT, 2), (VAR, ##4)
 	   5#   ATRIB, (VAR, ##4), (IDLE), (VAR, j)
-	   6#   PARAM, (CADEIA, 4 / 2 = ), (IDLE), (IDLE)
+	   6#   PARAM, (CADEIA, 4 - 2 = ), (IDLE), (IDLE)
 	   7#   PARAM, (VAR, j), (IDLE), (IDLE)
 	   8#   WRITE, (INT, 2), (IDLE), (IDLE)
 	   9#      GT, (VAR, j), (INT, 0), (VAR, ##5)
@@ -253,17 +253,17 @@ var2 = 2
   11# WRITE
 		Escrevendo: 
 
-var1/var2 = 0
+var1/var2 = 2
 
   12# MENOS
-  13# RETfez retorno 2
+  13# RET
    5# ATRIB
    6# PARAM
    7# PARAM
    8# WRITE
 		Escrevendo: 
 
-4 / 2 = 2
+4 - 2 = 2
 
    9# GT
   10# NOT
@@ -274,7 +274,7 @@ var1/var2 = 0
   17# PARAM
   18# CALL
    1# OPENMOD
-   2# MAIS
+   2# MULT
    3# ATRIB
    4# PARAM
    5# PARAM
@@ -288,7 +288,7 @@ posic = 2
    9# WRITE
 		Escrevendo: 
 
-posic + 2 = 4
+posic * 6 = 12
 
   10# RET
   19# IND

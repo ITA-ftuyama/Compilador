@@ -10,9 +10,9 @@ vazio Inserir (int posic) {
 locais:
 	int i;
 comandos:
-	i := posic + 2;
+	i := posic * 6;
 	escrever ("posic = ", posic);
-	escrever ("posic + 2 = ", i);
+	escrever ("posic * 6 = ", i);
 }
 
 int Subtracao (int var1, int var2) {
