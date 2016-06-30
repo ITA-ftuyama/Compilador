@@ -11,14 +11,18 @@ locais:
 	int i;
 comandos:
 	i := posic + 2;
+	escrever ("posic = ", posic);
 	escrever ("posic + 2 = ", i);
 }
 
-int Quadrado (int var) {
+int Subtracao (int var1, int var2) {
 locais:
 	int i;
 comandos:
-	retornar var*var;
+	escrever ("var1 = ", var1);
+	escrever ("var2 = ", var2);
+	escrever ("var1/var2 = ", (var1/var2));
+	retornar var1 - var2;
 }
 
 /*  Funcao principal  */
@@ -27,8 +31,8 @@ principal {
 locais:
 	int j, f, array[3];
 comandos:
-	j := Quadrado(4);
-	// escrever ("4 * 4 = ", j);
+	j := Subtracao(4, 2);
+	escrever ("4 - 2 = ", j);
 	se (!(j > 0)) {
 		i := 1;
 	} senao {

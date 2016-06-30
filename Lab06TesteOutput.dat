@@ -11,14 +11,18 @@ locais:
 	int i;
 comandos:
 	i := posic + 2;
+	escrever ("posic = ", posic);
 	escrever ("posic + 2 = ", i);
 }
 
-int Quadrado (int var) {
+int Subtracao (int var1, int var2) {
 locais:
 	int i;
 comandos:
-	retornar var * var;
+	escrever ("var1 = ", var1);
+	escrever ("var2 = ", var2);
+	escrever ("var1/var2 = ", (var1 / var2));
+	retornar var1 - var2;
 }
 
 
@@ -28,9 +32,8 @@ principal {
 locais:
 	int j, f, array[3];
 comandos:
-	j := Quadrado (4);
-
-	// escrever ("4 * 4 = ", j);
+	j := Subtracao (4, 2);
+	escrever ("4 / 2 = ", j);
 	se (!(j > 0)) {
 		i := 1;
 	}
@@ -56,34 +59,36 @@ i: Nao Referenciada
 Classe 4:
   (##1     , IDVAR, int   , 1, 1, escopo: Inserir);
 Classe 5:
-  (##2     , IDVAR, int   , 1, 1, escopo: Quadrado);
+  (##2     , IDVAR, int   , 1, 1, escopo: Subtracao);
 Classe 6:
-  (##10    , IDVAR, int   , 1, 1, escopo: Principal);
-  (##3     , IDVAR, int   , 1, 1, escopo: Principal);
+  (##10    , IDVAR, logico, 1, 1, escopo: Principal);
+  (##3     , IDVAR, int   , 1, 1, escopo: Subtracao);
 Classe 7:
   (##11    , IDVAR, int   , 1, 1, escopo: Principal);
-  (##4     , IDVAR, logico, 1, 1, escopo: Principal);
-  (var     , IDVAR, int   , 1, 1, escopo: Quadrado);
+  (##4     , IDVAR, int   , 1, 1, escopo: Principal);
 Classe 8:
   (##12    , IDVAR, int   , 1, 1, escopo: Principal);
   (##5     , IDVAR, logico, 1, 1, escopo: Principal);
 Classe 9:
-  (##6     , IDVAR, int   , 1, 1, escopo: Principal);
+  (##13    , IDVAR, int   , 1, 1, escopo: Principal);
+  (##6     , IDVAR, logico, 1, 1, escopo: Principal);
 Classe 10:
   (##7     , IDVAR, int   , 1, 1, escopo: Principal);
   (f       , IDVAR, int   , 1, 1, escopo: Principal);
   (Principal, IDFUNC, vazio , escopo: Global
-	Variaveis: int j, int f, int array[3], int ##3, logico ##4, logico ##5, int ##6, int ##7, int ##8, logico ##9, int ##10, int ##11, int ##12
+	Variaveis: int ##13, int ##12, int ##11, logico ##10, int ##9, int ##8, int ##7, logico ##6, logico ##5, int ##4, int array[3], int f, int j
 	Parametros: NULL);
+  (var1    , IDVAR, int   , 1, 1, escopo: Subtracao);
 Classe 11:
   (##8     , IDVAR, int   , 1, 1, escopo: Principal);
+  (var2    , IDVAR, int   , 1, 1, escopo: Subtracao);
 Classe 12:
-  (##9     , IDVAR, logico, 1, 1, escopo: Principal);
-  (Quadrado, IDFUNC, int   , escopo: Global
-	Variaveis: int i, int ##2
-	Parametros: int var);
+  (##9     , IDVAR, int   , 1, 1, escopo: Principal);
+  (Subtracao, IDFUNC, int   , escopo: Global
+	Variaveis: int ##3, int ##2, int i
+	Parametros: int var2, int var1);
 Classe 13:
-  (i       , IDVAR, int   , 0, 0, escopo: Quadrado);
+  (i       , IDVAR, int   , 0, 0, escopo: Subtracao);
   (i       , IDVAR, int   , 1, 1, escopo: Inserir);
   (posic   , IDVAR, int   , 1, 1, escopo: Inserir);
   (i       , IDVAR, int   , 1, 1, escopo: Global);
@@ -94,10 +99,10 @@ Classe 14:
 Classe 18:
   (Global  , IDGLOB, null  , escopo: NULL
 	Variaveis: int i
-	Funcoes: vazio Inserir, int Quadrado, vazio Principal);
+	Funcoes: vazio Principal, int Subtracao, vazio Inserir);
 Classe 19:
   (Inserir , IDFUNC, vazio , escopo: Global
-	Variaveis: int i, int ##1
+	Variaveis: int ##1, int i
 	Parametros: int posic);
 
 
@@ -115,68 +120,85 @@ Quadruplas do modulo Inserir:
 	   1# OPENMOD, (MODULO, Inserir), (IDLE), (IDLE)
 	   2#    MAIS, (VAR, posic), (INT, 2), (VAR, ##1)
 	   3#   ATRIB, (VAR, ##1), (IDLE), (VAR, i)
-	   4#   PARAM, (CADEIA, posic + 2 = ), (IDLE), (IDLE)
-	   5#   PARAM, (VAR, i), (IDLE), (IDLE)
+	   4#   PARAM, (CADEIA, posic = ), (IDLE), (IDLE)
+	   5#   PARAM, (VAR, posic), (IDLE), (IDLE)
 	   6#   WRITE, (INT, 2), (IDLE), (IDLE)
-	   7#     RET, (IDLE), (IDLE), (IDLE)
+	   7#   PARAM, (CADEIA, posic + 2 = ), (IDLE), (IDLE)
+	   8#   PARAM, (VAR, i), (IDLE), (IDLE)
+	   9#   WRITE, (INT, 2), (IDLE), (IDLE)
+	  10#     RET, (IDLE), (IDLE), (IDLE)
 
-Quadruplas do modulo Quadrado:
+Quadruplas do modulo Subtracao:
 
-	   1# OPENMOD, (MODULO, Quadrado), (IDLE), (IDLE)
-	   2#    MULT, (VAR, var), (VAR, var), (VAR, ##2)
-	   3#     RET, (VAR, ##2), (IDLE), (IDLE)
+	   1# OPENMOD, (MODULO, Subtracao), (IDLE), (IDLE)
+	   2#   PARAM, (CADEIA, var1 = ), (IDLE), (IDLE)
+	   3#   PARAM, (VAR, var1), (IDLE), (IDLE)
+	   4#   WRITE, (INT, 2), (IDLE), (IDLE)
+	   5#   PARAM, (CADEIA, var2 = ), (IDLE), (IDLE)
+	   6#   PARAM, (VAR, var2), (IDLE), (IDLE)
+	   7#   WRITE, (INT, 2), (IDLE), (IDLE)
+	   8#   PARAM, (CADEIA, var1/var2 = ), (IDLE), (IDLE)
+	   9#     DIV, (VAR, var1), (VAR, var2), (VAR, ##2)
+	  10#   PARAM, (VAR, ##2), (IDLE), (IDLE)
+	  11#   WRITE, (INT, 2), (IDLE), (IDLE)
+	  12#   MENOS, (VAR, var1), (VAR, var2), (VAR, ##3)
+	  13#     RET, (VAR, ##3), (IDLE), (IDLE)
 
 Quadruplas do modulo Principal:
 
 	   1# OPENMOD, (MODULO, Principal), (IDLE), (IDLE)
 	   2#   PARAM, (INT, 4), (IDLE), (IDLE)
-	   3#    CALL, (FUNC, Quadrado), (INT, 1), (VAR, ##3)
-	   4#   ATRIB, (VAR, ##3), (IDLE), (VAR, j)
-	   5#      GT, (VAR, j), (INT, 0), (VAR, ##4)
-	   6#     NOT, (VAR, ##4), (IDLE), (VAR, ##5)
-	   7#      JF, (VAR, ##5), (IDLE), (ROTULO, 10)
-	   8#   ATRIB, (INT, 1), (IDLE), (VAR, i)
-	   9#    JUMP, (IDLE), (IDLE), (ROTULO, 12)
-	  10#     NOP, (IDLE), (IDLE), (IDLE)
-	  11#   ATRIB, (INT, 2), (IDLE), (VAR, i)
-	  12#     NOP, (IDLE), (IDLE), (IDLE)
-	  13#   PARAM, (VAR, i), (IDLE), (IDLE)
-	  14#    CALL, (PROC, Inserir), (INT, 1), (IDLE)
-	  15#     IND, (INT, 0), (IDLE), (IDLE)
-	  16#   INDEX, (VAR, array), (INT, 1), (VAR, ##6)
-	  17# ATRIBPONT, (INT, 17), (IDLE), (VAR, ##6)
-	  18#     IND, (INT, 1), (IDLE), (IDLE)
-	  19#   INDEX, (VAR, array), (INT, 1), (VAR, ##7)
-	  20# ATRIBPONT, (INT, 21), (IDLE), (VAR, ##7)
-	  21#     IND, (INT, 2), (IDLE), (IDLE)
-	  22#   INDEX, (VAR, array), (INT, 1), (VAR, ##8)
-	  23# ATRIBPONT, (INT, 11), (IDLE), (VAR, ##8)
-	  24#   ATRIB, (INT, 0), (IDLE), (VAR, f)
-	  25#     NOP, (IDLE), (IDLE), (IDLE)
-	  26#      LT, (VAR, f), (INT, 3), (VAR, ##9)
-	  27#      JF, (VAR, ##9), (IDLE), (ROTULO, 48)
-	  28#     NOP, (IDLE), (IDLE), (IDLE)
-	  29#   PARAM, (CADEIA, i = ), (IDLE), (IDLE)
-	  30#   PARAM, (VAR, i), (IDLE), (IDLE)
-	  31#   PARAM, (CADEIA,  j = ), (IDLE), (IDLE)
-	  32#   PARAM, (VAR, j), (IDLE), (IDLE)
-	  33#   PARAM, (CADEIA,  f = ), (IDLE), (IDLE)
-	  34#   PARAM, (VAR, f), (IDLE), (IDLE)
-	  35#   WRITE, (INT, 6), (IDLE), (IDLE)
-	  36#   PARAM, (CADEIA, array[), (IDLE), (IDLE)
-	  37#   PARAM, (VAR, f), (IDLE), (IDLE)
-	  38#   PARAM, (CADEIA, ] = ), (IDLE), (IDLE)
-	  39#     IND, (VAR, f), (IDLE), (IDLE)
-	  40#   INDEX, (VAR, array), (INT, 1), (VAR, ##11)
-	  41# CONTAPONT, (VAR, ##11), (IDLE), (VAR, ##12)
-	  42#   PARAM, (VAR, ##12), (IDLE), (IDLE)
-	  43#   WRITE, (INT, 4), (IDLE), (IDLE)
-	  44#     NOP, (IDLE), (IDLE), (IDLE)
-	  45#    MAIS, (VAR, f), (INT, 1), (VAR, ##10)
-	  46#   ATRIB, (VAR, ##10), (IDLE), (VAR, f)
-	  47#    JUMP, (IDLE), (IDLE), (ROTULO, 25)
+	   3#   PARAM, (INT, 2), (IDLE), (IDLE)
+	   4#    CALL, (FUNC, Subtracao), (INT, 2), (VAR, ##4)
+	   5#   ATRIB, (VAR, ##4), (IDLE), (VAR, j)
+	   6#   PARAM, (CADEIA, 4 / 2 = ), (IDLE), (IDLE)
+	   7#   PARAM, (VAR, j), (IDLE), (IDLE)
+	   8#   WRITE, (INT, 2), (IDLE), (IDLE)
+	   9#      GT, (VAR, j), (INT, 0), (VAR, ##5)
+	  10#     NOT, (VAR, ##5), (IDLE), (VAR, ##6)
+	  11#      JF, (VAR, ##6), (IDLE), (ROTULO, 14)
+	  12#   ATRIB, (INT, 1), (IDLE), (VAR, i)
+	  13#    JUMP, (IDLE), (IDLE), (ROTULO, 16)
+	  14#     NOP, (IDLE), (IDLE), (IDLE)
+	  15#   ATRIB, (INT, 2), (IDLE), (VAR, i)
+	  16#     NOP, (IDLE), (IDLE), (IDLE)
+	  17#   PARAM, (VAR, i), (IDLE), (IDLE)
+	  18#    CALL, (PROC, Inserir), (INT, 1), (IDLE)
+	  19#     IND, (INT, 0), (IDLE), (IDLE)
+	  20#   INDEX, (VAR, array), (INT, 1), (VAR, ##7)
+	  21# ATRIBPONT, (INT, 17), (IDLE), (VAR, ##7)
+	  22#     IND, (INT, 1), (IDLE), (IDLE)
+	  23#   INDEX, (VAR, array), (INT, 1), (VAR, ##8)
+	  24# ATRIBPONT, (INT, 21), (IDLE), (VAR, ##8)
+	  25#     IND, (INT, 2), (IDLE), (IDLE)
+	  26#   INDEX, (VAR, array), (INT, 1), (VAR, ##9)
+	  27# ATRIBPONT, (INT, 11), (IDLE), (VAR, ##9)
+	  28#   ATRIB, (INT, 0), (IDLE), (VAR, f)
+	  29#     NOP, (IDLE), (IDLE), (IDLE)
+	  30#      LT, (VAR, f), (INT, 3), (VAR, ##10)
+	  31#      JF, (VAR, ##10), (IDLE), (ROTULO, 52)
+	  32#     NOP, (IDLE), (IDLE), (IDLE)
+	  33#   PARAM, (CADEIA, i = ), (IDLE), (IDLE)
+	  34#   PARAM, (VAR, i), (IDLE), (IDLE)
+	  35#   PARAM, (CADEIA,  j = ), (IDLE), (IDLE)
+	  36#   PARAM, (VAR, j), (IDLE), (IDLE)
+	  37#   PARAM, (CADEIA,  f = ), (IDLE), (IDLE)
+	  38#   PARAM, (VAR, f), (IDLE), (IDLE)
+	  39#   WRITE, (INT, 6), (IDLE), (IDLE)
+	  40#   PARAM, (CADEIA, array[), (IDLE), (IDLE)
+	  41#   PARAM, (VAR, f), (IDLE), (IDLE)
+	  42#   PARAM, (CADEIA, ] = ), (IDLE), (IDLE)
+	  43#     IND, (VAR, f), (IDLE), (IDLE)
+	  44#   INDEX, (VAR, array), (INT, 1), (VAR, ##12)
+	  45# CONTAPONT, (VAR, ##12), (IDLE), (VAR, ##13)
+	  46#   PARAM, (VAR, ##13), (IDLE), (IDLE)
+	  47#   WRITE, (INT, 4), (IDLE), (IDLE)
 	  48#     NOP, (IDLE), (IDLE), (IDLE)
-	  49#     RET, (IDLE), (IDLE), (IDLE)
+	  49#    MAIS, (VAR, f), (INT, 1), (VAR, ##11)
+	  50#   ATRIB, (VAR, ##11), (IDLE), (VAR, f)
+	  51#    JUMP, (IDLE), (IDLE), (ROTULO, 29)
+	  52#     NOP, (IDLE), (IDLE), (IDLE)
+	  53#     RET, (IDLE), (IDLE), (IDLE)
 
 
 	INTERPRETADOR:
@@ -189,13 +211,15 @@ Quadruplas do modulo Principal:
 			   ##3:  1 elemento(s) alocado(s) 
 			  ##11:  1 elemento(s) alocado(s) 
 			   ##4:  1 elemento(s) alocado(s) 
-			   var:  1 elemento(s) alocado(s) 
 			  ##12:  1 elemento(s) alocado(s) 
 			   ##5:  1 elemento(s) alocado(s) 
+			  ##13:  1 elemento(s) alocado(s) 
 			   ##6:  1 elemento(s) alocado(s) 
 			   ##7:  1 elemento(s) alocado(s) 
 			     f:  1 elemento(s) alocado(s) 
+			  var1:  1 elemento(s) alocado(s) 
 			   ##8:  1 elemento(s) alocado(s) 
+			  var2:  1 elemento(s) alocado(s) 
 			   ##9:  1 elemento(s) alocado(s) 
 			     i:  1 elemento(s) alocado(s) 
 			     i:  1 elemento(s) alocado(s) 
@@ -206,19 +230,49 @@ Quadruplas do modulo Principal:
    2# CALL
    1# OPENMOD
    2# PARAM
-   3# CALL
+   3# PARAM
+   4# CALL
    1# OPENMOD
-   2# MULT
-   3# RET
-   4# ATRIB
-   5# GT
-   6# NOT
-   7# JF
-  10# NOP
-  11# ATRIB
-  12# NOP
-  13# PARAM
-  14# CALL
+   2# PARAM
+   3# PARAM
+   4# WRITE
+		Escrevendo: 
+
+var1 = 4
+
+   5# PARAM
+   6# PARAM
+   7# WRITE
+		Escrevendo: 
+
+var2 = 2
+
+   8# PARAM
+   9# DIV
+  10# PARAM
+  11# WRITE
+		Escrevendo: 
+
+var1/var2 = 0
+
+  12# MENOS
+  13# RETfez retorno 2
+   5# ATRIB
+   6# PARAM
+   7# PARAM
+   8# WRITE
+		Escrevendo: 
+
+4 / 2 = 2
+
+   9# GT
+  10# NOT
+  11# JF
+  14# NOP
+  15# ATRIB
+  16# NOP
+  17# PARAM
+  18# CALL
    1# OPENMOD
    2# MAIS
    3# ATRIB
@@ -227,115 +281,122 @@ Quadruplas do modulo Principal:
    6# WRITE
 		Escrevendo: 
 
-posic + 2 = 2
+posic = 2
 
-   7# RET
-  15# IND
-  16# INDEX
-  17# ATRIBPONT
-  18# IND
-  19# INDEX
-  20# ATRIBPONT
-  21# IND
-  22# INDEX
-  23# ATRIBPONT
-  24# ATRIB
-  25# NOP
-  26# LT
-  27# JF
-  28# NOP
-  29# PARAM
-  30# PARAM
-  31# PARAM
-  32# PARAM
-  33# PARAM
-  34# PARAM
-  35# WRITE
+   7# PARAM
+   8# PARAM
+   9# WRITE
 		Escrevendo: 
 
-i = 2 j = 0 f = 0
+posic + 2 = 4
 
+  10# RET
+  19# IND
+  20# INDEX
+  21# ATRIBPONT
+  22# IND
+  23# INDEX
+  24# ATRIBPONT
+  25# IND
+  26# INDEX
+  27# ATRIBPONT
+  28# ATRIB
+  29# NOP
+  30# LT
+  31# JF
+  32# NOP
+  33# PARAM
+  34# PARAM
+  35# PARAM
   36# PARAM
   37# PARAM
   38# PARAM
-  39# IND
-  40# INDEX
-  41# CONTAPONT
+  39# WRITE
+		Escrevendo: 
+
+i = 2 j = 2 f = 0
+
+  40# PARAM
+  41# PARAM
   42# PARAM
-  43# WRITE
+  43# IND
+  44# INDEX
+  45# CONTAPONT
+  46# PARAM
+  47# WRITE
 		Escrevendo: 
 
 array[0] = 17
 
-  44# NOP
-  45# MAIS
-  46# ATRIB
-  47# JUMP
-  25# NOP
-  26# LT
-  27# JF
-  28# NOP
-  29# PARAM
-  30# PARAM
-  31# PARAM
-  32# PARAM
+  48# NOP
+  49# MAIS
+  50# ATRIB
+  51# JUMP
+  29# NOP
+  30# LT
+  31# JF
+  32# NOP
   33# PARAM
   34# PARAM
-  35# WRITE
-		Escrevendo: 
-
-i = 2 j = 0 f = 1
-
+  35# PARAM
   36# PARAM
   37# PARAM
   38# PARAM
-  39# IND
-  40# INDEX
-  41# CONTAPONT
+  39# WRITE
+		Escrevendo: 
+
+i = 2 j = 2 f = 1
+
+  40# PARAM
+  41# PARAM
   42# PARAM
-  43# WRITE
+  43# IND
+  44# INDEX
+  45# CONTAPONT
+  46# PARAM
+  47# WRITE
 		Escrevendo: 
 
 array[1] = 21
 
-  44# NOP
-  45# MAIS
-  46# ATRIB
-  47# JUMP
-  25# NOP
-  26# LT
-  27# JF
-  28# NOP
-  29# PARAM
-  30# PARAM
-  31# PARAM
-  32# PARAM
+  48# NOP
+  49# MAIS
+  50# ATRIB
+  51# JUMP
+  29# NOP
+  30# LT
+  31# JF
+  32# NOP
   33# PARAM
   34# PARAM
-  35# WRITE
-		Escrevendo: 
-
-i = 2 j = 0 f = 2
-
+  35# PARAM
   36# PARAM
   37# PARAM
   38# PARAM
-  39# IND
-  40# INDEX
-  41# CONTAPONT
+  39# WRITE
+		Escrevendo: 
+
+i = 2 j = 2 f = 2
+
+  40# PARAM
+  41# PARAM
   42# PARAM
-  43# WRITE
+  43# IND
+  44# INDEX
+  45# CONTAPONT
+  46# PARAM
+  47# WRITE
 		Escrevendo: 
 
 array[2] = 11
 
-  44# NOP
-  45# MAIS
-  46# ATRIB
-  47# JUMP
-  25# NOP
-  26# LT
-  27# JF
   48# NOP
-  49# RET
+  49# MAIS
+  50# ATRIB
+  51# JUMP
+  29# NOP
+  30# LT
+  31# JF
+  52# NOP
+  53# RET
    3# EXIT

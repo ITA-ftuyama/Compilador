@@ -1309,9 +1309,8 @@ void InsereListSimb (simbolo simb, listsimb *list) {
     listsimb aux = (elemlistsimb *) 
             malloc  (sizeof (elemlistsimb));
     aux->simb = simb;
-    aux->prox = NULL;
+    aux->prox = (*list)->prox;
     (*list)->prox = aux;
-    (*list) = aux;
 }
 
 /*
@@ -1753,26 +1752,15 @@ void ExecQuadCall (quadrupla quad, quadrupla *quadprox, modhead *mod) {
     *quadprox = (*mod)->listquad->prox;
 
     // Deposita os argumentos nos parâmetros
-    int i; simbolo simb; operando opndaux;  pilhaoperando pilhaopndaux;
+    int i; simbolo simb; listsimb param; operando opndaux;
 
-    InicPilhaOpnd (&pilhaopndaux);
-    for (i = 1; i <= quad->opnd2.atr.valint; i++) {
-        EmpilharOpnd (TopoOpnd (pilhaopnd), &pilhaopndaux);
+    for (i = 1, param = (*mod)->modname->listparam->prox; 
+        i <= quad->opnd2.atr.valint && param != NULL; 
+        i++, param = param->prox) {
+
+        simb = param->simb;
+        opndaux = TopoOpnd (pilhaopnd);
         DesempilharOpnd (&pilhaopnd);
-    }
-
-    return;
-    simb = (*mod)->modname->listparam->simb;
-    for (; simb != NULL; simb = simb->prox) {
-        printf("I");
-    }
-    return;
-
-    for (i = 1; i <= quad->opnd2.atr.valint && simb != NULL; i++, simb = simb->prox) {
-        printf("(%s)", simb->cadeia);
-        opndaux = TopoOpnd (pilhaopndaux);
-        DesempilharOpnd (&pilhaopndaux);
-        return;
         switch (opndaux.tipo) {
             case INTOPND:   *(simb->valint)   = opndaux.atr.valint;     break;
             case REALOPND:  *(simb->valfloat) = opndaux.atr.valfloat;   break;
