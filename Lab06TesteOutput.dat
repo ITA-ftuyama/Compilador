@@ -19,9 +19,12 @@ int Subtracao (int var1, int var2) {
 locais:
 	int i;
 comandos:
-	escrever ("var1 = ", var1);
-	escrever ("var2 = ", var2);
-	escrever ("var1/var2 = ", (var1 / var2));
+	escrever ("
+var1 = ", var1);
+	escrever ("
+var2 = ", var2);
+	escrever ("
+var1/var2 = ", (var1 / var2));
 	retornar var1 - var2;
 }
 
@@ -31,10 +34,13 @@ comandos:
 principal {
 locais:
 	int j, f, array[3];
+	int matriz[3][3];
 comandos:
 	j := Subtracao (4, 2);
-	escrever ("4 - 2 = ", j);
-	escrever ("3 - 7 = ", Subtracao (3, 7));
+	escrever ("
+4 - 2 = ", j);
+	escrever ("
+3 - 7 = ", Subtracao (3, 7));
 	se (!(j > 0)) {
 		i := 1;
 	}
@@ -46,8 +52,25 @@ comandos:
 	array[1] := 21;
 	array[2] := 11;
 	para (f := 0; f < 3; f := f + 1) {
-		escrever ("i = ", i, " j = ", j, " f = ", f);
-		escrever ("array[", f, "] = ", array[f]);
+		escrever ("
+i = ", i, " j = ", j, " f = ", f);
+		escrever ("
+array[", f, "] = ", array[f]);
+	}
+	matriz[0][0] := 17;
+	matriz[0][1] := 21;
+	matriz[0][2] := 11;
+	matriz[1][0] := 27;
+	matriz[1][1] := 31;
+	matriz[1][2] := 21;
+	matriz[3][0] := 0;
+	matriz[3][1] := 0;
+	matriz[3][2] := 0;
+	para (j := 0; j < 3; j := j + 1) {
+		para (f := 0; f < 3; f := f + 1) {
+			escrever ("
+matriz[", j, "][", f, "] = ", matriz[j][f]);
+		}
 	}
 }
 
@@ -56,4 +79,29 @@ i: Nao Referenciada
 
 
 	INTERPRETADOR:
-var1 = 4var2 = 2var1/var2 = 24 - 2 = 2var1 = 3var2 = 7var1/var2 = 03 - 7 = -4posic = 2posic * 6 = 12i = 2 j = 2 f = 0array[0] = 17i = 2 j = 2 f = 1array[1] = 21i = 2 j = 2 f = 2array[2] = 11
+-----------------------
+
+
+var1 = 4
+var2 = 2
+var1/var2 = 2
+4 - 2 = 2
+var1 = 3
+var2 = 7
+var1/var2 = 0
+3 - 7 = -4posic = 2posic * 6 = 12
+i = 2 j = 2 f = 0
+array[0] = 17
+i = 2 j = 2 f = 1
+array[1] = 21
+i = 2 j = 2 f = 2
+array[2] = 11
+matriz[0][0] = 17
+matriz[0][1] = 21
+matriz[0][2] = 11
+matriz[1][0] = 27
+matriz[1][1] = 31
+matriz[1][2] = 21
+matriz[2][0] = 0
+matriz[2][1] = 0
+matriz[2][2] = 0

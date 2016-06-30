@@ -104,10 +104,9 @@ comandos:
 	escrever ("Nova palavra? (s/n): ");
 	ler (c);
 	enquanto (c = 's' || c = 'S') {
-		ler(c);
+		ler(c); // \n após a letra
 		escrever ("\nDigite a palavra: ");
 		fim := false;
-		escrever("palavra:(");
 		para (i := 0; !fim; i := i + 1) {
 			ler (palavra[i]);
 			se (palavra[i] = '\n') {
@@ -116,7 +115,6 @@ comandos:
 			}
 			escrever(palavra[i]);
 		}
-		escrever(")");
 		posic := Procura ();
 		se (posic > 0) 
 			nocorr[posic] := nocorr[posic] + 1;

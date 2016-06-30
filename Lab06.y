@@ -436,7 +436,7 @@ void InicPilhaQuad (pilhaquadruplas *);
 char VaziaQuad (pilhaquadruplas);
 
 FILE *finput;
-bool DEBUG = FALSE;
+bool DEBUG = TRUE;
 
 %}
 
@@ -1388,7 +1388,8 @@ int hash (char *cadeia) {
 void ImprimeTabSimb () {
     int i, j; simbolo s;
     if (!DEBUG) return; 
-    printf ("\n\n\tTABELA  DE  SIMBOLOS:\n\n");
+    printf ("\n\n\tTABELA  DE  SIMBOLOS:\n");
+    printf ("-----------------------\n\n");
     for (i = 0; i < NCLASSHASH; i++)
         if (tabsimb[i]) {
             printf ("Classe %d:\n", i);
@@ -1600,6 +1601,7 @@ void ImprimeQuadruplas () {
     quadrupla q;
     if (!DEBUG) return; 
     printf ("\n\n\tCODIGO INTEMEDIARIO:\n");
+    printf ("-----------------------\n");
     for (p = codintermed->prox; p != NULL; p = p->prox) {
         printf ("\n\nQuadruplas do modulo %s:\n", p->modname->cadeia);
         for (q = p->listquad->prox; q != NULL; q = q->prox) {
@@ -1666,6 +1668,8 @@ void InterpCodIntermed () {
     bool encerra = FALSE;
     modhead mod = codintermed->prox;
     printf ("\n\n\tINTERPRETADOR:\n");
+    printf ("-----------------------\n\n");
+
 
     // Executa as quádruplas do módulo Principal
     for (quad = mod->listquad->prox; (!encerra && quad != NULL); quad = quadprox) {

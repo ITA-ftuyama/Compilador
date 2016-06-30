@@ -19,9 +19,9 @@ int Subtracao (int var1, int var2) {
 locais:
 	int i;
 comandos:
-	escrever ("var1 = ", var1);
-	escrever ("var2 = ", var2);
-	escrever ("var1/var2 = ", (var1/var2));
+	escrever ("\nvar1 = ", var1);
+	escrever ("\nvar2 = ", var2);
+	escrever ("\nvar1/var2 = ", (var1/var2));
 	retornar var1 - var2;
 }
 
@@ -30,10 +30,11 @@ comandos:
 principal {
 locais:
 	int j, f, array[3];
+	int matriz[3][3];
 comandos:
 	j := Subtracao(4, 2);
-	escrever ("4 - 2 = ", j);
-	escrever ("3 - 7 = ", Subtracao(3, 7));
+	escrever ("\n4 - 2 = ", j);
+	escrever ("\n3 - 7 = ", Subtracao(3, 7));
 	se (!(j > 0)) {
 		i := 1;
 	} senao {
@@ -44,7 +45,21 @@ comandos:
 	array[1] := 21;
 	array[2] := 11;
 	para (f := 0; f < 3; f := f + 1) {
-		escrever("i = ", i, " j = ", j, " f = ", f);
-		escrever("array[", f, "] = ", array[f]);
+		escrever("\ni = ", i, " j = ", j, " f = ", f);
+		escrever("\narray[", f, "] = ", array[f]);
+	}
+	matriz[0][0] := 17;
+	matriz[0][1] := 21;
+	matriz[0][2] := 11;
+	matriz[1][0] := 27;
+	matriz[1][1] := 31;
+	matriz[1][2] := 21;
+	matriz[3][0] := 0;
+	matriz[3][1] := 0;
+	matriz[3][2] := 0;
+	para (j := 0; j < 3; j := j + 1) {
+		para (f := 0; f < 3; f := f + 1) {
+			escrever("\nmatriz[", j, "][", f, "] = ", matriz[j][f]);
+		}
 	}
 }
