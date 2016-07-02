@@ -33,9 +33,10 @@ Lab06  < Compilador/Lab06Teste.dat > Compilador/Lab06TesteOutput.dat
 	Lab06 < Compilador/Testes04/RetornoFunc.dat > Compilador/Testes04/oRetornoFunc.dat
 :TestesSemanticos
 
+
+	Lab06  < Compilador/Testes05/Lab05Teste.dat > Compilador/Testes05/Lab05TesteOutput.dat
+	Lab06  < Compilador/Testes05/Lab05TesteSlides.dat > Compilador/Testes05/Lab05TesteSlidesOutput.dat
 goto TestesCodigoIntermediario
-	Lab06  < Compilador/Testes05/Lab06Teste.dat > Compilador/Testes05/Lab06TesteOutput.dat
-	Lab06  < Compilador/Testes05/Lab06TesteSlides.dat > Compilador/Testes05/Lab06TesteSlidesOutput.dat
 :TestesCodigoIntermediario
 
 echo Completo

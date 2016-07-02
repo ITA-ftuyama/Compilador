@@ -139,6 +139,7 @@ n: Nao Inicializada
 
 
 	TABELA  DE  SIMBOLOS:
+-----------------------
 
 Classe 0:
   (s       , IDVAR, int   , 1, 1, escopo: testeSlide6);
@@ -194,7 +195,7 @@ Classe 11:
   (##15    , IDVAR, int   , 1, 1, escopo: testeSlide2);
   (##8     , IDVAR, int   , 1, 1, escopo: testeSlide);
   (testeSlide, IDFUNC, vazio , escopo: Global
-	Variaveis: logico achou, int n, int div, int resto, int cont, int num, logico ##1, logico ##2, int ##3, logico ##4, int ##5, logico ##6, logico ##7, int ##8, logico ##9, int ##10, logico ##11, int ##12
+	Variaveis: int ##12, logico ##11, int ##10, logico ##9, int ##8, logico ##7, logico ##6, int ##5, logico ##4, int ##3, logico ##2, logico ##1, int num, int cont, int resto, int div, int n, logico achou
 	Parametros: NULL);
 Classe 12:
   (##52    , IDVAR, int   , 1, 1, escopo: testeSlide6);
@@ -228,7 +229,7 @@ Classe 15:
   (##19    , IDVAR, int   , 1, 1, escopo: testeSlide4);
   (k       , IDVAR, int   , 1, 1, escopo: testeSlide4);
   (testeSlide2, IDFUNC, vazio , escopo: Global
-	Variaveis: int i, int j, int n, int v, int h, logico ##13, int ##14, int ##15
+	Variaveis: int ##15, int ##14, logico ##13, int h, int v, int n, int j, int i
 	Parametros: NULL);
 Classe 16:
   (##47    , IDVAR, int   , 1, 1, escopo: testeSlide5);
@@ -238,31 +239,31 @@ Classe 16:
 	Parametros: int n);
   (##29    , IDVAR, int   , 1, 1, escopo: testeSlide4);
   (testeSlide3, IDFUNC, vazio , escopo: Global
-	Variaveis: int a, int b, int c, int ##16
+	Variaveis: int ##16, int c, int b, int a
 	Parametros: NULL);
 Classe 17:
   (##48    , IDVAR, logico, 1, 1, escopo: testeSlide5);
   (##39    , IDVAR, logico, 1, 1, escopo: testeSlide5);
   (m       , IDVAR, int   , 1, 1, escopo: testeSlide5);
   (testeSlide4, IDFUNC, vazio , escopo: Global
-	Variaveis: int i, int j, int k, int A[10][10], int ##17, int ##18, int ##19, int ##20, int ##21, int ##22, int ##23, int ##24, int ##25, int ##26, int ##27, int ##28, int ##29, int ##30
+	Variaveis: int ##30, int ##29, int ##28, int ##27, int ##26, int ##25, int ##24, int ##23, int ##22, int ##21, int ##20, int ##19, int ##18, int ##17, int A[10][10], int k, int j, int i
 	Parametros: NULL);
 Classe 18:
   (##49    , IDVAR, logico, 1, 1, escopo: testeSlide6);
   (n       , IDVAR, int   , 0, 1, escopo: testeSlide6);
   (n       , IDVAR, int   , 1, 1, escopo: testeSlide5);
   (testeSlide5, IDFUNC, vazio , escopo: Global
-	Variaveis: carac c, int m, int n, int comb, logico ##31, logico ##32, logico ##33, logico ##34, logico ##35, logico ##36, logico ##37, logico ##38, logico ##39, logico ##40, logico ##41, int ##42, int ##43, int ##44, int ##45, int ##46, int ##47, logico ##48
+	Variaveis: logico ##48, int ##47, int ##46, int ##45, int ##44, int ##43, int ##42, logico ##41, logico ##40, logico ##39, logico ##38, logico ##37, logico ##36, logico ##35, logico ##34, logico ##33, logico ##32, logico ##31, int comb, int n, int m, carac c
 	Parametros: NULL);
   (n       , IDVAR, int   , 1, 1, escopo: fat);
   (n       , IDVAR, int   , 1, 1, escopo: testeSlide2);
   (n       , IDVAR, int   , 1, 1, escopo: testeSlide);
   (Global  , IDGLOB, null  , escopo: NULL
 	Variaveis: carac c
-	Funcoes: vazio testeSlide, vazio testeSlide2, vazio testeSlide3, vazio testeSlide4, int fat, vazio testeSlide5, vazio testeSlide6, vazio Principal);
+	Funcoes: vazio Principal, vazio testeSlide6, vazio testeSlide5, int fat, vazio testeSlide4, vazio testeSlide3, vazio testeSlide2, vazio testeSlide);
 Classe 19:
   (testeSlide6, IDFUNC, vazio , escopo: Global
-	Variaveis: int i, int n, int s, int p, logico ##49, int ##50, int ##51, int ##52
+	Variaveis: int ##52, int ##51, int ##50, logico ##49, int p, int s, int n, int i
 	Parametros: NULL);
   (A       , IDVAR, int   , 1, 1, EH ARRAY
 	ndims = 2, dimensoes:  10  10, escopo: testeSlide4);
@@ -274,11 +275,14 @@ Classe 22:
 
 
 	CODIGO INTEMEDIARIO:
+-----------------------
 
 
 Quadruplas do modulo Global:
 
 	   1# OPENMOD, (MODULO, Global), (IDLE), (IDLE)
+	   2#    CALL, (PROC, Principal), (INT, 0), (IDLE)
+	   3#    EXIT, (IDLE), (IDLE), (IDLE)
 
 Quadruplas do modulo testeSlide:
 
@@ -488,4 +492,23 @@ Quadruplas do modulo Principal:
 	   2#   PARAM, (VAR, c), (IDLE), (IDLE)
 	   3#    READ, (INT, 1), (IDLE), (IDLE)
 	   4#     RET, (IDLE), (IDLE), (IDLE)
-	   5#    EXIT, (IDLE), (IDLE), (IDLE)
+
+
+	INTERPRETADOR:
+-----------------------
+
+
+   1# OPENMOD
+		Alocando as variaveis:
+			     c:  1 elemento(s) alocado(s) 
+   2# CALL
+		Alocando as variaveis:
+   1# OPENMOD
+		Alocando as variaveis:
+			     c:  1 elemento(s) alocado(s) 
+   2# PARAM
+   3# READ
+		Lendo: 
+
+
+***** RunTimeException<>: Leitura inesperada do arquivo entrada. *****

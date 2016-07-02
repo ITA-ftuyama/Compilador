@@ -44,6 +44,7 @@
 /*   Definicao de outras constantes   */
 
 #define     NCLASSHASH      23
+#define     SUCCESS         2
 #define     TRUE            1
 #define     FALSE           0
 #define     MAXDIMS         10
@@ -98,6 +99,7 @@
 /*  Definicao de RUN TIME Exception */
 #define EXCEPTION_RECURSIVE "A linguagem nao admite recursividade."
 #define EXCEPTION_INPUTFILE "Arquivo de entrada nao encontrado."
+#define EXCEPTION_READFILE  "Leitura inesperada do arquivo entrada."
 
 /****************************************************/
 /*                                                  */
@@ -1662,7 +1664,7 @@ void InterpCodIntermed () {
     InicPilhaOpnd (&pilhaopnd);
     InicPilhaOpnd (&pilhaindex);
     InicPilhaQuad (&pilhaquads);
-    finput = fopen ("Compilador/Lab06_entrada", "r");
+    finput = fopen ("Compilador/Lab06Input", "r");
 
     // A execução começa no módulo global
     bool encerra = FALSE;
@@ -2262,11 +2264,20 @@ void ExecQuadRead (quadrupla quad) {
     for (i = 1; i <= quad->opnd1.atr.valint; i++) {
         opndaux = TopoOpnd (pilhaopndaux);
         DesempilharOpnd (&pilhaopndaux);
+        int check;
         switch (opndaux.atr.simb->tvar) {
-            case INTEGER:   fscanf (finput, "%d", opndaux.atr.simb->valint);    break;
-            case FLOAT:     fscanf (finput, "%g", opndaux.atr.simb->valfloat);  break;
-            case LOGIC:     fscanf (finput, "%d", opndaux.atr.simb->vallogic);  break;
-            case CHAR:      fscanf (finput, "%c", opndaux.atr.simb->valchar);   break;
+            case INTEGER:   
+                if (fscanf (finput, "%d", opndaux.atr.simb->valint) != SUCCESS)
+                    RunTimeException(EXCEPTION_READFILE);  break;
+            case FLOAT:
+                if (fscanf (finput, "%g", opndaux.atr.simb->valfloat) != SUCCESS)
+                    RunTimeException(EXCEPTION_READFILE);  break;  
+            case LOGIC: 
+                if (fscanf (finput, "%d", opndaux.atr.simb->vallogic) != SUCCESS)
+                    RunTimeException(EXCEPTION_READFILE);  break;   
+            case CHAR: 
+                if (fscanf (finput, "%c", opndaux.atr.simb->valchar) != SUCCESS)
+                    RunTimeException(EXCEPTION_READFILE);  break;     
         }
     }
 }
