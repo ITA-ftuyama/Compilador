@@ -1,0 +1,243 @@
+
+/*  Programa de teste para 
+		Geração de Código Intermediário */
+
+
+/*  Variaveis globais  */
+
+globais:
+	carac c;
+	int lista[3], i, j, k, A[10][10];
+	int ntab;
+
+funcoes:
+
+/*  Funcao para procurar uma palavra na tabela de palavras  */
+
+int Procura (int var) {
+locais:
+	int i, inf, sup, med, posic, compara;
+	logico achou, fimteste;
+comandos:
+	achou := false;
+	inf := 1;
+	sup := ntab;
+	
+	retornar posic;
+}
+
+/*  Funcao para inserir uma palavra na tabela de palavras  */
+
+vazio Inserir (int posic) {
+locais:
+	int i, j;
+	logico fim;
+comandos:
+	ntab := ntab + 1;
+}
+
+/*  Funcao para escrever a tabela de palavras  */
+
+vazio ExibirTabela () {
+locais:
+	int i, j;
+	logico fim;
+comandos:
+	;
+}
+
+vazio Teste1() {
+locais:
+	int var;
+comandos:
+
+	// Caso 1: Atribuicao
+	i := 5;
+	j := 1;
+	k := A[i-3][j+2] + 5;
+	A[10-i][9-j] := i + j*k;
+
+
+	// Caso 2: Ler (varios atributos)
+	ler(i, j, A[2][3], k);
+	escrever(i, j, A[2][3], k);
+	ler (c, lista[1], i);
+	escrever (c, lista[1], i);
+	ler (c, j, i);
+	escrever (c, j, i);
+
+
+	// Caso 3: Ler (um atributo)
+	ler (A[1][2]);
+	ler (j);
+
+
+	// Caso 4: Escrever
+	escrever (A[1][2]);
+	escrever (j);
+
+}
+
+
+vazio Teste2() {
+locais:
+	int var, cont, num, div, resto;
+	logico achou;
+comandos:
+	// Caso 5: Se
+	A[1][1] := 1;
+	div := 2;
+
+	se  (achou = false) {
+		escrever (num);
+		cont := cont + 1;
+	}
+
+	resto := num % div;
+	se  (resto = 0) achou := true;
+	senao div := div + 1;
+
+	se (A[1][1] = 1) {
+		
+		// Operador mais
+		i := i + j;
+		
+		// Operador menos
+		i := i - k;
+	}
+
+	se (A[1][1] != 1);
+	senao {
+		A[1][1] := 3;
+	}
+
+	i := 1;
+	se (i > 1) {
+
+		// Operador multiplicacao
+		i := i*2;
+
+		// Operador divisao
+		i := i/4;
+	}
+
+	se (i < 1);
+	senao {
+		i := 3;
+
+		// Operador resto
+		j := 6%i;
+	}
+}
+
+
+vazio Teste3() {
+locais:
+	int var, div, num;
+	logico achou;
+comandos:
+	// Caso 6: Enquanto
+	A[1][1] := 1;
+	enquanto (achou = false && div * div <= num) {
+		achou := true;
+	}
+
+	enquanto (A[1][1] >= 1 || var <= 1) {
+		
+		// Operador mais
+		var := i + j + 10;
+		A[1][1] := 1 - 3;
+		
+		// Operador menos
+		i := i - k;
+	}
+
+	i := 8;
+	enquanto (i > 4) {
+
+		// Operador multiplicacao
+		i := i*2;
+
+		// Operador divisao
+		i := i/4;
+
+		escrever(i);
+	}
+
+	// Caso 7: Repetir enquanto
+	c := 'n';
+	repetir {
+		c := c + 1;
+		escrever("c = ", c);
+	} enquanto (c != 's');
+
+	repetir {
+		// Operador menos unario
+		var := ~1;
+		A[1][1] := 1;
+	} enquanto (A[1][1] != 1 && var = 1);
+
+	repetir {
+		i := 3;
+
+		// Operador resto
+		j := 6%i;
+	} enquanto(j != 0);
+}
+
+
+vazio Teste4() {
+locais:
+	int var, i, s, n, p, compara;
+	carac c;
+	logico fimteste;
+comandos:
+	// Caso 8: Para
+	s := 0;
+	p := 1;
+	n := 2;
+	para (i := 1; i <= n; i := i + 1) 
+	{
+		s := s + i;
+		p := p * i;
+	}
+   	i := 0;
+
+	para (i := 1; !fimteste && compara = 0; i := i + 1) {
+		se (c < 'z') 
+			compara := ~1;
+		senao se (c > 'a') 
+			compara := 1;
+		se (c = '\0') 
+			fimteste := true;
+		fimteste := true;
+	}
+}
+
+/*  Funcao principal  */
+
+principal {
+locais:
+	carac c;
+	int posic;
+	logico fim;
+comandos:
+	ntab := 0;
+	abrir ("Compilador/Testes06/Lab06TesteInput");
+	escrever ("Nova palavra? (s/n): ");
+	ler (c);
+	ler (c);
+
+	chamar Teste1();
+	chamar Teste2();
+	chamar Teste3();
+	chamar Teste4();
+
+	/*Caso 10: Chamada Funcao*/
+	A[1][4] := Procura(A[1][1]);
+	A[1][5] := Procura(i);
+
+	/*Caso 10: Chamada Procedimento*/
+	chamar Inserir(A[1][2]);
+	chamar Inserir(i);
+}

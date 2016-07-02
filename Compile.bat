@@ -21,7 +21,16 @@ echo.
 echo Compilando programa
 
 REM Lab06  < Compilador/Lab06Prog.dat > Compilador/Lab06ProgOutput.dat
-REM Lab06  < Compilador/Lab06Teste.dat > Compilador/Lab06TesteOutput.dat
+Lab06  < Compilador/Lab06Teste.dat > Compilador/Lab06TesteOutput.dat
+
+REM goto TestesInterpretador
+	Lab06  < Compilador/Testes06/Lab06Teste.dat > Compilador/Testes06/Lab06TesteOutput.dat
+:TestesInterpretador
+
+goto TestesCodigoIntermediario
+	Lab06  < Compilador/Testes05/Lab05Teste.dat > Compilador/Testes05/Lab05TesteOutput.dat
+	Lab06  < Compilador/Testes05/Lab05TesteSlides.dat > Compilador/Testes05/Lab05TesteSlidesOutput.dat
+:TestesCodigoIntermediario
 
 goto TestesSemanticos
 	Lab06 < Compilador/Testes04/Declaracao.dat > Compilador/Testes04/oDeclaracao.dat
@@ -32,11 +41,6 @@ goto TestesSemanticos
 	Lab06 < Compilador/Testes04/CallFunc.dat > Compilador/Testes04/oCallFunc.dat
 	Lab06 < Compilador/Testes04/RetornoFunc.dat > Compilador/Testes04/oRetornoFunc.dat
 :TestesSemanticos
-
-REM goto TestesCodigoIntermediario
-	Lab06  < Compilador/Testes05/Lab05Teste.dat > Compilador/Testes05/Lab05TesteOutput.dat
-	Lab06  < Compilador/Testes05/Lab05TesteSlides.dat > Compilador/Testes05/Lab05TesteSlidesOutput.dat
-:TestesCodigoIntermediario
 
 echo.
 echo Completo
