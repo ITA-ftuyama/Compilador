@@ -126,6 +126,7 @@ principal {
 locais:
 	carac c;
 comandos:
+	abrir ("Compilador/Testes05/Lab05TesteSlidesInput");
 	ler (c);
 }
 
@@ -489,9 +490,10 @@ Quadruplas do modulo testeSlide6:
 Quadruplas do modulo Principal:
 
 	   1# OPENMOD, (MODULO, Principal), (IDLE), (IDLE)
-	   2#   PARAM, (VAR, c), (IDLE), (IDLE)
-	   3#    READ, (INT, 1), (IDLE), (IDLE)
-	   4#     RET, (IDLE), (IDLE), (IDLE)
+	   2#   ABRIR, (CADEIA, Compilador/Testes05/Lab05TesteSlidesInput), (IDLE), (IDLE)
+	   3#   PARAM, (VAR, c), (IDLE), (IDLE)
+	   4#    READ, (INT, 1), (IDLE), (IDLE)
+	   5#     RET, (IDLE), (IDLE), (IDLE)
 
 
 	INTERPRETADOR:
@@ -506,7 +508,12 @@ Quadruplas do modulo Principal:
    1# OPENMOD
 		Alocando as variaveis:
 			     c:  1 elemento(s) alocado(s) 
-   2# PARAM
-   3# READ
+   2# ABRIR
+   3# PARAM
+   4# READ
+		Lendo: 
 
-***** RunTimeException<>: Arquivo de entrada nao encontrado. *****
+   5# RET
+		Desalocando as variaveis:
+			     c:  1 elemento(s) alocado(s) 
+   3# EXIT

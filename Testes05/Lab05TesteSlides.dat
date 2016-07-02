@@ -106,5 +106,6 @@ principal {
 locais:
 	carac c;
 comandos:
+	abrir("Compilador/Testes05/Lab05TesteSlidesInput");
 	ler(c);
 }
