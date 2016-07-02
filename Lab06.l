@@ -19,9 +19,9 @@ cadeia		\"{carac2}*\"
 
 %%
 
-{ws}				{ ;}
-"//"				{comentarioLinha();}
-"/*"				{comentario ();}
+{ws}						{ ;}
+"//"						{comentarioLinha();}
+"/*"						{comentario ();}
 
 se|SE 						{return SE;}
 senao|SENAO 				{return SENAO;}
@@ -32,21 +32,21 @@ repetir|REPETIR 			{return REPETIR;}
 true|TRUE|verdade|VERDADE	{return VERDADE;}
 false|FALSE|falso|FALSO  	{return FALSO;}
 
-globais|GLOBAIS     {return GLOBAIS;}
-locais|LOCAIS     	{return LOCAIS;}
-comandos|COMANDOS   {return COMANDOS;}
-funcoes|FUNCOES	    {return FUNCOES;}
-principal|PRINCIPAL	{return PRINCIPAL;}
+globais|GLOBAIS     		{return GLOBAIS;}
+locais|LOCAIS     			{return LOCAIS;}
+comandos|COMANDOS   		{return COMANDOS;}
+funcoes|FUNCOES	    		{return FUNCOES;}
+principal|PRINCIPAL			{return PRINCIPAL;}
 
-ler|LER         	{return LER;}
-escrever|ESCREVER   {return ESCREVER;}
-chamar|CHAMAR      	{return CHAMAR;}
+ler|LER         			{return LER;}
+escrever|ESCREVER   		{return ESCREVER;}
+chamar|CHAMAR      			{return CHAMAR;}
 
-int|INT         	{return INTEIRO;}
-real|REAL        	{return REAL;}
-carac|CARAC       	{return CARAC;}
-logico|LOGICO      	{return LOGICO;}
-vazio|VAZIO       	{return VAZIO;}
+int|INT         			{return INTEIRO;}
+real|REAL        			{return REAL;}
+carac|CARAC       			{return CARAC;}
+logico|LOGICO      			{return LOGICO;}
+vazio|VAZIO       			{return VAZIO;}
 
 {id}		{strcpy (yylval.cadeia, yytext);    return ID;		}
 {ctcarac}	{yylval.carac = tratachar (yytext);	return CTCARAC;	}

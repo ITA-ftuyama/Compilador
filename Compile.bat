@@ -34,8 +34,8 @@ goto TestesSemanticos
 :TestesSemanticos
 
 goto TestesCodigoIntermediario
-	Lab06  < Compilador/Testes05/Lab06Teste.dat > Compilador/Testes05/Lab06TesteOutput.dat
-	Lab06  < Compilador/Testes05/Lab06TesteSlides.dat > Compilador/Testes05/Lab06TesteSlidesOutput.dat
+	Lab06  < Compilador/Testes05/Lab05Teste.dat > Compilador/Testes05/Lab05TesteOutput.dat
+	Lab06  < Compilador/Testes05/Lab05TesteSlides.dat > Compilador/Testes05/Lab05TesteSlidesOutput.dat
 :TestesCodigoIntermediario
 
 echo.
