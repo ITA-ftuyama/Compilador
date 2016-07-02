@@ -60,8 +60,11 @@ comandos:
 
 	// Caso 2: Ler (varios atributos)
 	ler(i, j, A[2][3], k);
+	escrever(i, j, A[2][3], k);
 	ler (c, lista[1], i);
+	escrever (c, lista[1], i);
 	ler (c, j, i);
+	escrever (c, j, i);
 
 
 	// Caso 3: Ler (um atributo)
@@ -70,8 +73,8 @@ comandos:
 
 
 	// Caso 4: Escrever
-	escrever (A[5][8]);
-	escrever (c);
+	escrever (A[1][2]);
+	escrever (j);
 
 }
 
@@ -83,6 +86,7 @@ locais:
 comandos:
 	// Caso 5: Se
 	A[1][1] := 1;
+	div := 2;
 
 	se  (achou = false) {
 		escrever (num);
@@ -92,7 +96,6 @@ comandos:
 	resto := num % div;
 	se  (resto = 0) achou := true;
 	senao div := div + 1;
-
 
 	se (A[1][1] = 1) {
 		
@@ -115,7 +118,7 @@ comandos:
 		i := i*2;
 
 		// Operador divisao
-		i := j/4;
+		i := i/4;
 	}
 
 	se (i < 1);
@@ -136,38 +139,42 @@ comandos:
 	// Caso 6: Enquanto
 	A[1][1] := 1;
 	enquanto (achou = false && div * div <= num) {
-		;
+		achou := true;
 	}
 
 	enquanto (A[1][1] >= 1 || var <= 1) {
 		
 		// Operador mais
-		i := i + j;
+		var := i + j + 10;
+		A[1][1] := 1 - 3;
 		
 		// Operador menos
 		i := i - k;
 	}
 
-	i := 1;
-	enquanto (i > 1) {
+	i := 8;
+	enquanto (i > 4) {
 
 		// Operador multiplicacao
 		i := i*2;
 
 		// Operador divisao
-		i := j/4;
+		i := i/4;
+
+		escrever(i);
 	}
 
 	// Caso 7: Repetir enquanto
-
+	c := 'n';
 	repetir {
-		;
-	} enquanto (c = 's');
-
+		c := c + 1;
+		escrever("c = ", c);
+	} enquanto (c != 's');
 
 	repetir {
 		// Operador menos unario
 		var := ~1;
+		A[1][1] := 1;
 	} enquanto (A[1][1] != 1 && var = 1);
 
 	repetir {
@@ -175,7 +182,7 @@ comandos:
 
 		// Operador resto
 		j := 6%i;
-	} enquanto(j != 2);
+	} enquanto(j != 0);
 }
 
 
@@ -188,6 +195,7 @@ comandos:
 	// Caso 8: Para
 	s := 0;
 	p := 1;
+	n := 2;
 	para (i := 1; i <= n; i := i + 1) 
 	{
 		s := s + i;
@@ -202,6 +210,7 @@ comandos:
 			compara := 1;
 		se (c = '\0') 
 			fimteste := true;
+		fimteste := true;
 	}
 }
 
@@ -214,7 +223,9 @@ locais:
 	logico fim;
 comandos:
 	ntab := 0;
+	abrir ("Compilador/Testes05/Lab05TesteInput");
 	escrever ("Nova palavra? (s/n): ");
+	ler (c);
 	ler (c);
 
 	chamar Teste1();

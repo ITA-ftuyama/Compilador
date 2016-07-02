@@ -99,6 +99,7 @@
 #define EXCEPTION_RECURSIVE "A linguagem nao admite recursividade."
 #define EXCEPTION_INPUTFILE "Arquivo de entrada nao encontrado."
 #define EXCEPTION_READFILE  "Leitura inesperada do arquivo entrada."
+#define EXCEPTION_DIVZERO   "Tentativa de divisao por zero."
 
 /****************************************************/
 /*                                                  */
@@ -128,17 +129,18 @@
 #define     NOP             18
 #define     OPJUMP          19
 #define     OPJF            20
-#define     PARAM           21
-#define     OPREAD          22
-#define     OPWRITE         23
-#define     OPEXIT          24
-#define     OPCALL          25
-#define     OPRETURN        26
-#define     OPIND           27
-#define     OPINDEX         28
-#define     OPATRIBPONT     29
-#define     OPCONTAPONT     30
-#define     OPABRIR         31
+#define     OPJT            21
+#define     PARAM           22
+#define     OPREAD          23
+#define     OPWRITE         24
+#define     OPEXIT          25
+#define     OPCALL          26
+#define     OPRETURN        27
+#define     OPIND           28
+#define     OPINDEX         29
+#define     OPATRIBPONT     30
+#define     OPCONTAPONT     31
+#define     OPABRIR         32
 
 /* Definicao de constantes para os tipos de operandos de quadruplas */
 
@@ -188,10 +190,10 @@ char *nometipesp[7] = {
 
 /* Strings para operadores de quadruplas */
 
-char *nomeoperquad[32] = {"",
+char *nomeoperquad[33] = {"",
     "OR", "AND", "LT", "LE", "GT", "GE", "EQ", "NE", "MAIS",
     "MENOS", "MULT", "DIV", "RESTO", "MENUN", "NOT", "ATRIB",
-    "OPENMOD", "NOP", "JUMP", "JF", "PARAM", "READ", "WRITE",
+    "OPENMOD", "NOP", "JUMP", "JF", "JT", "PARAM", "READ", "WRITE",
     "EXIT", "CALL", "RET", "IND", "INDEX", "ATRIBPONT", "CONTAPONT",
     "ABRIR"
 };
@@ -389,7 +391,6 @@ void ExecQuadRel (quadrupla, int);
 void ExecQuadAtrib (quadrupla);
 void ExecQuadRead (quadrupla);
 void ExecQuadJump (quadrupla, quadrupla*);
-void ExecQuadJF (quadrupla , quadrupla *);
 
 /****************************************************/
 /*                                                  */
@@ -763,19 +764,21 @@ CmdEnquanto :   ENQUANTO  ABPAR {
                         GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
                 }
             ;
-CmdRepetir  :   REPETIR  {printf("repetir ");}
-                CmdInside ENQUANTO   ABPAR  {
-                    tabular(1); printf("enquanto ("); 
+CmdRepetir  :   REPETIR  {
+                    printf("repetir ");
                     $<quad>$ =
                         GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
+                }
+                CmdInside ENQUANTO   ABPAR  {
+                    tabular(1); printf("enquanto ("); 
                 }
                 Expressao FPAR PVIRG  {
                     printf(");"); 
                     if ($7.tipo != LOGIC)
                         Exception (errorIncomp, INCOMP_REPETIR); 
                     opndaux.tipo = ROTOPND;
-                    opndaux.atr.rotulo = $<quad>6;
-                    GeraQuadrupla (OPJF, $7.opnd, opndidle, opndaux);
+                    opndaux.atr.rotulo = $<quad>2;
+                    GeraQuadrupla (OPJT, $7.opnd, opndidle, opndaux);
                 }
             ;
 CmdPara     :   PARA  ABPAR {printf("para (");}
@@ -1715,7 +1718,8 @@ void InterpCodIntermed () {
                                 ExecQuadRel (quad, quad->oper);             break;
             case OPREAD     :   ExecQuadRead (quad);                        break;
             case OPJUMP     :   ExecQuadJump (quad, &quadprox);             break;
-            case OPJF       :   ExecQuadJF (quad, &quadprox);               break;
+            case OPJF       :   ExecQuadJump (quad, &quadprox);             break;
+            case OPJT       :   ExecQuadJump (quad, &quadprox);             break;
             case NOP        :                                               break;
             default         :                                               break;
         }
@@ -1745,10 +1749,10 @@ void AlocaVariaveis (listsimb varlist) {
                 for (j = 1; j <= simb->ndims; j++)  
                     nelemaloc *= simb->dims[j];
             switch (simb->tvar) {
-               case INTEGER:    simb->valint   = malloc (nelemaloc * sizeof (int));    break;
-               case FLOAT:      simb->valfloat = malloc (nelemaloc * sizeof (float));  break;
-               case CHAR:       simb->valchar  = malloc (nelemaloc * sizeof (char));   break;
-               case LOGIC:      simb->vallogic = malloc (nelemaloc * sizeof (char));   break;
+               case INTEGER:    simb->valint   = malloc (nelemaloc * sizeof (int));    *(simb->valint)   = 0;  break;
+               case FLOAT:      simb->valfloat = malloc (nelemaloc * sizeof (float));  *(simb->valfloat) = 0;  break;
+               case CHAR:       simb->valchar  = malloc (nelemaloc * sizeof (char));   *(simb->valchar)  = 0;  break;
+               case LOGIC:      simb->vallogic = malloc (nelemaloc * sizeof (char));   *(simb->vallogic) = 0;  break;
            }
            if (DEBUG) printf ("\n\t\t\t%6s: %2d elemento(s) alocado(s) ", simb->cadeia, nelemaloc);
         }  
@@ -1990,7 +1994,8 @@ void ExecQuadAritmetica (quadrupla quad, int oper) {
                     case OPMAIS :   *(quad->result.atr.simb->valint) = valint1 + valint2;   break;
                     case OPMENOS:   *(quad->result.atr.simb->valint) = valint1 - valint2;   break;
                     case OPMULT :   *(quad->result.atr.simb->valint) = valint1 * valint2;   break;
-                    case OPDIV  :   *(quad->result.atr.simb->valint) = valint1 / valint2;   break;
+                    case OPDIV  :   if (valint2 == 0) RunTimeException(EXCEPTION_DIVZERO);
+                                    *(quad->result.atr.simb->valint) = valint1 / valint2;   break;
                 }
                 break;
             case FLOAT:
@@ -1999,28 +2004,32 @@ void ExecQuadAritmetica (quadrupla quad, int oper) {
                         case OPMAIS :   *(quad->result.atr.simb->valfloat) = valint1 + valint2; break;
                         case OPMENOS:   *(quad->result.atr.simb->valfloat) = valint1 - valint2; break;
                         case OPMULT :   *(quad->result.atr.simb->valfloat) = valint1 * valint2; break;
-                        case OPDIV  :   *(quad->result.atr.simb->valfloat) = valint1 / valint2; break;
+                        case OPDIV  :   if (valint2 == 0) RunTimeException(EXCEPTION_DIVZERO);
+                                        *(quad->result.atr.simb->valfloat) = valint1 / valint2; break;
                     }
                 if (tipo1 == INTOPND && tipo2 == REALOPND)
                     switch (oper) {
                         case OPMAIS :   *(quad->result.atr.simb->valfloat) = valint1 + valfloat2;   break;
                         case OPMENOS:   *(quad->result.atr.simb->valfloat) = valint1 - valfloat2;   break;
                         case OPMULT :   *(quad->result.atr.simb->valfloat) = valint1 * valfloat2;   break;
-                        case OPDIV  :   *(quad->result.atr.simb->valfloat) = valint1 / valfloat2;   break;
+                        case OPDIV  :   if (valfloat2 == 0) RunTimeException(EXCEPTION_DIVZERO);
+                                        *(quad->result.atr.simb->valfloat) = valint1 / valfloat2;   break;
                     }
                 if (tipo1 == REALOPND && tipo2 == INTOPND)
                     switch (oper) {
                         case OPMAIS :   *(quad->result.atr.simb->valfloat) = valfloat1 + valint2;   break;
                         case OPMENOS:   *(quad->result.atr.simb->valfloat) = valfloat1 - valint2;   break;
                         case OPMULT :   *(quad->result.atr.simb->valfloat) = valfloat1 * valint2;   break;
-                        case OPDIV  :   *(quad->result.atr.simb->valfloat) = valfloat1 / valint2;   break;
+                        case OPDIV  :   if (valint2 == 0) RunTimeException(EXCEPTION_DIVZERO);
+                                        *(quad->result.atr.simb->valfloat) = valfloat1 / valint2;   break;
                     }
                 if (tipo1 == REALOPND && tipo2 == REALOPND)
                     switch (oper) {
                         case OPMAIS :   *(quad->result.atr.simb->valfloat) = valfloat1 + valfloat2; break;
                         case OPMENOS:   *(quad->result.atr.simb->valfloat) = valfloat1 - valfloat2; break;
                         case OPMULT :   *(quad->result.atr.simb->valfloat) = valfloat1 * valfloat2; break;
-                        case OPDIV  :   *(quad->result.atr.simb->valfloat) = valfloat1 / valfloat2; break;
+                        case OPDIV  :   if (valfloat2 == 0) RunTimeException(EXCEPTION_DIVZERO);
+                                        *(quad->result.atr.simb->valfloat) = valfloat1 / valfloat2; break;
                     }
                 break;
         }
@@ -2052,7 +2061,8 @@ void ExecQuadResto (quadrupla quad) {
             break;
     }
     switch (quad->result.atr.simb->tvar) {
-        case INTEGER:   *(quad->result.atr.simb->valint) = valint1 % valint2;   break;
+        case INTEGER:   if (valint2 == 0) RunTimeException(EXCEPTION_DIVZERO);
+                        *(quad->result.atr.simb->valint) = valint1 % valint2;   break;
     }
 }
 
@@ -2306,22 +2316,23 @@ void ExecQuadRead (quadrupla quad) {
     }
 }
 
-/* Executa a quádrupla do operador jump */
+/* Executa a quádrupla do operador jump condicional/incondicional */
 
 void ExecQuadJump (quadrupla quad, quadrupla *quadprox) {
-    *quadprox = quad->result.atr.rotulo;
-}
-
-/* Executa a quádrupla do operador jump condicional */
-
-void ExecQuadJF (quadrupla quad, quadrupla *quadprox) {
     bool condicao = FALSE;
-    if (quad->opnd1.tipo == LOGICOPND)
-        condicao = quad->opnd1.atr.vallogic;
-    if (quad->opnd1.tipo == VAROPND)
-        condicao = *(quad->opnd1.atr.simb->vallogic);
-    if (!condicao)
-        *quadprox = quad->result.atr.rotulo;
+    switch (quad->oper) {
+        case OPJUMP:    *quadprox = quad->result.atr.rotulo;    break;
+        case OPJF: case OPJT:
+            if (quad->opnd1.tipo == LOGICOPND)
+                condicao = quad->opnd1.atr.vallogic;
+            if (quad->opnd1.tipo == VAROPND)
+                condicao = *(quad->opnd1.atr.simb->vallogic);
+            switch (quad->oper) {
+                case OPJT:  if (condicao == TRUE)   *quadprox = quad->result.atr.rotulo;    break;
+                case OPJF:  if (condicao == FALSE)  *quadprox = quad->result.atr.rotulo;    break;
+            }
+            break;
+    }
 }
 
 /****************************************************/
