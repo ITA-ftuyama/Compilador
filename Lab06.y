@@ -44,7 +44,6 @@
 /*   Definicao de outras constantes   */
 
 #define     NCLASSHASH      23
-#define     SUCCESS         2
 #define     TRUE            1
 #define     FALSE           0
 #define     MAXDIMS         10
@@ -139,6 +138,7 @@
 #define     OPINDEX         28
 #define     OPATRIBPONT     29
 #define     OPCONTAPONT     30
+#define     OPABRIR         31
 
 /* Definicao de constantes para os tipos de operandos de quadruplas */
 
@@ -188,11 +188,12 @@ char *nometipesp[7] = {
 
 /* Strings para operadores de quadruplas */
 
-char *nomeoperquad[31] = {"",
+char *nomeoperquad[32] = {"",
     "OR", "AND", "LT", "LE", "GT", "GE", "EQ", "NE", "MAIS",
     "MENOS", "MULT", "DIV", "RESTO", "MENUN", "NOT", "ATRIB",
     "OPENMOD", "NOP", "JUMP", "JF", "PARAM", "READ", "WRITE",
-    "EXIT", "CALL", "RET", "IND", "INDEX", "ATRIBPONT", "CONTAPONT"
+    "EXIT", "CALL", "RET", "IND", "INDEX", "ATRIBPONT", "CONTAPONT",
+    "ABRIR"
 };
 
 /* Strings para tipos de operandos de quadruplas */
@@ -378,6 +379,7 @@ void ExecQuadCall (quadrupla, quadrupla*, modhead *);
 void ExecQuadReturn (quadrupla, quadrupla*, modhead *);
 void ExecQuadIndex (quadrupla);
 void ExecQuadWrite (quadrupla);
+void ExecQuadAbrir (quadrupla);
 void ExecQuadAritmetica (quadrupla, int);
 void ExecQuadResto (quadrupla);
 void ExecQuadMenun (quadrupla);
@@ -504,6 +506,7 @@ bool DEBUG = TRUE;
 %token  PRINCIPAL
 
 %token  LER
+%token  ABRIR
 %token  ESCREVER
 %token  CHAMAR
 
@@ -694,6 +697,7 @@ Comando     :   CmdComposto
             |   {tabular(1);} CmdRepetir
             |   {tabular(1);} CmdPara
             |   {tabular(1);} CmdLer
+            |   {tabular(1);} CmdAbrir
             |   {tabular(1);} CmdEscrever
             |   {tabular(1);} CmdAtrib
             |   {tabular(1);} ChamadaProc
@@ -885,6 +889,15 @@ ListLeit    :   Variavel {
                         }
                     }
                 } 
+            ;
+CmdAbrir    :   ABRIR   ABPAR   CADEIA {
+                    printf("abrir (\"%s\");", $3);
+                    opndaux.tipo = CADOPND;
+                    opndaux.atr.valcad = malloc (strlen($3) + 1);
+                    strcpy (opndaux.atr.valcad, $3);
+                    GeraQuadrupla (OPABRIR, opndaux, opndidle, opndidle);
+                }
+                FPAR  PVIRG
             ;
 CmdEscrever :   ESCREVER  ABPAR  {printf("escrever (");} ListEscr {
                     opnd1.tipo = INTOPND;
@@ -1664,7 +1677,6 @@ void InterpCodIntermed () {
     InicPilhaOpnd (&pilhaopnd);
     InicPilhaOpnd (&pilhaindex);
     InicPilhaQuad (&pilhaquads);
-    finput = fopen ("Compilador/Lab06Input", "r");
 
     // A execução começa no módulo global
     bool encerra = FALSE;
@@ -1672,13 +1684,12 @@ void InterpCodIntermed () {
     printf ("\n\n\tINTERPRETADOR:\n");
     printf ("-----------------------\n\n");
 
-
     // Executa as quádruplas do módulo Principal
     for (quad = mod->listquad->prox; (!encerra && quad != NULL); quad = quadprox) {
         if (DEBUG) printf ("\n%4d# %s", quad->num, nomeoperquad[quad->oper]);
         quadprox = quad->prox;
         switch (quad->oper) {
-            case OPEXIT :       encerra = TRUE;                             break;
+            case OPEXIT     :   encerra = TRUE;                             break;
             case OPENMOD    :   AlocaVariaveis (mod->modname->listvardecl); break;
             case OPCALL     :   ExecQuadCall (quad, &quadprox, &mod);       break;
             case OPRETURN   :   ExecQuadReturn (quad, &quadprox, &mod);     break;
@@ -1686,6 +1697,7 @@ void InterpCodIntermed () {
             case OPIND      :   EmpilharOpnd (quad->opnd1, &pilhaindex);    break;
             case OPINDEX    :   ExecQuadIndex (quad);                       break;
             case OPWRITE    :   ExecQuadWrite (quad);                       break;
+            case OPABRIR    :   ExecQuadAbrir (quad);                       break;
             case OPMAIS     :   case OPMENOS:   
             case OPMULT     :   case OPDIV  :
                                 ExecQuadAritmetica (quad, quad->oper);      break;
@@ -1708,7 +1720,6 @@ void InterpCodIntermed () {
             default         :                                               break;
         }
     }
-    fclose(finput);
 }
 
 /* 
@@ -1778,6 +1789,19 @@ void DesalocaVariaveis (modhead *mod) {
             }  
         }
     }
+}
+
+/* Abre o arquivo de entrada do programa */
+
+void ExecQuadAbrir (quadrupla quad) {
+    // Se existe outro aberto, fecha
+    if (finput != NULL)
+        fclose (finput);
+
+    // Abre um novo arquivo de entrada
+    finput = fopen (quad->opnd1.atr.valcad, "r");
+    if (finput == NULL)
+        RunTimeException(EXCEPTION_INPUTFILE);
 }
 
 /* 
@@ -2267,16 +2291,16 @@ void ExecQuadRead (quadrupla quad) {
         int check;
         switch (opndaux.atr.simb->tvar) {
             case INTEGER:   
-                if (fscanf (finput, "%d", opndaux.atr.simb->valint) != SUCCESS)
+                if (fscanf (finput, "%d", opndaux.atr.simb->valint) != TRUE)
                     RunTimeException(EXCEPTION_READFILE);  break;
             case FLOAT:
-                if (fscanf (finput, "%g", opndaux.atr.simb->valfloat) != SUCCESS)
+                if (fscanf (finput, "%g", opndaux.atr.simb->valfloat) != TRUE)
                     RunTimeException(EXCEPTION_READFILE);  break;  
             case LOGIC: 
-                if (fscanf (finput, "%d", opndaux.atr.simb->vallogic) != SUCCESS)
+                if (fscanf (finput, "%d", opndaux.atr.simb->vallogic) != TRUE)
                     RunTimeException(EXCEPTION_READFILE);  break;   
             case CHAR: 
-                if (fscanf (finput, "%c", opndaux.atr.simb->valchar) != SUCCESS)
+                if (fscanf (finput, "%c", opndaux.atr.simb->valchar) != TRUE)
                     RunTimeException(EXCEPTION_READFILE);  break;     
         }
     }

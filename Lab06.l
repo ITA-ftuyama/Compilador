@@ -39,6 +39,7 @@ funcoes|FUNCOES	    		{return FUNCOES;}
 principal|PRINCIPAL			{return PRINCIPAL;}
 
 ler|LER         			{return LER;}
+abrir|ABRIR       			{return ABRIR;}
 escrever|ESCREVER   		{return ESCREVER;}
 chamar|CHAMAR      			{return CHAMAR;}
 

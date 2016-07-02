@@ -101,6 +101,7 @@ locais:
 	logico fim;
 comandos:
 	ntab := 0;
+	abrir ("Compilador/Lab06ProgInput");
 	escrever ("Nova palavra? (s/n): ");
 	ler (c);
 	enquanto (c = 's' || c = 'S') {
