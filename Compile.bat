@@ -23,7 +23,7 @@ echo Compilando programa
 Lab06  < Compilador/Lab06Prog.dat > Compilador/Lab06ProgOutput.dat
 Lab06  < Compilador/Lab06Teste.dat > Compilador/Lab06TesteOutput.dat
 
- goto TestesSemanticos
+goto TestesSemanticos
 	Lab06 < Compilador/Testes04/Declaracao.dat > Compilador/Testes04/oDeclaracao.dat
 	Lab06 < Compilador/Testes04/Principal.dat > Compilador/Testes04/oPrincipal.dat
 	Lab06 < Compilador/Testes04/Indexada.dat > Compilador/Testes04/oIndexada.dat
@@ -33,12 +33,12 @@ Lab06  < Compilador/Lab06Teste.dat > Compilador/Lab06TesteOutput.dat
 	Lab06 < Compilador/Testes04/RetornoFunc.dat > Compilador/Testes04/oRetornoFunc.dat
 :TestesSemanticos
 
-
-	Lab06  < Compilador/Testes05/Lab05Teste.dat > Compilador/Testes05/Lab05TesteOutput.dat
-	Lab06  < Compilador/Testes05/Lab05TesteSlides.dat > Compilador/Testes05/Lab05TesteSlidesOutput.dat
 goto TestesCodigoIntermediario
+	Lab06  < Compilador/Testes05/Lab06Teste.dat > Compilador/Testes05/Lab06TesteOutput.dat
+	Lab06  < Compilador/Testes05/Lab06TesteSlides.dat > Compilador/Testes05/Lab06TesteSlidesOutput.dat
 :TestesCodigoIntermediario
 
+echo.
 echo Completo
 cd Compilador
 pause

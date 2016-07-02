@@ -1,4 +1,5 @@
 
+
 /*
 	Testes Realizados:
 
@@ -22,138 +23,15 @@ globais:
 	real varreal;
 	carac varchar;
 	logico varlogico;
-
 funcoes:
+
 vazio InserirVazio () {
 locais:
 	int var;
 comandos:
 	;
 }
+
 vazio InserirVazio (
 
 ***** Exception<Declaracao Indevida>: InserirVazio *****
-int a) {
-locais:
-	int var;
-comandos:
-	;
-}
-vazio InserirVariosVazio (int a, real b, carac c, logico d) {
-locais:
-	int var;
-comandos:
-	;
-}
-int InserirOne (int a) {
-locais:
-	int var;
-comandos:
-	retornar a;
-}
-real InserirReal (real a) {
-locais:
-	int var;
-comandos:
-	retornar a;
-}
-int Inserir (int a, int b) {
-locais:
-	int var;
-comandos:
-	var := a + b;
-	retornar var;
-}
-int InserirVarios (int a, real b, carac c, logico d) {
-locais:
-	int var;
-comandos:
-	retornar a;
-}
-principal {
-locais:
-	int var;
-comandos:
-	
-/* Testando o numero de argumentos de funcao*/
-
-var := InserirOne (varint);
-	var := InserirOne ()
-
-***** Exception<Incompatibilidade>: Numero de argumentos diferente do numero de parametros *****
-;
-	var := InserirOne (varint, varint)
-
-***** Exception<Incompatibilidade>: Numero de argumentos diferente do numero de parametros *****
-;
-
-/* Testando compatibilidade de argumentos de funcao*/
-
-	var := InserirOne (varlogico)
-
-***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac *****
-;
-	var := Inserir (varint, varint);
-	var := InserirVarios (varint, varreal, varchar, varlogico);
-	var := InserirVarios (varint, varint, varint, varint)
-
-***** Exception<Incompatibilidade>: Obtido: int. Esperado: logico *****
-;
-	var := InserirVarios (varreal, varreal, varreal, varreal)
-
-***** Exception<Incompatibilidade>: Obtido: real. Esperado: int ou carac *****
-
-
-***** Exception<Incompatibilidade>: Obtido: real. Esperado: int ou carac *****
-
-
-***** Exception<Incompatibilidade>: Obtido: real. Esperado: logico *****
-;
-	var := InserirVarios (varchar, varchar, varchar, varchar)
-
-***** Exception<Incompatibilidade>: Obtido: carac. Esperado: logico *****
-;
-	var := InserirVarios (varlogico, varlogico, varlogico, varlogico)
-
-***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac *****
-
-
-***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac ou real *****
-
-
-***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac *****
-;
-	var := InserirVazio (
-
-***** Exception<Tipo Inadequado>: InserirVazio *****
-);
-
-/* Testando numero de argumentos de procedimento */
-
-	chamar InserirVazio();
-	chamar InserirOne(
-
-***** Exception<Tipo Inadequado>: InserirOne *****
-varint);
-	chamar InserirVazio(varint);
-
-
-***** Exception<Incompatibilidade>: Numero de argumentos diferente do numero de parametros *****
-
-/* Testando compatibilidade de argumentos de procedimento */
-
-	chamar InserirVariosVazio(varint, varreal, varchar, varlogico);
-	chamar InserirVariosVazio(varint, varreal, varlogico, varchar);
-
-
-***** Exception<Incompatibilidade>: Obtido: logico. Esperado: int ou carac *****
-
-
-***** Exception<Incompatibilidade>: Obtido: carac. Esperado: logico *****
-	chamar InserirVariosVazio(varreal, varint, varlogico, varchar);
-
-
-***** Exception<Incompatibilidade>: Obtido: real. Esperado: int ou carac *****
-
-
-***** Exception<Incompatibilida

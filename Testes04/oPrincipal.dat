@@ -1,0 +1,26 @@
+
+
+/*
+	Testes Realizados:
+
+•	O programa deve ter uma e uma só função de cabeçalho principal, devendo esta ser a última função desse programa.
+•	Uma função não pode ter o mesmo nome que o de uma variável global.
+•	A linguagem não admite recursividade.
+
+ */
+
+globais:
+	int variavel, Inserir;
+	logico destruir;
+funcoes:
+
+principal {
+locais:
+	int x;
+comandos:
+	;
+}
+
+principal
+
+***** Exception<Incompatibilidade>: Funcao principal deveria ser unica *****
