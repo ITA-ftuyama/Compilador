@@ -57,9 +57,12 @@ i = ", i, " j = ", j, " f = ", f);
 		escrever ("
 array[", f, "] = ", array[f]);
 	}
-	matriz[0][0] := 17;
-	matriz[0][1] := 21;
-	matriz[0][2] := 11;
+	f := array[0];
+	escrever ("
+f = array[0] = ", f);
+	matriz[0][0] := array[0];
+	matriz[0][1] := array[1];
+	matriz[0][2] := array[2];
 	matriz[1][0] := 27;
 	matriz[1][1] := 31;
 	matriz[1][2] := 21;
@@ -93,28 +96,33 @@ Classe 7:
   (##11    , IDVAR, logico, 1, 1, escopo: Principal);
   (##4     , IDVAR, int   , 1, 1, escopo: Principal);
 Classe 8:
+  (##30    , IDVAR, int   , 1, 1, escopo: Principal);
   (##21    , IDVAR, int   , 1, 1, escopo: Principal);
   (##12    , IDVAR, int   , 1, 1, escopo: Principal);
   (##5     , IDVAR, int   , 1, 1, escopo: Principal);
 Classe 9:
+  (##31    , IDVAR, int   , 1, 1, escopo: Principal);
   (##22    , IDVAR, int   , 1, 1, escopo: Principal);
   (##13    , IDVAR, int   , 1, 1, escopo: Principal);
   (##6     , IDVAR, logico, 1, 1, escopo: Principal);
 Classe 10:
+  (##32    , IDVAR, logico, 1, 1, escopo: Principal);
   (##23    , IDVAR, int   , 1, 1, escopo: Principal);
   (##14    , IDVAR, int   , 1, 1, escopo: Principal);
   (##7     , IDVAR, logico, 1, 1, escopo: Principal);
   (f       , IDVAR, int   , 1, 1, escopo: Principal);
   (Principal, IDFUNC, vazio , escopo: Global
-	Variaveis: int ##29, int ##28, int ##27, logico ##26, int ##25, logico ##24, int ##23, int ##22, int ##21, int ##20, int ##19, int ##18, int ##17, int ##16, int ##15, int ##14, int ##13, int ##12, logico ##11, int ##10, int ##9, int ##8, logico ##7, logico ##6, int ##5, int ##4, int matriz[3][3], int array[3], int f, int j
+	Variaveis: int ##37, int ##36, int ##35, logico ##34, int ##33, logico ##32, int ##31, int ##30, int ##29, int ##28, int ##27, int ##26, int ##25, int ##24, int ##23, int ##22, int ##21, int ##20, int ##19, int ##18, int ##17, int ##16, int ##15, int ##14, int ##13, int ##12, logico ##11, int ##10, int ##9, int ##8, logico ##7, logico ##6, int ##5, int ##4, int matriz[3][3], int array[3], int f, int j
 	Parametros: NULL);
   (var1    , IDVAR, int   , 1, 1, escopo: Subtracao);
 Classe 11:
-  (##24    , IDVAR, logico, 1, 1, escopo: Principal);
+  (##33    , IDVAR, int   , 1, 1, escopo: Principal);
+  (##24    , IDVAR, int   , 1, 1, escopo: Principal);
   (##15    , IDVAR, int   , 1, 1, escopo: Principal);
   (##8     , IDVAR, int   , 1, 1, escopo: Principal);
   (var2    , IDVAR, int   , 1, 1, escopo: Subtracao);
 Classe 12:
+  (##34    , IDVAR, logico, 1, 1, escopo: Principal);
   (##25    , IDVAR, int   , 1, 1, escopo: Principal);
   (##16    , IDVAR, int   , 1, 1, escopo: Principal);
   (##9     , IDVAR, int   , 1, 1, escopo: Principal);
@@ -122,19 +130,22 @@ Classe 12:
 	Variaveis: int ##3, int ##2, int i
 	Parametros: int var2, int var1);
 Classe 13:
-  (##26    , IDVAR, logico, 1, 1, escopo: Principal);
+  (##35    , IDVAR, int   , 1, 1, escopo: Principal);
+  (##26    , IDVAR, int   , 1, 1, escopo: Principal);
   (##17    , IDVAR, int   , 1, 1, escopo: Principal);
   (i       , IDVAR, int   , 0, 0, escopo: Subtracao);
   (i       , IDVAR, int   , 1, 1, escopo: Inserir);
   (posic   , IDVAR, int   , 1, 1, escopo: Inserir);
   (i       , IDVAR, int   , 1, 1, escopo: Global);
 Classe 14:
+  (##36    , IDVAR, int   , 1, 1, escopo: Principal);
   (##27    , IDVAR, int   , 1, 1, escopo: Principal);
   (##18    , IDVAR, int   , 1, 1, escopo: Principal);
   (array   , IDVAR, int   , 1, 1, EH ARRAY
 	ndims = 1, dimensoes:  3, escopo: Principal);
   (j       , IDVAR, int   , 1, 1, escopo: Principal);
 Classe 15:
+  (##37    , IDVAR, int   , 1, 1, escopo: Principal);
   (##28    , IDVAR, int   , 1, 1, escopo: Principal);
   (##19    , IDVAR, int   , 1, 1, escopo: Principal);
 Classe 16:
@@ -258,74 +269,91 @@ array[), (IDLE), (IDLE)
 	  57#    JUMP, (IDLE), (IDLE), (ROTULO, 35)
 	  58#     NOP, (IDLE), (IDLE), (IDLE)
 	  59#     IND, (INT, 0), (IDLE), (IDLE)
-	  60#     IND, (INT, 0), (IDLE), (IDLE)
-	  61#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##15)
-	  62# ATRIBPONT, (INT, 17), (IDLE), (VAR, ##15)
-	  63#     IND, (INT, 0), (IDLE), (IDLE)
-	  64#     IND, (INT, 1), (IDLE), (IDLE)
-	  65#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##16)
-	  66# ATRIBPONT, (INT, 21), (IDLE), (VAR, ##16)
+	  60#   INDEX, (VAR, array), (INT, 1), (VAR, ##15)
+	  61# CONTAPONT, (VAR, ##15), (IDLE), (VAR, ##16)
+	  62#   ATRIB, (VAR, ##16), (IDLE), (VAR, f)
+	  63#   PARAM, (CADEIA, 
+f = array[0] = ), (IDLE), (IDLE)
+	  64#   PARAM, (VAR, f), (IDLE), (IDLE)
+	  65#   WRITE, (INT, 2), (IDLE), (IDLE)
+	  66#     IND, (INT, 0), (IDLE), (IDLE)
 	  67#     IND, (INT, 0), (IDLE), (IDLE)
-	  68#     IND, (INT, 2), (IDLE), (IDLE)
-	  69#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##17)
-	  70# ATRIBPONT, (INT, 11), (IDLE), (VAR, ##17)
-	  71#     IND, (INT, 1), (IDLE), (IDLE)
-	  72#     IND, (INT, 0), (IDLE), (IDLE)
-	  73#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##18)
-	  74# ATRIBPONT, (INT, 27), (IDLE), (VAR, ##18)
-	  75#     IND, (INT, 1), (IDLE), (IDLE)
+	  68#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##17)
+	  69#     IND, (INT, 0), (IDLE), (IDLE)
+	  70#   INDEX, (VAR, array), (INT, 1), (VAR, ##18)
+	  71# CONTAPONT, (VAR, ##18), (IDLE), (VAR, ##19)
+	  72# ATRIBPONT, (VAR, ##19), (IDLE), (VAR, ##18)
+	  73#     IND, (INT, 0), (IDLE), (IDLE)
+	  74#     IND, (INT, 1), (IDLE), (IDLE)
+	  75#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##20)
 	  76#     IND, (INT, 1), (IDLE), (IDLE)
-	  77#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##19)
-	  78# ATRIBPONT, (INT, 31), (IDLE), (VAR, ##19)
-	  79#     IND, (INT, 1), (IDLE), (IDLE)
-	  80#     IND, (INT, 2), (IDLE), (IDLE)
-	  81#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##20)
-	  82# ATRIBPONT, (INT, 21), (IDLE), (VAR, ##20)
-	  83#     IND, (INT, 3), (IDLE), (IDLE)
-	  84#     IND, (INT, 0), (IDLE), (IDLE)
-	  85#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##21)
-	  86# ATRIBPONT, (INT, 0), (IDLE), (VAR, ##21)
-	  87#     IND, (INT, 3), (IDLE), (IDLE)
-	  88#     IND, (INT, 1), (IDLE), (IDLE)
-	  89#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##22)
-	  90# ATRIBPONT, (INT, 0), (IDLE), (VAR, ##22)
-	  91#     IND, (INT, 3), (IDLE), (IDLE)
-	  92#     IND, (INT, 2), (IDLE), (IDLE)
-	  93#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##23)
-	  94# ATRIBPONT, (INT, 0), (IDLE), (VAR, ##23)
-	  95#   ATRIB, (INT, 0), (IDLE), (VAR, j)
-	  96#     NOP, (IDLE), (IDLE), (IDLE)
-	  97#      LT, (VAR, j), (INT, 3), (VAR, ##24)
-	  98#      JF, (VAR, ##24), (IDLE), (ROTULO, 125)
-	  99#     NOP, (IDLE), (IDLE), (IDLE)
-	 100#   ATRIB, (INT, 0), (IDLE), (VAR, f)
-	 101#     NOP, (IDLE), (IDLE), (IDLE)
-	 102#      LT, (VAR, f), (INT, 3), (VAR, ##26)
-	 103#      JF, (VAR, ##26), (IDLE), (ROTULO, 120)
-	 104#     NOP, (IDLE), (IDLE), (IDLE)
-	 105#   PARAM, (CADEIA, 
-matriz[), (IDLE), (IDLE)
-	 106#   PARAM, (VAR, j), (IDLE), (IDLE)
-	 107#   PARAM, (CADEIA, ][), (IDLE), (IDLE)
-	 108#   PARAM, (VAR, f), (IDLE), (IDLE)
-	 109#   PARAM, (CADEIA, ] = ), (IDLE), (IDLE)
-	 110#     IND, (VAR, j), (IDLE), (IDLE)
-	 111#     IND, (VAR, f), (IDLE), (IDLE)
-	 112#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##28)
-	 113# CONTAPONT, (VAR, ##28), (IDLE), (VAR, ##29)
-	 114#   PARAM, (VAR, ##29), (IDLE), (IDLE)
-	 115#   WRITE, (INT, 6), (IDLE), (IDLE)
-	 116#     NOP, (IDLE), (IDLE), (IDLE)
-	 117#    MAIS, (VAR, f), (INT, 1), (VAR, ##27)
-	 118#   ATRIB, (VAR, ##27), (IDLE), (VAR, f)
-	 119#    JUMP, (IDLE), (IDLE), (ROTULO, 101)
+	  77#   INDEX, (VAR, array), (INT, 1), (VAR, ##21)
+	  78# CONTAPONT, (VAR, ##21), (IDLE), (VAR, ##22)
+	  79# ATRIBPONT, (VAR, ##22), (IDLE), (VAR, ##21)
+	  80#     IND, (INT, 0), (IDLE), (IDLE)
+	  81#     IND, (INT, 2), (IDLE), (IDLE)
+	  82#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##23)
+	  83#     IND, (INT, 2), (IDLE), (IDLE)
+	  84#   INDEX, (VAR, array), (INT, 1), (VAR, ##24)
+	  85# CONTAPONT, (VAR, ##24), (IDLE), (VAR, ##25)
+	  86# ATRIBPONT, (VAR, ##25), (IDLE), (VAR, ##24)
+	  87#     IND, (INT, 1), (IDLE), (IDLE)
+	  88#     IND, (INT, 0), (IDLE), (IDLE)
+	  89#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##26)
+	  90# ATRIBPONT, (INT, 27), (IDLE), (VAR, ##26)
+	  91#     IND, (INT, 1), (IDLE), (IDLE)
+	  92#     IND, (INT, 1), (IDLE), (IDLE)
+	  93#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##27)
+	  94# ATRIBPONT, (INT, 31), (IDLE), (VAR, ##27)
+	  95#     IND, (INT, 1), (IDLE), (IDLE)
+	  96#     IND, (INT, 2), (IDLE), (IDLE)
+	  97#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##28)
+	  98# ATRIBPONT, (INT, 21), (IDLE), (VAR, ##28)
+	  99#     IND, (INT, 3), (IDLE), (IDLE)
+	 100#     IND, (INT, 0), (IDLE), (IDLE)
+	 101#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##29)
+	 102# ATRIBPONT, (INT, 0), (IDLE), (VAR, ##29)
+	 103#     IND, (INT, 3), (IDLE), (IDLE)
+	 104#     IND, (INT, 1), (IDLE), (IDLE)
+	 105#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##30)
+	 106# ATRIBPONT, (INT, 0), (IDLE), (VAR, ##30)
+	 107#     IND, (INT, 3), (IDLE), (IDLE)
+	 108#     IND, (INT, 2), (IDLE), (IDLE)
+	 109#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##31)
+	 110# ATRIBPONT, (INT, 0), (IDLE), (VAR, ##31)
+	 111#   ATRIB, (INT, 0), (IDLE), (VAR, j)
+	 112#     NOP, (IDLE), (IDLE), (IDLE)
+	 113#      LT, (VAR, j), (INT, 3), (VAR, ##32)
+	 114#      JF, (VAR, ##32), (IDLE), (ROTULO, 141)
+	 115#     NOP, (IDLE), (IDLE), (IDLE)
+	 116#   ATRIB, (INT, 0), (IDLE), (VAR, f)
+	 117#     NOP, (IDLE), (IDLE), (IDLE)
+	 118#      LT, (VAR, f), (INT, 3), (VAR, ##34)
+	 119#      JF, (VAR, ##34), (IDLE), (ROTULO, 136)
 	 120#     NOP, (IDLE), (IDLE), (IDLE)
-	 121#     NOP, (IDLE), (IDLE), (IDLE)
-	 122#    MAIS, (VAR, j), (INT, 1), (VAR, ##25)
-	 123#   ATRIB, (VAR, ##25), (IDLE), (VAR, j)
-	 124#    JUMP, (IDLE), (IDLE), (ROTULO, 96)
-	 125#     NOP, (IDLE), (IDLE), (IDLE)
-	 126#     RET, (IDLE), (IDLE), (IDLE)
+	 121#   PARAM, (CADEIA, 
+matriz[), (IDLE), (IDLE)
+	 122#   PARAM, (VAR, j), (IDLE), (IDLE)
+	 123#   PARAM, (CADEIA, ][), (IDLE), (IDLE)
+	 124#   PARAM, (VAR, f), (IDLE), (IDLE)
+	 125#   PARAM, (CADEIA, ] = ), (IDLE), (IDLE)
+	 126#     IND, (VAR, j), (IDLE), (IDLE)
+	 127#     IND, (VAR, f), (IDLE), (IDLE)
+	 128#   INDEX, (VAR, matriz), (INT, 2), (VAR, ##36)
+	 129# CONTAPONT, (VAR, ##36), (IDLE), (VAR, ##37)
+	 130#   PARAM, (VAR, ##37), (IDLE), (IDLE)
+	 131#   WRITE, (INT, 6), (IDLE), (IDLE)
+	 132#     NOP, (IDLE), (IDLE), (IDLE)
+	 133#    MAIS, (VAR, f), (INT, 1), (VAR, ##35)
+	 134#   ATRIB, (VAR, ##35), (IDLE), (VAR, f)
+	 135#    JUMP, (IDLE), (IDLE), (ROTULO, 117)
+	 136#     NOP, (IDLE), (IDLE), (IDLE)
+	 137#     NOP, (IDLE), (IDLE), (IDLE)
+	 138#    MAIS, (VAR, j), (INT, 1), (VAR, ##33)
+	 139#   ATRIB, (VAR, ##33), (IDLE), (VAR, j)
+	 140#    JUMP, (IDLE), (IDLE), (ROTULO, 112)
+	 141#     NOP, (IDLE), (IDLE), (IDLE)
+	 142#     RET, (IDLE), (IDLE), (IDLE)
 
 
 	INTERPRETADOR:
@@ -339,6 +367,14 @@ matriz[), (IDLE), (IDLE)
 		Alocando as variaveis:
    1# OPENMOD
 		Alocando as variaveis:
+			  ##37:  1 elemento(s) alocado(s) 
+			  ##36:  1 elemento(s) alocado(s) 
+			  ##35:  1 elemento(s) alocado(s) 
+			  ##34:  1 elemento(s) alocado(s) 
+			  ##33:  1 elemento(s) alocado(s) 
+			  ##32:  1 elemento(s) alocado(s) 
+			  ##31:  1 elemento(s) alocado(s) 
+			  ##30:  1 elemento(s) alocado(s) 
 			  ##29:  1 elemento(s) alocado(s) 
 			  ##28:  1 elemento(s) alocado(s) 
 			  ##27:  1 elemento(s) alocado(s) 
@@ -607,32 +643,36 @@ array[2] = 11
   37# JF
   58# NOP
   59# IND
-  60# IND
-  61# INDEX
-  62# ATRIBPONT
-  63# IND
-  64# IND
-  65# INDEX
-  66# ATRIBPONT
+  60# INDEX
+  61# CONTAPONT
+  62# ATRIB
+  63# PARAM
+  64# PARAM
+  65# WRITE
+		Escrevendo: 
+
+
+f = array[0] = 17
+  66# IND
   67# IND
-  68# IND
-  69# INDEX
-  70# ATRIBPONT
-  71# IND
-  72# IND
-  73# INDEX
-  74# ATRIBPONT
-  75# IND
+  68# INDEX
+  69# IND
+  70# INDEX
+  71# CONTAPONT
+  72# ATRIBPONT
+  73# IND
+  74# IND
+  75# INDEX
   76# IND
   77# INDEX
-  78# ATRIBPONT
-  79# IND
+  78# CONTAPONT
+  79# ATRIBPONT
   80# IND
-  81# INDEX
-  82# ATRIBPONT
+  81# IND
+  82# INDEX
   83# IND
-  84# IND
-  85# INDEX
+  84# INDEX
+  85# CONTAPONT
   86# ATRIBPONT
   87# IND
   88# IND
@@ -642,259 +682,283 @@ array[2] = 11
   92# IND
   93# INDEX
   94# ATRIBPONT
-  95# ATRIB
-  96# NOP
-  97# LT
-  98# JF
-  99# NOP
- 100# ATRIB
- 101# NOP
- 102# LT
- 103# JF
- 104# NOP
- 105# PARAM
- 106# PARAM
- 107# PARAM
- 108# PARAM
- 109# PARAM
- 110# IND
- 111# IND
- 112# INDEX
- 113# CONTAPONT
- 114# PARAM
- 115# WRITE
-		Escrevendo: 
-
-
-matriz[0][0] = 17
- 116# NOP
- 117# MAIS
- 118# ATRIB
- 119# JUMP
- 101# NOP
- 102# LT
- 103# JF
- 104# NOP
- 105# PARAM
- 106# PARAM
- 107# PARAM
- 108# PARAM
- 109# PARAM
- 110# IND
- 111# IND
- 112# INDEX
- 113# CONTAPONT
- 114# PARAM
- 115# WRITE
-		Escrevendo: 
-
-
-matriz[0][1] = 21
- 116# NOP
- 117# MAIS
- 118# ATRIB
- 119# JUMP
- 101# NOP
- 102# LT
- 103# JF
- 104# NOP
- 105# PARAM
- 106# PARAM
- 107# PARAM
- 108# PARAM
- 109# PARAM
- 110# IND
- 111# IND
- 112# INDEX
- 113# CONTAPONT
- 114# PARAM
- 115# WRITE
-		Escrevendo: 
-
-
-matriz[0][2] = 11
- 116# NOP
- 117# MAIS
- 118# ATRIB
- 119# JUMP
- 101# NOP
- 102# LT
- 103# JF
+  95# IND
+  96# IND
+  97# INDEX
+  98# ATRIBPONT
+  99# IND
+ 100# IND
+ 101# INDEX
+ 102# ATRIBPONT
+ 103# IND
+ 104# IND
+ 105# INDEX
+ 106# ATRIBPONT
+ 107# IND
+ 108# IND
+ 109# INDEX
+ 110# ATRIBPONT
+ 111# ATRIB
+ 112# NOP
+ 113# LT
+ 114# JF
+ 115# NOP
+ 116# ATRIB
+ 117# NOP
+ 118# LT
+ 119# JF
  120# NOP
- 121# NOP
- 122# MAIS
- 123# ATRIB
- 124# JUMP
-  96# NOP
-  97# LT
-  98# JF
-  99# NOP
- 100# ATRIB
- 101# NOP
- 102# LT
- 103# JF
- 104# NOP
- 105# PARAM
- 106# PARAM
- 107# PARAM
- 108# PARAM
- 109# PARAM
- 110# IND
- 111# IND
- 112# INDEX
- 113# CONTAPONT
- 114# PARAM
- 115# WRITE
+ 121# PARAM
+ 122# PARAM
+ 123# PARAM
+ 124# PARAM
+ 125# PARAM
+ 126# IND
+ 127# IND
+ 128# INDEX
+ 129# CONTAPONT
+ 130# PARAM
+ 131# WRITE
+		Escrevendo: 
+
+
+matriz[0][0] = 0
+ 132# NOP
+ 133# MAIS
+ 134# ATRIB
+ 135# JUMP
+ 117# NOP
+ 118# LT
+ 119# JF
+ 120# NOP
+ 121# PARAM
+ 122# PARAM
+ 123# PARAM
+ 124# PARAM
+ 125# PARAM
+ 126# IND
+ 127# IND
+ 128# INDEX
+ 129# CONTAPONT
+ 130# PARAM
+ 131# WRITE
+		Escrevendo: 
+
+
+matriz[0][1] = 0
+ 132# NOP
+ 133# MAIS
+ 134# ATRIB
+ 135# JUMP
+ 117# NOP
+ 118# LT
+ 119# JF
+ 120# NOP
+ 121# PARAM
+ 122# PARAM
+ 123# PARAM
+ 124# PARAM
+ 125# PARAM
+ 126# IND
+ 127# IND
+ 128# INDEX
+ 129# CONTAPONT
+ 130# PARAM
+ 131# WRITE
+		Escrevendo: 
+
+
+matriz[0][2] = 0
+ 132# NOP
+ 133# MAIS
+ 134# ATRIB
+ 135# JUMP
+ 117# NOP
+ 118# LT
+ 119# JF
+ 136# NOP
+ 137# NOP
+ 138# MAIS
+ 139# ATRIB
+ 140# JUMP
+ 112# NOP
+ 113# LT
+ 114# JF
+ 115# NOP
+ 116# ATRIB
+ 117# NOP
+ 118# LT
+ 119# JF
+ 120# NOP
+ 121# PARAM
+ 122# PARAM
+ 123# PARAM
+ 124# PARAM
+ 125# PARAM
+ 126# IND
+ 127# IND
+ 128# INDEX
+ 129# CONTAPONT
+ 130# PARAM
+ 131# WRITE
 		Escrevendo: 
 
 
 matriz[1][0] = 27
- 116# NOP
- 117# MAIS
- 118# ATRIB
- 119# JUMP
- 101# NOP
- 102# LT
- 103# JF
- 104# NOP
- 105# PARAM
- 106# PARAM
- 107# PARAM
- 108# PARAM
- 109# PARAM
- 110# IND
- 111# IND
- 112# INDEX
- 113# CONTAPONT
- 114# PARAM
- 115# WRITE
+ 132# NOP
+ 133# MAIS
+ 134# ATRIB
+ 135# JUMP
+ 117# NOP
+ 118# LT
+ 119# JF
+ 120# NOP
+ 121# PARAM
+ 122# PARAM
+ 123# PARAM
+ 124# PARAM
+ 125# PARAM
+ 126# IND
+ 127# IND
+ 128# INDEX
+ 129# CONTAPONT
+ 130# PARAM
+ 131# WRITE
 		Escrevendo: 
 
 
 matriz[1][1] = 31
- 116# NOP
- 117# MAIS
- 118# ATRIB
- 119# JUMP
- 101# NOP
- 102# LT
- 103# JF
- 104# NOP
- 105# PARAM
- 106# PARAM
- 107# PARAM
- 108# PARAM
- 109# PARAM
- 110# IND
- 111# IND
- 112# INDEX
- 113# CONTAPONT
- 114# PARAM
- 115# WRITE
+ 132# NOP
+ 133# MAIS
+ 134# ATRIB
+ 135# JUMP
+ 117# NOP
+ 118# LT
+ 119# JF
+ 120# NOP
+ 121# PARAM
+ 122# PARAM
+ 123# PARAM
+ 124# PARAM
+ 125# PARAM
+ 126# IND
+ 127# IND
+ 128# INDEX
+ 129# CONTAPONT
+ 130# PARAM
+ 131# WRITE
 		Escrevendo: 
 
 
 matriz[1][2] = 21
- 116# NOP
- 117# MAIS
- 118# ATRIB
- 119# JUMP
- 101# NOP
- 102# LT
- 103# JF
+ 132# NOP
+ 133# MAIS
+ 134# ATRIB
+ 135# JUMP
+ 117# NOP
+ 118# LT
+ 119# JF
+ 136# NOP
+ 137# NOP
+ 138# MAIS
+ 139# ATRIB
+ 140# JUMP
+ 112# NOP
+ 113# LT
+ 114# JF
+ 115# NOP
+ 116# ATRIB
+ 117# NOP
+ 118# LT
+ 119# JF
  120# NOP
- 121# NOP
- 122# MAIS
- 123# ATRIB
- 124# JUMP
-  96# NOP
-  97# LT
-  98# JF
-  99# NOP
- 100# ATRIB
- 101# NOP
- 102# LT
- 103# JF
- 104# NOP
- 105# PARAM
- 106# PARAM
- 107# PARAM
- 108# PARAM
- 109# PARAM
- 110# IND
- 111# IND
- 112# INDEX
- 113# CONTAPONT
- 114# PARAM
- 115# WRITE
+ 121# PARAM
+ 122# PARAM
+ 123# PARAM
+ 124# PARAM
+ 125# PARAM
+ 126# IND
+ 127# IND
+ 128# INDEX
+ 129# CONTAPONT
+ 130# PARAM
+ 131# WRITE
 		Escrevendo: 
 
 
 matriz[2][0] = 0
- 116# NOP
- 117# MAIS
- 118# ATRIB
- 119# JUMP
- 101# NOP
- 102# LT
- 103# JF
- 104# NOP
- 105# PARAM
- 106# PARAM
- 107# PARAM
- 108# PARAM
- 109# PARAM
- 110# IND
- 111# IND
- 112# INDEX
- 113# CONTAPONT
- 114# PARAM
- 115# WRITE
+ 132# NOP
+ 133# MAIS
+ 134# ATRIB
+ 135# JUMP
+ 117# NOP
+ 118# LT
+ 119# JF
+ 120# NOP
+ 121# PARAM
+ 122# PARAM
+ 123# PARAM
+ 124# PARAM
+ 125# PARAM
+ 126# IND
+ 127# IND
+ 128# INDEX
+ 129# CONTAPONT
+ 130# PARAM
+ 131# WRITE
 		Escrevendo: 
 
 
 matriz[2][1] = 0
- 116# NOP
- 117# MAIS
- 118# ATRIB
- 119# JUMP
- 101# NOP
- 102# LT
- 103# JF
- 104# NOP
- 105# PARAM
- 106# PARAM
- 107# PARAM
- 108# PARAM
- 109# PARAM
- 110# IND
- 111# IND
- 112# INDEX
- 113# CONTAPONT
- 114# PARAM
- 115# WRITE
+ 132# NOP
+ 133# MAIS
+ 134# ATRIB
+ 135# JUMP
+ 117# NOP
+ 118# LT
+ 119# JF
+ 120# NOP
+ 121# PARAM
+ 122# PARAM
+ 123# PARAM
+ 124# PARAM
+ 125# PARAM
+ 126# IND
+ 127# IND
+ 128# INDEX
+ 129# CONTAPONT
+ 130# PARAM
+ 131# WRITE
 		Escrevendo: 
 
 
 matriz[2][2] = 0
- 116# NOP
- 117# MAIS
- 118# ATRIB
- 119# JUMP
- 101# NOP
- 102# LT
- 103# JF
- 120# NOP
- 121# NOP
- 122# MAIS
- 123# ATRIB
- 124# JUMP
-  96# NOP
-  97# LT
-  98# JF
- 125# NOP
- 126# RET
+ 132# NOP
+ 133# MAIS
+ 134# ATRIB
+ 135# JUMP
+ 117# NOP
+ 118# LT
+ 119# JF
+ 136# NOP
+ 137# NOP
+ 138# MAIS
+ 139# ATRIB
+ 140# JUMP
+ 112# NOP
+ 113# LT
+ 114# JF
+ 141# NOP
+ 142# RET
 		Desalocando as variaveis:
+			  ##37:  1 elemento(s) alocado(s) 
+			  ##36:  1 elemento(s) alocado(s) 
+			  ##35:  1 elemento(s) alocado(s) 
+			  ##34:  1 elemento(s) alocado(s) 
+			  ##33:  1 elemento(s) alocado(s) 
+			  ##32:  1 elemento(s) alocado(s) 
+			  ##31:  1 elemento(s) alocado(s) 
+			  ##30:  1 elemento(s) alocado(s) 
 			  ##29:  1 elemento(s) alocado(s) 
 			  ##28:  1 elemento(s) alocado(s) 
 			  ##27:  1 elemento(s) alocado(s) 

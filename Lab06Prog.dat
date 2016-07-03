@@ -7,7 +7,7 @@
 
 globais:
 	carac nomes[50][10], palavra[10];
-	int ntab, nocorr[50];
+	int ntab, nocorr[50], vezes;
 
 funcoes:
 
@@ -51,12 +51,15 @@ vazio Inserir (int posic) {
 locais:
 	int i, j;
 	logico fim;
+	carac c;
 comandos:
 	ntab := ntab + 1;
 	para (i := ntab; i >= posic + 1; i := i - 1) {
 		fim := false;
 		para (j := 0; !fim; j := j + 1) {
-			nomes[i][j] := nomes[i - 1][j];
+			c := nomes[i - 1][j];
+			escrever (c);
+			nomes[i][j] := c;
 			se (nomes[i][j] = '\0') 
 				fim := true;
 		}
@@ -64,9 +67,16 @@ comandos:
 	}
 	fim := false;
 	para (j := 0; !fim; j := j + 1) {
-		nomes[posic][j] := palavra[j];
+		c := palavra[j];
+		escrever(c);
+		nomes[posic][j] := c;
+
 		se (palavra[j] = '\0') 
 			fim := true;
+		escrever(nomes[posic][j]);
+	}
+	se (vezes = 2) {
+		retornar;
 	}
 	nocorr[posic] := 1;
 }
@@ -86,7 +96,7 @@ comandos:
 		para (j := 0; !fim; j := j + 1) {
 			se (nomes[i][j] = '\0') 
 				fim := true;
-			senao escrever (nomes[i][j]);
+			escrever (nomes[i][j]);
 		}
 		escrever (" | ", nocorr[i]);
 	}
@@ -100,6 +110,7 @@ locais:
 	int posic, i;
 	logico fim;
 comandos:
+	vezes := 0;
 	ntab := 0;
 	abrir ("Compilador/Lab06ProgInput");
 	escrever ("Nova palavra? (s/n): ");
@@ -117,11 +128,16 @@ comandos:
 			escrever(palavra[i]);
 		}
 		posic := Procura ();
+		escrever(posic);
 		se (posic > 0) 
 			nocorr[posic] := nocorr[posic] + 1;
 		senao chamar Inserir(~posic);
 		escrever ("\n\nNova palavra? (s/n): ");
+		se (vezes = 2) {
+		retornar;
+	}
 		ler (c);
+		vezes := vezes + 1;
 	}
 	chamar ExibirTabela();
 }

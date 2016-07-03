@@ -48,9 +48,11 @@ comandos:
 		escrever("\ni = ", i, " j = ", j, " f = ", f);
 		escrever("\narray[", f, "] = ", array[f]);
 	}
-	matriz[0][0] := 17;
-	matriz[0][1] := 21;
-	matriz[0][2] := 11;
+	f := array[0];
+	escrever("\nf = array[0] = ", f);
+	matriz[0][0] := array[0];
+	matriz[0][1] := array[1];
+	matriz[0][2] := array[2];
 	matriz[1][0] := 27;
 	matriz[1][1] := 31;
 	matriz[1][2] := 21;

@@ -382,12 +382,12 @@ void ExecQuadReturn (quadrupla, quadrupla*, modhead *);
 void ExecQuadIndex (quadrupla);
 void ExecQuadWrite (quadrupla);
 void ExecQuadAbrir (quadrupla);
-void ExecQuadAritmetica (quadrupla, int);
+void ExecQuadAritmetica (quadrupla);
 void ExecQuadResto (quadrupla);
 void ExecQuadMenun (quadrupla);
 void ExecQuadNot (quadrupla);
-void ExecQuadAndOr (quadrupla, int);
-void ExecQuadRel (quadrupla, int);
+void ExecQuadAndOr (quadrupla);
+void ExecQuadRel (quadrupla);
 void ExecQuadAtrib (quadrupla);
 void ExecQuadRead (quadrupla);
 void ExecQuadJump (quadrupla, quadrupla*);
@@ -1703,19 +1703,18 @@ void InterpCodIntermed () {
             case OPABRIR    :   ExecQuadAbrir (quad);                       break;
             case OPMAIS     :   case OPMENOS:   
             case OPMULT     :   case OPDIV  :
-                                ExecQuadAritmetica (quad, quad->oper);      break;
+                                ExecQuadAritmetica (quad);                  break;
             case OPRESTO:       ExecQuadResto (quad);                       break;
             case OPMENUN    :   ExecQuadMenun (quad);                       break;   
             case OPNOT      :   ExecQuadNot (quad);                         break;                   
             case OPAND      :   case OPOR:
-                                ExecQuadAndOr (quad, quad->oper);           break;
-            case OPATRIB    :   ExecQuadAtrib (quad);                       break;
-            case OPATRIBPONT:   ExecQuadAtrib (quad);                       break;
+                                ExecQuadAndOr (quad);                       break;
+            case OPATRIB    :   case OPATRIBPONT:
             case OPCONTAPONT:   ExecQuadAtrib (quad);                       break;
             case OPLT       :   case OPLE:      
             case OPGT       :   case OPGE:      
             case OPEQ       :   case OPNE:  
-                                ExecQuadRel (quad, quad->oper);             break;
+                                ExecQuadRel (quad);                         break;
             case OPREAD     :   ExecQuadRead (quad);                        break;
             case OPJUMP     :   ExecQuadJump (quad, &quadprox);             break;
             case OPJF       :   ExecQuadJump (quad, &quadprox);             break;
@@ -1724,6 +1723,19 @@ void InterpCodIntermed () {
             default         :                                               break;
         }
     }
+}
+
+/* Abre o arquivo de entrada do programa */
+
+void ExecQuadAbrir (quadrupla quad) {
+    // Se existe outro aberto, fecha
+    if (finput != NULL)
+        fclose (finput);
+
+    // Abre um novo arquivo de entrada
+    finput = fopen (quad->opnd1.atr.valcad, "r");
+    if (finput == NULL)
+        RunTimeException(EXCEPTION_INPUTFILE);
 }
 
 /* 
@@ -1793,19 +1805,6 @@ void DesalocaVariaveis (modhead *mod) {
             }  
         }
     }
-}
-
-/* Abre o arquivo de entrada do programa */
-
-void ExecQuadAbrir (quadrupla quad) {
-    // Se existe outro aberto, fecha
-    if (finput != NULL)
-        fclose (finput);
-
-    // Abre um novo arquivo de entrada
-    finput = fopen (quad->opnd1.atr.valcad, "r");
-    if (finput == NULL)
-        RunTimeException(EXCEPTION_INPUTFILE);
 }
 
 /* 
@@ -1960,7 +1959,7 @@ void ExecQuadWrite (quadrupla quad) {
 
 /* Executa a quádrupla dos operadores aritméticos */
 
-void ExecQuadAritmetica (quadrupla quad, int oper) {
+void ExecQuadAritmetica (quadrupla quad) {
     int tipo1, tipo2, valint1, valint2;
     float valfloat1, valfloat2;
     switch (quad->opnd1.tipo) {
@@ -1990,7 +1989,7 @@ void ExecQuadAritmetica (quadrupla quad, int oper) {
     if (quad->result.tipo == VAROPND) {
         switch (quad->result.atr.simb->tvar) {
             case INTEGER:
-                switch (oper) {
+                switch (quad->oper) {
                     case OPMAIS :   *(quad->result.atr.simb->valint) = valint1 + valint2;   break;
                     case OPMENOS:   *(quad->result.atr.simb->valint) = valint1 - valint2;   break;
                     case OPMULT :   *(quad->result.atr.simb->valint) = valint1 * valint2;   break;
@@ -2000,7 +1999,7 @@ void ExecQuadAritmetica (quadrupla quad, int oper) {
                 break;
             case FLOAT:
                 if (tipo1 == INTOPND && tipo2 == INTOPND)
-                    switch (oper) {
+                    switch (quad->oper) {
                         case OPMAIS :   *(quad->result.atr.simb->valfloat) = valint1 + valint2; break;
                         case OPMENOS:   *(quad->result.atr.simb->valfloat) = valint1 - valint2; break;
                         case OPMULT :   *(quad->result.atr.simb->valfloat) = valint1 * valint2; break;
@@ -2008,7 +2007,7 @@ void ExecQuadAritmetica (quadrupla quad, int oper) {
                                         *(quad->result.atr.simb->valfloat) = valint1 / valint2; break;
                     }
                 if (tipo1 == INTOPND && tipo2 == REALOPND)
-                    switch (oper) {
+                    switch (quad->oper) {
                         case OPMAIS :   *(quad->result.atr.simb->valfloat) = valint1 + valfloat2;   break;
                         case OPMENOS:   *(quad->result.atr.simb->valfloat) = valint1 - valfloat2;   break;
                         case OPMULT :   *(quad->result.atr.simb->valfloat) = valint1 * valfloat2;   break;
@@ -2016,7 +2015,7 @@ void ExecQuadAritmetica (quadrupla quad, int oper) {
                                         *(quad->result.atr.simb->valfloat) = valint1 / valfloat2;   break;
                     }
                 if (tipo1 == REALOPND && tipo2 == INTOPND)
-                    switch (oper) {
+                    switch (quad->oper) {
                         case OPMAIS :   *(quad->result.atr.simb->valfloat) = valfloat1 + valint2;   break;
                         case OPMENOS:   *(quad->result.atr.simb->valfloat) = valfloat1 - valint2;   break;
                         case OPMULT :   *(quad->result.atr.simb->valfloat) = valfloat1 * valint2;   break;
@@ -2024,7 +2023,7 @@ void ExecQuadAritmetica (quadrupla quad, int oper) {
                                         *(quad->result.atr.simb->valfloat) = valfloat1 / valint2;   break;
                     }
                 if (tipo1 == REALOPND && tipo2 == REALOPND)
-                    switch (oper) {
+                    switch (quad->oper) {
                         case OPMAIS :   *(quad->result.atr.simb->valfloat) = valfloat1 + valfloat2; break;
                         case OPMENOS:   *(quad->result.atr.simb->valfloat) = valfloat1 - valfloat2; break;
                         case OPMULT :   *(quad->result.atr.simb->valfloat) = valfloat1 * valfloat2; break;
@@ -2110,7 +2109,7 @@ void ExecQuadNot (quadrupla quad) {
 
 /* Executa a quádrupla dos operadores And e Or */
 
-void ExecQuadAndOr (quadrupla quad, int oper) {
+void ExecQuadAndOr (quadrupla quad) {
     bool vallogic1, vallogic2;
 
     switch (quad->opnd1.tipo) {
@@ -2129,7 +2128,7 @@ void ExecQuadAndOr (quadrupla quad, int oper) {
     }
     switch (quad->result.atr.simb->tvar) {
         case LOGIC: 
-            switch (oper) {
+            switch (quad->oper) {
                 case OPAND: *(quad->result.atr.simb->vallogic) = vallogic1 && vallogic2;    break;      
                 case OPOR : *(quad->result.atr.simb->vallogic) = vallogic1 || vallogic2;    break;  
             }
@@ -2215,7 +2214,7 @@ void ExecQuadAtrib (quadrupla quad) {
 
 /* Executa a quádrupla de operadores relacionais */
 
-void ExecQuadRel (quadrupla quad, int oper) {
+void ExecQuadRel (quadrupla quad) {
     int tipo1, tipo2, valint1, valint2;
     float valfloat1, valfloat2;
 
@@ -2244,7 +2243,7 @@ void ExecQuadRel (quadrupla quad, int oper) {
             break;
     }
     if (tipo1 == INTOPND && tipo2 == INTOPND)
-        switch (oper) {
+        switch (quad->oper) {
             case OPLE:  *(quad->result.atr.simb->vallogic) = valint1 <= valint2;    break;      
             case OPGT:  *(quad->result.atr.simb->vallogic) = valint1 >  valint2;    break;     
             case OPGE:  *(quad->result.atr.simb->vallogic) = valint1 >= valint2;    break;     
@@ -2253,7 +2252,7 @@ void ExecQuadRel (quadrupla quad, int oper) {
             case OPLT:  *(quad->result.atr.simb->vallogic) = valint1 <  valint2;    break;
         }
     if (tipo1 == INTOPND && tipo2 == REALOPND)
-        switch (oper) {
+        switch (quad->oper) {
             case OPLE:  *(quad->result.atr.simb->vallogic) = valint1 <= valfloat2;   break;      
             case OPGT:  *(quad->result.atr.simb->vallogic) = valint1 >  valfloat2;   break;       
             case OPGE:  *(quad->result.atr.simb->vallogic) = valint1 >= valfloat2;   break;    
@@ -2262,7 +2261,7 @@ void ExecQuadRel (quadrupla quad, int oper) {
             case OPLT:  *(quad->result.atr.simb->vallogic) = valint1 <  valfloat2;   break;
         }
     if (tipo1 == REALOPND && tipo2 == INTOPND)
-        switch (oper) {
+        switch (quad->oper) {
             case OPLE:  *(quad->result.atr.simb->vallogic) = valfloat1 <= valint2;   break;      
             case OPGT:  *(quad->result.atr.simb->vallogic) = valfloat1 >  valint2;   break;      
             case OPGE:  *(quad->result.atr.simb->vallogic) = valfloat1 >= valint2;   break;     
@@ -2271,7 +2270,7 @@ void ExecQuadRel (quadrupla quad, int oper) {
             case OPLT:  *(quad->result.atr.simb->vallogic) = valfloat1 <  valint2;   break;
         }
     if (tipo1 == REALOPND && tipo2 == REALOPND)
-        switch (oper) {
+        switch (quad->oper) {
             case OPLE:  *(quad->result.atr.simb->vallogic) = valfloat1 <= valfloat2; break;      
             case OPGT:  *(quad->result.atr.simb->vallogic) = valfloat1 >  valfloat2; break;     
             case OPGE:  *(quad->result.atr.simb->vallogic) = valfloat1 >= valfloat2; break;     

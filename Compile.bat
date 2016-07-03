@@ -20,10 +20,10 @@ gcc y.tab.c main.c yyerror.c -o Lab06 -lfl
 echo.
 echo Compilando programa
 
-REM Lab06  < Compilador/Lab06Prog.dat > Compilador/Lab06ProgOutput.dat
+Lab06  < Compilador/Lab06Prog.dat > Compilador/Lab06ProgOutput.dat
 Lab06  < Compilador/Lab06Teste.dat > Compilador/Lab06TesteOutput.dat
 
-REM goto TestesInterpretador
+goto TestesInterpretador
 	Lab06  < Compilador/Testes06/Lab06Teste.dat > Compilador/Testes06/Lab06TesteOutput.dat
 :TestesInterpretador
 
