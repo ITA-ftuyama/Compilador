@@ -67,9 +67,7 @@ comandos:
 	}
 	fim := false;
 	para (j := 0; !fim; j := j + 1) {
-		c := palavra[j];
-		escrever(c);
-		nomes[posic][j] := c;
+		nomes[posic][j] := palavra[j];
 
 		se (palavra[j] = '\0') 
 			fim := true;
@@ -128,7 +126,7 @@ comandos:
 			escrever(palavra[i]);
 		}
 		posic := Procura ();
-		escrever(posic);
+		escrever("posic = (", posic, ")");
 		se (posic > 0) 
 			nocorr[posic] := nocorr[posic] + 1;
 		senao chamar Inserir(~posic);
