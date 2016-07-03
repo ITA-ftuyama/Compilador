@@ -239,7 +239,7 @@ struct celsimb {
     char *cadeia;
     int tid, tvar, tparam;
     int  nparam, ndims, dims[MAXDIMS+1];
-    bool inic, ref, array, param, active;
+    bool inic, ref, array, param, active, dirty;
     listsimb listvardecl, listparam, listfunc; 
     simbolo escopo, prox;
     modhead fhead;
@@ -1347,7 +1347,7 @@ simbolo InsereSimb (char *cadeia, int tid, int tvar, simbolo escopo) {
     s = tabsimb[i] = (simbolo) malloc (sizeof (celsimb));
     s->cadeia = (char*) malloc ((strlen(cadeia)+1) * sizeof(char));
     strcpy (s->cadeia, cadeia);
-    s->tid = tid;       s->tvar = tvar;     s->array = FALSE;
+    s->tid = tid;       s->tvar = tvar;     s->array = s->dirty = FALSE;
     s->prox = aux;      s->escopo = escopo;
     s->listvardecl = s->listparam = s->listfunc = NULL;
 
@@ -1608,7 +1608,7 @@ simbolo NovaTemp (int tip) {
         nometemp[2+i-j] = s[j];
     simb = InsereSimb (nometemp, IDVAR, tip, escopo);
     simb->inic = simb->ref = TRUE;
-    simb->array = FALSE;
+    simb->array = simb->dirty = FALSE;
     return simb;
 }
 
@@ -1686,14 +1686,13 @@ void InterpCodIntermed () {
     modhead mod = codintermed->prox;
     printf ("\n\n\tINTERPRETADOR:\n");
     printf ("-----------------------\n\n");
-    int number = 0;
+
     // Executa as quádruplas do módulo Principal
-    for (quad = mod->listquad->prox; (!encerra && quad != NULL); quad = quadprox) {number++;
+    for (quad = mod->listquad->prox; (!encerra && quad != NULL); quad = quadprox) {
         if (DEBUG) printf ("\n%4d# %s", quad->num, nomeoperquad[quad->oper]);
         quadprox = quad->prox;
-        //if (number > 245) exit(0);
         switch (quad->oper) {
-            case OPEXIT     :   encerra = TRUE;                             break;
+            case OPEXIT     :   DesalocaVariaveis (&mod); encerra = TRUE;   break;
             case OPENMOD    :   AlocaVariaveis (mod->modname->listvardecl); break;
             case OPCALL     :   ExecQuadCall (quad, &quadprox, &mod);       break;
             case OPRETURN   :   ExecQuadReturn (quad, &quadprox, &mod);     break;
@@ -1792,19 +1791,19 @@ void DesalocaVariaveis (modhead *mod) {
 
             simb = var->simb;
             if (simb->tid == IDVAR) {
-                #warning Corrigir lógica para free: Matriz
-                nelemaloc = 0;
-               //  nelemaloc = 1;
-               //  if (simb->array) 
-               //      for (j = 1; j <= simb->ndims; j++)  
-               //          nelemaloc *= simb->dims[j];
-               //  switch (simb->tvar) {
-               //     case INTEGER:    free(simb->valint);     break;
-               //     case FLOAT:      free(simb->valfloat);   break;
-               //     case CHAR:       free(simb->valchar);    break;
-               //     case LOGIC:      free(simb->vallogic);   break;
-               // }
-               if (DEBUG) printf ("\n\t\t\t%6s: %2d elemento(s) desalocado(s) ", simb->cadeia, nelemaloc);
+                nelemaloc = 1;
+                if (simb->array) 
+                    for (j = 1; j <= simb->ndims; j++)  
+                        nelemaloc *= simb->dims[j];
+
+                if (simb->dirty == FALSE)
+                    switch (simb->tvar) {
+                        case INTEGER:    free(simb->valint);     break;
+                        case FLOAT:      free(simb->valfloat);   break;
+                        case CHAR:       free(simb->valchar);    break;
+                        case LOGIC:      free(simb->vallogic);   break;
+                    }
+                if (DEBUG) printf ("\n\t\t\t%6s: %2d elemento(s) desalocado(s) ", simb->cadeia, nelemaloc);
             }  
         }
     }
@@ -2166,6 +2165,7 @@ void ExecQuadIndex (quadrupla quad) {
     }
     
     // O resultado recebe o endereço da posição da matriz
+    quad->result.atr.simb->dirty = TRUE;
     switch (quad->opnd1.atr.simb->tvar) {
         case INTEGER: quad->result.atr.simb->valint   = quad->opnd1.atr.simb->valint   + offset;  break;
         case FLOAT  : quad->result.atr.simb->valfloat = quad->opnd1.atr.simb->valfloat + offset;  break;
