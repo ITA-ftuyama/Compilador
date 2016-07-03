@@ -338,7 +338,7 @@ struct celmodhead {
 
 quadrupla quadcorrente, quadaux, quadaux2;
 modhead codintermed, modcorrente;
-int oper, numquadcorrente, numtemp = 0;
+int numquadcorrente, numtemp = 0;
 operando opnd1, opnd2, result, opndaux;
 const operando opndidle = {IDLEOPND, 0};
 
@@ -363,8 +363,7 @@ struct infoexpressao {
 typedef struct infovariavel infovariavel;
 struct infovariavel {
     simbolo simb;
-    operando opnd;
-    operando varindex;
+    operando opnd, varindex;
 };
 
 /****************************************************/
@@ -1676,7 +1675,7 @@ void RenumQuadruplas (quadrupla quad1, quadrupla quad2) {
 
 void InterpCodIntermed () {
     quadrupla quad, quadprox;
-    
+
     // Inicialização de Pilhas e Entradas
     InicPilhaOpnd (&pilhaopnd);
     InicPilhaOpnd (&pilhaindex);
@@ -1687,11 +1686,12 @@ void InterpCodIntermed () {
     modhead mod = codintermed->prox;
     printf ("\n\n\tINTERPRETADOR:\n");
     printf ("-----------------------\n\n");
-
+    int number = 0;
     // Executa as quádruplas do módulo Principal
-    for (quad = mod->listquad->prox; (!encerra && quad != NULL); quad = quadprox) {
+    for (quad = mod->listquad->prox; (!encerra && quad != NULL); quad = quadprox) {number++;
         if (DEBUG) printf ("\n%4d# %s", quad->num, nomeoperquad[quad->oper]);
         quadprox = quad->prox;
+        //if (number > 245) exit(0);
         switch (quad->oper) {
             case OPEXIT     :   encerra = TRUE;                             break;
             case OPENMOD    :   AlocaVariaveis (mod->modname->listvardecl); break;
@@ -1792,17 +1792,19 @@ void DesalocaVariaveis (modhead *mod) {
 
             simb = var->simb;
             if (simb->tid == IDVAR) {
-                nelemaloc = 1;
-                if (simb->array) 
-                    for (j = 1; j <= simb->ndims; j++)  
-                        nelemaloc *= simb->dims[j];
-                switch (simb->tvar) {
-                   case INTEGER:    free(simb->valint);     break;
-                   case FLOAT:      free(simb->valfloat);   break;
-                   case CHAR:       free(simb->valchar);    break;
-                   case LOGIC:      free(simb->vallogic);   break;
-               }
-               if (DEBUG) printf ("\n\t\t\t%6s: %2d elemento(s) alocado(s) ", simb->cadeia, nelemaloc);
+                #warning Corrigir lógica para free: Matriz
+                nelemaloc = 0;
+               //  nelemaloc = 1;
+               //  if (simb->array) 
+               //      for (j = 1; j <= simb->ndims; j++)  
+               //          nelemaloc *= simb->dims[j];
+               //  switch (simb->tvar) {
+               //     case INTEGER:    free(simb->valint);     break;
+               //     case FLOAT:      free(simb->valfloat);   break;
+               //     case CHAR:       free(simb->valchar);    break;
+               //     case LOGIC:      free(simb->vallogic);   break;
+               // }
+               if (DEBUG) printf ("\n\t\t\t%6s: %2d elemento(s) desalocado(s) ", simb->cadeia, nelemaloc);
             }  
         }
     }

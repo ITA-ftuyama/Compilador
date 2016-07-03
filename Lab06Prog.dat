@@ -6,8 +6,8 @@
 /*  Variaveis globais  */
 
 globais:
-	carac nomes[50][10], palavra[10];
-	int ntab, nocorr[50], vezes;
+	carac nomes[50][15], palavra[15];
+	int ntab, nocorr[50];
 
 funcoes:
 
@@ -57,9 +57,7 @@ comandos:
 	para (i := ntab; i >= posic + 1; i := i - 1) {
 		fim := false;
 		para (j := 0; !fim; j := j + 1) {
-			c := nomes[i - 1][j];
-			escrever (c);
-			nomes[i][j] := c;
+			nomes[i][j] := nomes[i - 1][j];
 			se (nomes[i][j] = '\0') 
 				fim := true;
 		}
@@ -68,13 +66,8 @@ comandos:
 	fim := false;
 	para (j := 0; !fim; j := j + 1) {
 		nomes[posic][j] := palavra[j];
-
 		se (palavra[j] = '\0') 
 			fim := true;
-		escrever(nomes[posic][j]);
-	}
-	se (vezes = 2) {
-		retornar;
 	}
 	nocorr[posic] := 1;
 }
@@ -86,17 +79,19 @@ locais:
 	int i, j;
 	logico fim;
 comandos:
-	escrever ("\n  ", "Palavra     ", "   Num. de ocorr.\n");
-	para (i := 1; i <= 50; i := i + 1) escrever ("-");
+	escrever("\n");
+	para (i := 1; i <= 35; i := i + 1) escrever ("-");
+	escrever ("\n  ", "Palavra\t\t", "\tNum. de ocorr.\n");
+	para (i := 1; i <= 35; i := i + 1) escrever ("-");
 	para (i := 1; i <= ntab; i := i + 1) {
 		escrever ("\n  ");
 		fim := false;
 		para (j := 0; !fim; j := j + 1) {
 			se (nomes[i][j] = '\0') 
 				fim := true;
-			escrever (nomes[i][j]);
+			senao escrever (nomes[i][j]);
 		}
-		escrever (" | ", nocorr[i]);
+		escrever ("\t\t|\t\t", nocorr[i]);
 	}
 }
 
@@ -108,13 +103,12 @@ locais:
 	int posic, i;
 	logico fim;
 comandos:
-	vezes := 0;
 	ntab := 0;
 	abrir ("Compilador/Lab06ProgInput");
 	escrever ("Nova palavra? (s/n): ");
 	ler (c);
 	enquanto (c = 's' || c = 'S') {
-		ler(c); // \n após a letra
+		ler(c);
 		escrever ("\nDigite a palavra: ");
 		fim := false;
 		para (i := 0; !fim; i := i + 1) {
@@ -123,19 +117,13 @@ comandos:
 				fim := true;
 				palavra[i] := '\0';
 			}
-			escrever(palavra[i]);
 		}
 		posic := Procura ();
-		escrever("posic = (", posic, ")");
 		se (posic > 0) 
 			nocorr[posic] := nocorr[posic] + 1;
 		senao chamar Inserir(~posic);
 		escrever ("\n\nNova palavra? (s/n): ");
-		se (vezes = 2) {
-		retornar;
-	}
 		ler (c);
-		vezes := vezes + 1;
 	}
 	chamar ExibirTabela();
 }
