@@ -441,7 +441,7 @@ void InicPilhaQuad (pilhaquadruplas *);
 char VaziaQuad (pilhaquadruplas);
 
 FILE *finput;
-bool DEBUG = FALSE;
+bool DEBUG = TRUE;
 
 %}
 

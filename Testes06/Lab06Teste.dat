@@ -46,9 +46,44 @@ comandos:
 	;
 }
 
+vazio TesteSlide1() {
+locais:
+	int var;
+	carac a, b, c;
+comandos:
+	ler(a,b,c);
+}
+
+vazio TesteSlide2() {
+locais:
+	int var, i, j, h;
+comandos:
+	i := 0;
+	j := 10;
+	h := 1;
+	enquanto(i<j)
+		i := j+h;
+}
+
+vazio TesteSlide3() {
+locais:
+	int var;
+	logico b1, b2;
+comandos:
+	b1 := (i+3 >= j-2)  &&  b2;
+}
+
+vazio TesteSlide4() {
+locais:
+	carac a, b, c;
+comandos:
+	escrever ("Valor de a+b:", a+b, "Valor de c:", c);
+}
+
 vazio Teste1() {
 locais:
 	int var;
+	carac o, p, q;
 comandos:
 
 	// Caso 1: Atribuicao
@@ -59,7 +94,7 @@ comandos:
 
 
 	// Caso 2: Ler (varios atributos)
-	ler(i, j, A[2][3], k);
+	ler(o, p, q);
 	escrever(i, j, A[2][3], k);
 	ler (c, lista[1], i);
 	escrever (c, lista[1], i);
@@ -222,12 +257,14 @@ locais:
 	int posic;
 	logico fim;
 comandos:
-	ntab := 0;
 	abrir ("Compilador/Testes06/Lab06TesteInput");
 	escrever ("Nova palavra? (s/n): ");
 	ler (c);
 	ler (c);
 
+	chamar TesteSlide1();
+	chamar TesteSlide2();
+	chamar TesteSlide3();
 	chamar Teste1();
 	chamar Teste2();
 	chamar Teste3();
