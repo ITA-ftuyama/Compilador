@@ -23,9 +23,8 @@ echo Compilando programa
 Lab06  < Compilador/Lab06Prog.dat > Compilador/Lab06ProgOutput.dat
 Lab06  < Compilador/Lab06Teste.dat > Compilador/Lab06TesteOutput.dat
 
-goto TestesInterpretador
-	Lab06  < Compilador/Testes06/Lab06Teste.dat > Compilador/Testes06/Lab06TesteOutput.dat
 :TestesInterpretador
+Lab06  < Compilador/Testes06/Lab06Teste.dat > Compilador/Testes06/Lab06TesteOutput.dat
 
 goto TestesCodigoIntermediario
 	Lab06  < Compilador/Testes05/Lab05Teste.dat > Compilador/Testes05/Lab05TesteOutput.dat
